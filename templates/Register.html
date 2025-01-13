@@ -180,23 +180,6 @@
             "16": ["Wiring", "Lighting"]
         };
 
-        function updateScopeOptions() {
-            const division = document.getElementById("division").value;
-            const scopeSelect = document.getElementById("scope");
-            scopeSelect.innerHTML = "";
-
-            if (scopeOptions[division]) {
-                scopeOptions[division].forEach(scope => {
-                    const option = document.createElement("option");
-                    option.value = scope;
-                    option.textContent = scope;
-                    scopeSelect.appendChild(option);
-                });
-                scopeSelect.parentElement.style.display = 'block';
-            } else {
-                scopeSelect.parentElement.style.display = 'none';
-            }
-        }
     </script>
 
 <script>
@@ -346,13 +329,6 @@
                     <option value="16">Division 16: Electrical</option>
                 </select>
             </div>
-            <div class="form-group" style="display:none;">
-                <label for="scope">Scope</label>
-                <select id="scope" name="scope">
-                    <option value="">Select scope</option>
-                </select>
-            </div>
-
 
 <!-- Business Name -->
             <div class="form-group">
