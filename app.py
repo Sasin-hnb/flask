@@ -55,11 +55,11 @@ def home():
 
 @app.route('/about')
 def About():
-    return render_template('about.html')
+    return render_template('About.html')
 
-@app.route('/contact.html')
+@app.route('/contact')
 def contact():
-    return render_template('contact.html')
+    return render_template('Contact.html')
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():
@@ -96,8 +96,8 @@ def register():
                 return jsonify({'message': 'Register Successfully'})
             else:
                 new_company = Company(domain=domain, BusinessName=BusinessName,
-                                      BusinessPhone=BusinessPhone, BusinessAddress=BusinessAddress,
-                                      BusinessWebsite=BusinessWebsite)
+                                        BusinessPhone=BusinessPhone, BusinessAddress=BusinessAddress,
+                                        BusinessWebsite=BusinessWebsite)
                 new_user = User(division=division, country=country, province=province,
                                 firstName=firstName, lastName=lastName, mobileNumber=mobileNumber,
                                 username=username, password=hash_password, domain=domain, state=True)
@@ -173,10 +173,45 @@ def search_projects():
     # You would define a Project model for this
     return render_template('search_results.html')
 
-@app.route('/profile')
+@app.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
+    if request.method == 'POST':
+        first_name = request.json.get('first_name')
+        last_name = request.json.get('last_name')
+        email = request.json.get('email')
+        phone = request.json.get('phone')
+        division = request.json.get('division')
+        company_name = request.json.get('company_name')
+
+        return redirect(url_for('dashboard'))
     return render_template('profile.html')
+
+@app.route('/detailed_reports')
+@login_required
+def detailed_reports():
+    return render_template('detailed_report.html')
+
+@app.route('/project_lookup')
+@login_required
+def project_lookup():
+    return render_template('project_lookup.html')
+
+@app.route('/project_entry')
+@login_required
+def project_entry():
+    return render_template('project_entry.html')
+
+@app.route('/bidding_history')
+@login_required
+def bidding_history():
+    return render_template('bidding_history.html')
+
+@app.route('/networking')
+@login_required
+def networking():
+    return render_template('Networking_Contacts.html')
+
 
 @app.route('/logout')
 @login_required
