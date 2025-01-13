@@ -64,7 +64,7 @@ def contact():
 @app.route('/register', methods=['POST', 'GET'])
 def register():
     if request.method == 'GET':
-        return render_template('register.html')
+        return render_template('Register.html')
     
     if request.method == 'POST':
         data = request.json
@@ -113,7 +113,7 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
-        return render_template('login.html')
+        return render_template('Login.html')
 
     if request.method == 'POST':
         username = request.json.get('username')
@@ -138,7 +138,7 @@ def login():
 @app.route('/dashboard', methods=['GET'])
 @login_required
 def dashboard():
-    return render_template('dashboard.html')
+    return render_template('Dashboard.html')
 
 @app.route('/add_project', methods=['GET', 'POST'])
 def add_project():
