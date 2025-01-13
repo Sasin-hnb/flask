@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About | ConstructHub</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        /* Header Section */
+        .header {
+            background-color: #003366;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .header .logo {
+            font-size: 1.5em;
+        }
+
+        .header a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 1.2em;
+        }
+
+        .header a:hover {
+            text-decoration: underline;
+        }
+
+        /* Hero Section */
+        .hero {
+            background-image: url('static/images/Hero_background.jpg'); /* Implemented image */
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 120px 20px;
+            position: relative;
+        }
+
+        /* Dark Overlay for Readability */
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+            z-index: 1;
+        }
+
+        .hero h1, .hero p, .hero a {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .hero .cta {
+            padding: 15px 30px;
+            background-color: #003366;
+            color: white;
+            font-size: 1.2em;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .hero .cta:hover {
+            background-color: white;
+            color: #003366;
+            border: 2px solid #003366;
+        }
+
+        /* Features Section */
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 50px 20px;
+            background-color: #f9f9f9;
+        }
+
+        .feature-card {
+            background-color: white;
+            border: 1px solid #d0e0f5;
+            border-radius: 8px;
+            width: 300px;
+            margin: 15px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-card img {
+            width: 150px;
+            margin-bottom: 15px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5em;
+            color: #003366;
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            font-size: 1em;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 400px;
+            text-align: center;
+        }
+
+	.modal-content p {
+	    line-height: 1.8; /* Increased spacing for paragraph text */
+
+	}
+
+        .modal-content h3 {
+            color: #003366;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Footer Section */
+        .footer {
+            background-color: #003366;
+            color: white;
+            text-align: center;
+            padding: 15px 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <div class="header">
+        <div class="left-nav">
+            <a href="/">
+                <img src="/static/images/constructhub-logo.png" alt="ConstructHub Logo" class="logo">
+            </a>
+        </div>
+        <nav>
+            <a href="/register">Register</a>
+            <a href="/login">Login</a>
+	    <a></a>
+        </nav>
+    </div>
+
+    <!-- Hero Section -->
+    <div class="hero">	
+        <h1>ConstructHub: Revolutionizing the Construction Industry</h1>
+        <p>In an industry as dynamic and competitive as construction, the ability to streamline project management, optimize bidding processes, and leverage data insights is more crucial than ever. ConstructHub is a cutting-edge web platform designed to empower contractors and subcontractors with tools that simplify operations, enhance decision-making, and foster collaboration—all while maintaining the privacy and security of proprietary information.</p>
+        <a href="/register" class="cta">Get Started</a>
+    </div>
+
+    <!-- Features Section -->
+    <div class="features">
+        <div class="feature-card" onclick="openModal('projectModal')">
+            <img src="static/tabs/project_entry.jpg" alt="Project Icon">
+            <h3>Project Entry & Lookup</h3>
+            <p>Easily search, add, and manage your companies bid value in one centralized platform.</p>
+        </div>
+        <div class="feature-card" onclick="openModal('biddingModal')">
+            <img src="static/tabs/bidding_metrics.jpg" alt="Metrics Icon">
+            <h3>Bidding Metrics</h3>
+            <p>Analyze bid performance with anonymized graphs and data-driven insights.</p>
+        </div>
+        <div class="feature-card" onclick="openModal('reportsModal')">
+            <img src="static/tabs/detailed_reports.jpg" alt="Report Icon">
+            <h3>Detailed Reports</h3>
+            <p>Generate comprehensive reports on bidding trends and project outcomes.</p>
+        </div>
+	<p>
+	    <div class="feature-card" onclick="openModal('membershipModal')">
+            <img src="static/tabs/membership.jpg" alt="Metrics Icon">
+            <h3>Membership-Based Access</h3>
+            <p>Choose from different membership tiers to unlock advanced features, such as viewing anonymized or detailed 	       bidding data for projects.</p>
+        </div>
+        <div class="feature-card" onclick="openModal('privacyModal')">
+            <img src="static/tabs/security_privacy.jpg" alt="Report Icon">
+            <h3>Privacy & Security</h3>
+            <p>Your data stays private—other companies can’t see your bid values unless explicitly allowed through 	   	       advanced membership privileges.</p>
+        </div>
+	<div class="feature-card" onclick="window.location.href='contact.html'">
+            <img src="static/tabs/contact_us.jpg" alt="Report Icon">
+            <h3>Contact Us</h3>
+            <p>Have questions? Reach out to our team for more information.</p>
+        </div>
+    </div>
+
+
+
+
+
+
+
+    <!-- Modals -->
+    <div id="projectModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('projectModal')">&times;</span>
+            <h3>Project Entry & Lookup</h3>
+            <p>ConstructHub empowers users with the ability to seamlessly search for ongoing or past construction projects and enter new ones into a shared database. This centralized approach ensures accurate, accessible project data, streamlining collaboration across the construction industry while enabling companies to manage bids, track progress, and stay competitive in real time.</p>
+        </div>
+    </div>
+
+    <div id="biddingModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('biddingModal')">&times;</span>
+            <h3>Bidding Metrics</h3>
+            <p>ConstructHub's Bidding Metrics provide powerful insights into bid performance through anonymized charts and detailed analytics. This feature helps companies understand their competitive position, refine bidding strategies, and make data-driven decisions to improve success rates and maximize project opportunities.</p>
+        </div>
+    </div>
+
+    <div id="reportsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('reportsModal')">&times;</span>
+            <h3>Detailed Reports</h3>
+            <p>ConstructHub's Detailed Reports enable users to generate comprehensive, downloadable summaries of bidding trends, project performance, and key metrics. These reports provide valuable insights, helping companies analyze results, showcase achievements, and make informed decisions to enhance future project outcomes.</p>
+        </div>
+    </div>
+
+    <div id="membershipModal" class="modal">
+          <div class="modal-content">
+            <span class="close" onclick="closeModal('membershipModal')">&times;</span>
+            <h3>Membership-Based Access</h3>
+            <p>ConstructHub's Membership-Based Access offers tiered plans that unlock advanced features and exclusive insights, such as viewing anonymized or detailed bidding data for projects. This flexible structure allows companies to choose the level of access that best fits their needs, ensuring they gain the competitive edge required to excel in the industry.</p>
+        </div>
+    </div>
+
+    <div id="privacyModal" class="modal">
+          <div class="modal-content">
+            <span class="close" onclick="closeModal('privacyModal')">&times;</span>
+            <h3>Privacy & Security</h3>
+            <p>ConstructHub prioritizes Privacy and Security, ensuring that your data remains confidential and protected. With advanced security measures, companies retain full control over their bid values and project information, safeguarding them from unauthorized access while fostering trust and collaboration within the platform.</p>
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Footer Section -->
+    <div class="footer">
+        &copy; 2024 ConstructHub. All rights reserved.
+    </div>
+
+    <!-- JavaScript for Modals -->
+    <script>
+        function openModal(id) {
+            document.getElementById(id).style.display = 'flex';
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+    </script>
+</body>
+</html>

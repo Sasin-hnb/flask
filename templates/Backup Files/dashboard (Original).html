@@ -1,0 +1,130 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        header {
+            background-color: #003366;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header-title {
+            margin: 0;
+        }
+        .header-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        .header-buttons a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            background-color: #001a33;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+        }
+        .header-buttons a:hover {
+            background-color: #004080;
+        }
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+        }
+        .welcome-message {
+            font-size: 1.5em;
+            color: #003366;
+            margin-bottom: 30px;
+        }
+        .card-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .card {
+            width: 200px;
+            height: 150px;
+            background: linear-gradient(to bottom right, #d0e0f5, #003366);
+            color: white;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        .card-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+        .card-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            text-align: center;
+        }
+        footer {
+            background-color: #001a33;
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1 class="header-title">Construction Portal Dashboard</h1>
+        <div class="header-buttons">
+            <a href="/profile">Profile</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </header>
+    <div class="container">
+        <div class="welcome-message">Welcome, [User]! Here’s your dashboard to manage projects.</div>
+        <div class="card-container">
+            <div class="card" onclick="window.location.href='/search-projects'">
+                <div class="card-icon">🔍</div>
+                <div class="card-title">Search Projects</div>
+            </div>
+            <div class="card" onclick="window.location.href='/add-project'">
+                <div class="card-icon">➕</div>
+                <div class="card-title">Add Project</div>
+            </div>
+            <div class="card" onclick="window.location.href='/generate-reports'">
+                <div class="card-icon">📊</div>
+                <div class="card-title">Generate Reports</div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2024 Construction Portal. All rights reserved.</p>
+    </footer>
+</body>
+</html>

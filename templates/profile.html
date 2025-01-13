@@ -1,0 +1,191 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Profile</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        header {
+            background-color: #003366;
+            color: white;
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header h1 {
+            margin: 0;
+        }
+        nav a {
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            margin: 0 15px;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .container h1 {
+            text-align: center;
+            color: #003366;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #003366;
+            font-weight: bold;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .form-group input:focus {
+            border-color: #003366;
+            outline: none;
+        }
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .form-group select:focus {
+            border-color: #003366;
+            outline: none;
+        }
+        .form-group .company-logo {
+            display: block;
+            margin: 10px 0;
+        }
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #003366;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+        }
+        .btn-submit:hover {
+            background-color: #001a33;
+        }
+        .btn-back {
+            display: block;
+            width: 100%;
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #cccccc;
+            color: #003366;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+        }
+        .btn-back:hover {
+            background-color: #bbbbbb;
+        }
+        footer {
+            text-align: center;
+            background-color: #001a33;
+            color: white;
+            padding: 15px 0;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Construction Portal</h1>
+        <nav>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/logout">Logout</a>
+        </nav>
+    </header>
+    <div class="container">
+        <h1>User Profile</h1>
+        <form method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="first_name">First Name</label>
+                <input type="text" id="first_name" name="first_name" placeholder="Enter your first name">
+            </div>
+            <div class="form-group">
+                <label for="last_name">Last Name</label>
+                <input type="text" id="last_name" name="last_name" placeholder="Enter your last name">
+            </div>
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email address">
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="text" id="phone" name="phone" placeholder="Enter your phone number">
+            </div>
+            <div class="form-group">
+                <label for="division">Division</label>
+                <select id="division" name="division">
+                    <option value="">Select your division</option>
+                    <option value="2">Division 2: Demolition</option>
+                    <option value="3">Division 3: Concrete</option>
+                    <option value="4">Division 4: Masonry</option>
+                    <option value="5">Division 5: Metals</option>
+                    <option value="6">Division 6: Wood and plastics</option>
+                    <option value="7">Division 7: Thermal and moisture protection</option>
+                    <option value="8">Division 8: Doors and windows</option>
+                    <option value="9">Division 9: Finishes</option>
+                    <option value="10">Division 10: Specialties</option>
+                    <option value="11">Division 11: Equipment</option>
+                    <option value="12">Division 12: Furnishings</option>
+                    <option value="13">Division 13: Special construction</option>
+                    <option value="14">Division 14: Conveying systems</option>
+                    <option value="15">Division 15: Mechanical</option>
+                    <option value="16">Division 16: Electrical</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="company_name">Company Name</label>
+                <input type="text" id="company_name" name="company_name" placeholder="Enter your company name">
+            </div>
+            <div class="form-group">
+                <label for="company_logo">Upload Company Logo</label>
+                <input type="file" id="company_logo" name="company_logo" accept="image/*" class="company-logo">
+            </div>
+            <button type="submit" class="btn-submit">Save Changes</button>
+        </form>
+        <a href="/dashboard" class="btn-back">Back to Dashboard</a>
+    </div>
+    <footer>
+        <p>&copy; 2024 Construction Portal. All rights reserved.</p>
+    </footer>
+</body>
+</html>

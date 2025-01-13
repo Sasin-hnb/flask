@@ -1,0 +1,237 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration | Construction Portal</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        /* Header Section */
+        .header {
+            background-color: #003366;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .header .left-nav {
+            display: flex;
+            align-items: center;
+        }
+
+        .header .logo {
+            font-size: 1.5em;
+        }
+
+        .header a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 1.2em;
+        }
+
+        .header a:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer Section */
+        .footer {
+            background-color: #003366;
+            color: white;
+            text-align: center;
+            padding: 15px 20px;
+        }
+
+        /* Registration Form */
+        .registration-form {
+            background-color: white;
+            margin: 100px auto 30px; /* Adjust spacing to account for the fixed header */
+            padding: 30px;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .registration-form h1 {
+            text-align: center;
+            color: #003366;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 1em;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #003366;
+        }
+
+        .form-actions {
+            text-align: center;
+        }
+
+        .form-actions button {
+            background-color: #003366;
+            color: white;
+            padding: 12px 20px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .form-actions button:hover {
+            background-color: #d0e0f5;
+            color: #003366;
+        }
+
+        .form-actions .login-link {
+            margin-top: 20px;
+            display: block;
+            font-size: 1em;
+            color: #003366;
+        }
+
+        .form-actions .login-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <div class="header">
+        <div class="left-nav">
+            <a href="/">
+                <img src="static/images/constructhub-logo.png" alt="ConstructHub Logo" class="logo">
+            </a>
+        </div>
+        <nav>
+            <a href="/login">Login</a>
+	    <a></a>
+        </nav>
+    </div>
+
+    <!-- Registration Form Section -->
+    <div class="registration-form">
+        <h1>Create an Account</h1>
+        <form action="/register" method="POST" id="registrationForm">
+            <!-- Company Information -->
+            <div class="form-group">
+                <label for="companyName">Company Name</label>
+                <input type="text" id="companyName" name="companyName" required placeholder="Enter company name">
+            </div>
+
+            <div class="form-group">
+                <label for="businessPhone">Business Phone Number</label>
+                <input type="text" id="businessPhone" name="businessPhone" required placeholder="Enter business phone number">
+            </div>
+
+            <div class="form-group">
+                <label for="companyAddress">Company Address</label>
+                <input type="text" id="companyAddress" name="companyAddress" required placeholder="Enter company address">
+            </div>
+
+            <div class="form-group">
+                <label for="city">City</label>
+                <input type="text" id="city" name="city" required placeholder="Enter city">
+            </div>
+
+            <div class="form-group">
+                <label for="province">Province</label>
+                <input type="text" id="province" name="province" required placeholder="Enter province">
+            </div>
+
+            <div class="form-group">
+                <label for="postalCode">Postal Code</label>
+                <input type="text" id="postalCode" name="postalCode" required placeholder="Enter postal code">
+            </div>
+
+            <div class="form-group">
+                <label for="country">Country</label>
+                <input type="text" id="country" name="country" required placeholder="Enter country">
+            </div>
+
+            <div class="form-group">
+                <label for="companyWebsite">Company Website (Optional)</label>
+                <input type="url" id="companyWebsite" name="companyWebsite" placeholder="Enter company website">
+            </div>
+
+            <!-- Personal Information -->
+            <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" name="firstName" required placeholder="Enter first name">
+            </div>
+
+            <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" name="lastName" required placeholder="Enter last name">
+            </div>
+
+            <div class="form-group">
+                <label for="mobileNumber">Mobile Number</label>
+                <input type="text" id="mobileNumber" name="mobileNumber" required placeholder="Enter mobile number">
+            </div>
+
+            <div class="form-group">
+                <label for="username">Username (Email Address)</label>
+                <input type="email" id="username" name="username" required placeholder="Enter email address">
+            </div>
+
+            <div class="form-group">
+                <label for="confirmEmail">Confirm Email Address</label>
+                <input type="email" id="confirmEmail" name="confirmEmail" required placeholder="Confirm email address">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required placeholder="Enter password">
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Confirm password">
+            </div>
+
+            <div class="form-actions">
+                <button type="submit">Register</button>
+                <a href="/login" class="login-link">Already have an account? Login</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Footer Section -->
+    <div class="footer">
+        <p>&copy; 2024 ConstructHub. All rights reserved.</p>
+    </div>
+</body>
+</html>

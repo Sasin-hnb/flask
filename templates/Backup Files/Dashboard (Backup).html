@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard | ConstructHub</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        /* Header Section */
+        .header {
+            background-color: #003366;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            height: 70px;
+        }
+
+        .header .left-nav img.logo {
+            width: 150px;
+            height: auto;
+        }
+
+        .header a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 1.2em;
+        }
+
+        /* Dashboard Layout */
+        .dashboard {
+            margin-top: 100px;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .dashboard-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .dashboard-card h3 {
+            color: #003366;
+            margin-bottom: 10px;
+        }
+
+        .dashboard-card p {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .dashboard-card button {
+            background-color: #003366;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .dashboard-card button:hover {
+            background-color: #d0e0f5;
+            color: #003366;
+        }
+
+        .icon {
+            font-size: 40px;
+            color: #003366;
+            margin-bottom: 10px;
+        }
+
+        /* Quick Actions Section */
+        .quick-actions {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .quick-actions button {
+            background-color: #003366;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .quick-actions button:hover {
+            background-color: #d0e0f5;
+            color: #003366;
+        }
+
+        /* Footer Section */
+        .footer {
+            background-color: #003366;
+            color: white;
+            text-align: center;
+            padding: 15px 20px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+	
+	/* Popup Overlay Background */
+	.popup-overlay {
+    		position: fixed;
+   		top: 0;
+    		left: 0;
+    		width: 100%;
+    		height: 100%;
+    		background-color: rgba(0, 0, 0, 0.5);
+    		display: flex;
+    		justify-content: center;
+    		align-items: center;
+    		z-index: 1000;
+	}
+
+	/* Popup Content Box */
+	.popup-content {
+    		background-color: white;
+    		padding: 20px;
+    		border-radius: 8px;
+    		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    		text-align: center;
+    		width: 300px;
+	}
+
+	.popup-content h3 {
+    	margin-top: 0;
+    	color: #003366;
+	}
+
+	.popup-content button {
+    	margin: 10px;
+    	padding: 10px 20px;
+    	border: none;
+    	border-radius: 5px;
+    	cursor: pointer;
+    	font-size: 1em;
+	}
+
+	.popup-content button:nth-child(1) {
+    	background-color: #003366;
+    	color: white;
+	}
+
+	.popup-content button:nth-child(2) {
+    	background-color: #d0e0f5;
+    	color: #003366;
+	}
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js Library -->
+</head>
+<body>
+    <!-- Header Section -->
+    <div class="header">
+        <div class="left-nav">
+            <a href="/">
+                <img src="/static/images/constructhub-logo.png" alt="ConstructHub Logo" class="logo">
+            </a>
+        </div>
+        <nav>
+            <a href="/profile">Profile</a>
+            <a href="/logout">Logout</a>
+	    <a></a>
+        </nav>
+    </div>
+
+
+
+
+
+
+
+    <!-- Dashboard Section -->
+    	<div class="dashboard">
+	    <div class="dashboard-card" id="active-users-card">
+    	    <img src="static/Tabs/UsersOnline.jpg" alt="Users Online" style="width: 150px; height: auto; display: block; 	margin: 0 auto; border-radius: 8px;">
+ 	    <h3>Active Users</h3>
+   	    <p>Currently Logged In: <span id="activeUsers">0</span></p>
+	</div>
+
+	<a href="profile_update.html" style="text-decoration: none; color: inherit;">
+	<div class="dashboard-card">
+            <img src="static/Tabs/ProfileUpdate.jpg" alt="Update Profile" style="width: 150px; height: auto; display: block; 	margin: 0 auto; border-radius: 8px;">
+            <h3>Update Profile</h3>
+            <p>Edit your account and profile details.</p>
+        </div>
+	</a>
+
+	<a href="detailed_reports.html" style="text-decoration: none; color: inherit;">
+	<div class="dashboard-card">
+            <img src="static/Tabs/DetailedReport.jpg" alt="Detailed Report" style="width: 150px; height: auto; display: block; 	margin: 0 auto; border-radius: 8px;">
+            <h3>View Detailed Report</h3>
+            <p>Build, View & Customize a report.</p>
+        </div>
+	</a>
+
+	<a href="project_lookup.html" style="text-decoration: none; color: inherit;">
+        <div class="dashboard-card">
+            <img src="static/Tabs/ProjectLookup.jpg" alt="Project Lookup" style="width: 150px; height: auto; display: block; 	margin: 0 auto; border-radius: 8px;">
+            <h3>Lookup Projects</h3>
+            <p>Easily search for ongoing or past construction projects.</p>
+        </div>
+	</a>
+
+	<a href="project_entry.html" style="text-decoration: none; color: inherit;">
+        <div class="dashboard-card">
+            <img src="static/Tabs/ProjectEntry.jpg" alt="Project Entry" style="width: 150px; height: auto; display: block; 	margin: 0 auto; border-radius: 8px;">
+            <h3>Enter Projects</h3>
+            <p>Securely enter a new project into the ConstructHUB Database.</p>
+        </div>
+	</a>
+
+
+        <div class="dashboard-card">
+	    <h3>Bidding Metrics</h3>
+            <p>Total Projects: <span id="totalProjects">0</span></p>
+            <p>Bids Submitted: <span id="bidsSubmitted">0</span></p>
+            <canvas id="biddingChart" width="200" height="100"></canvas>
+        </div>
+
+	<a href="bidding_history.html" style="text-decoration: none; color: inherit;">
+        <div class="dashboard-card">
+            <img src="static/Tabs/BiddingHistory.jpg" alt="Bidding History" style="width: 150px; height: auto; display: block; 	margin: 0 auto; border-radius: 8px;">
+            <h3>Bidding History</h3>
+            <p>View your bidding history, and quote values.</p>
+        </div>
+	</a>
+
+	<a href="networking.html" style="text-decoration: none; color: inherit;">
+	<div class="dashboard-card">
+            <img src="static/Tabs/Networking.jpg" alt="Networking" style="width: 150px; height: auto; display: block; 	margin: 0 auto; border-radius: 8px;">
+            <h3>Networking Contacts</h3>
+            <p>Find contact information for others contractors in your geographic area</p>
+        </div>
+	</a>
+
+	<!-- Logout Button with Popup Confirmation -->
+	<div class="dashboard-card" id="logout-card" style="cursor: pointer;" onclick="showLogoutPopup()">
+   	<img src="static/Tabs/Logout.jpg" alt="Logout" style="width: 150px; height: auto; display: block; margin: 0 auto; border-radius: 8px;">
+  	<h3>Logout</h3>
+    	<p>Safely log out of your ConstructHub account.</p>
+	</div>
+
+	<!-- Popup Confirmation Window -->
+	<div id="logoutPopup" class="popup-overlay" style="display: none;">
+    	<div class="popup-content">
+        <h3>Confirm Logout</h3>
+        <p>Are you sure you want to log out?</p>
+        <button onclick="confirmLogout()">Yes, Log Out</button>
+        <button onclick="closeLogoutPopup()">Cancel</button>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+    <!-- Quick Actions Section -->
+    <div class="quick-actions">
+        <button onclick="window.location.href='/add-bid'">Add New Bid</button>
+        <button onclick="window.location.href='/view-reports'">View Reports</button>
+    </div>
+
+    <!-- Footer Section -->
+    <div class="footer">
+        <p>&copy; 2024 ConstructHub. All rights reserved.</p>
+    </div>
+
+
+
+
+
+
+
+
+    <!-- Scripts -->
+    <script>
+        // Simulated counters
+        const totalProjects = 330;
+        const bidsSubmitted = 168;
+
+        function animateCounter(id, value) {
+            let count = 0;
+            const increment = Math.ceil(value / 100);
+            const counter = setInterval(() => {
+                count += increment;
+                if (count >= value) {
+                    count = value;
+                    clearInterval(counter);
+                }
+                document.getElementById(id).textContent = count;
+            }, 20);
+        }
+
+        animateCounter("totalProjects", totalProjects);
+        animateCounter("bidsSubmitted", bidsSubmitted);
+
+        // Bidding Metrics Chart
+        const ctx = document.getElementById('biddingChart').getContext('2d');
+        const biddingChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec' ],
+                datasets: [{
+                    label: 'Bids Submitted',
+                    data: [5, 12, 9, 20, 25, 18, 30, 8, 19, 10, 8, 4],
+                    backgroundColor: 'rgba(0, 51, 102, 0.7)',
+                    borderColor: 'rgba(0, 51, 102, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    </script>
+
+    
+
+
+
+<!-- Online Users Script -->
+
+<script>
+    // Function to fetch active user count
+    function fetchActiveUsers() {
+        fetch('/api/active-users') // API endpoint provided by your back end
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('activeUsers').textContent = data.activeUsers;
+            })
+            .catch(error => console.error('Error fetching active users:', error));
+    }
+
+    // Call the function every 10 seconds
+    setInterval(fetchActiveUsers, 10000);
+
+    // Initial call
+    fetchActiveUsers();
+
+
+    // Show the popup
+    function showLogoutPopup() {
+        document.getElementById('logoutPopup').style.display = 'flex';
+    }
+
+    // Close the popup
+    function closeLogoutPopup() {
+        document.getElementById('logoutPopup').style.display = 'none';
+    }
+
+    // Confirm and redirect to logout page
+    function confirmLogout() {
+        window.location.href = 'logout.html'; // Redirect to the logout page
+    }
+
+
+</script>
+
+</body>
+</html>

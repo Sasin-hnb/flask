@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | ConstructHub</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        .header {
+            background-color: #003366;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .header .logo {
+            font-size: 1.5em;
+        }
+
+        .header a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 1.2em;
+        }
+
+        .header a:hover {
+            text-decoration: underline;
+        }
+
+        .main-content {
+            padding: 20px;
+            max-width: 800px;
+            margin: 80px auto 0 auto; /* Adjust for fixed header */
+            text-align: center;
+        }
+
+        .main-content h2 {
+            color: #003366;
+        }
+
+        .main-content p {
+            color: #333;
+            line-height: 1.6;
+        }
+
+        form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        form input, form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        form button {
+            background-color: #003366;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        form button:hover {
+            background-color: #005599;
+        }
+
+        .footer {
+            background-color: #003366;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .footer ul {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .footer ul li {
+            display: inline;
+        }
+
+        .footer ul li a {
+            color: #d0e0f5;
+            text-decoration: none;
+        }
+
+        .footer ul li a:hover {
+            text-decoration: underline;
+        }
+
+	/* Footer Links Styling */
+	.footer-links {
+  	text-align: center;      /* Center align the links */
+    	margin-top: 20px;        /* Add spacing from the form */
+    	font-size: 0.9em;        /* Slightly smaller font */
+    	color: #555;             /* Subtle grey color */
+	}
+
+	.footer-links a {
+    	color: #555;             /* Link color */
+    	text-decoration: none;   /* Remove underline */
+    	margin: 0 10px;          /* Space between links */
+	}
+
+	.footer-links a:hover {
+    	text-decoration: underline; /* Add underline on hover */
+    	color: #003366;            /* Highlight hover color */
+	}
+
+    </style>
+</head>
+
+
+
+<body>
+    <!-- Header Section -->
+    <div class="header">
+        <div class="left-nav">
+            <a href="/">
+                <img src="static/images/constructhub-logo.png" alt="ConstructHub Logo" class="logo">
+            </a>
+        </div>
+        <nav>
+            <a href="/About">About Us</a>
+            <a href="/register">Register</a>
+            <a href="/login">Login</a>
+	    <a></a>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <h2>We'd love to hear from you</h2>
+        <p>If you have any questions, feedback, or inquiries, please use the form below to get in touch with us. Our team will respond as soon as possible.</p>
+
+        <form action="/submit-contact" method="POST">
+            <label for="name">Your Name</label>
+            <input type="text" id="name" name="name" placeholder="Enter your name" required>
+
+            <label for="email">Your Email</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email" required>
+
+            <label for="message">Your Message</label>
+            <textarea id="message" name="message" rows="5" placeholder="Enter your message" required></textarea>
+
+            <button type="submit">Send Message</button>
+        </form>
+    </div>
+
+
+
+
+
+
+<!-- Footer Section -->
+<div class="footer">
+    <p>&copy; 2024 ConstructHub. All rights reserved.</p>
+
+<div class="footer-links">
+    <a href="/privacy-policy.html" target="_blank">Privacy Policy</a> |
+    <a href="/subscription_agreement.html" target="_blank">Subscription Agreement</a> |
+    <a href="/terms-of-use.html" target="_blank">Terms of Use</a> |
+    <a href="/copyright-notice.html" target="_blank">Copyright Notice</a>
+</div>
+
+</body>
+</html>

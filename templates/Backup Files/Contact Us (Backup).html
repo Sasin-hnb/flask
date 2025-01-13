@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | ConstructHub</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        .header {
+            background-color: #003366;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2em;
+        }
+
+        .main-content {
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .main-content h2 {
+            color: #003366;
+        }
+
+        .main-content p {
+            color: #333;
+            line-height: 1.6;
+        }
+
+        form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        form input, form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        form button {
+            background-color: #003366;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        form button:hover {
+            background-color: #005599;
+        }
+
+        .footer {
+            background-color: #003366;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .footer ul {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .footer ul li {
+            display: inline;
+        }
+
+        .footer ul li a {
+            color: #d0e0f5;
+            text-decoration: none;
+        }
+
+        .footer ul li a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <div class="header">
+		<div class="left-nav">
+	    <!-- Logo link -->
+	    <a href="/">
+		<img src="static/images/constructhub-logo.png" alt="ConstructHub Logo" class="logo">
+	    </a>
+	</div>
+        <nav>
+	    <a href="/About">About Us</a>
+            <a href="/register">Register</a>
+            <a href="/login">Login</a>
+	    <a></a>
+        </nav>
+    </div>
+
+
+
+
+
+    <h1>Contact Us</h1>
+</div>
+
+<div class="main-content">
+    <h2>We'd love to hear from you</h2>
+    <p>If you have any questions, feedback, or inquiries, please use the form below to get in touch with us. Our team will respond as soon as possible.</p>
+
+    <form action="/submit-contact" method="POST">
+        <label for="name">Your Name</label>
+        <input type="text" id="name" name="name" placeholder="Enter your name" required>
+
+        <label for="email">Your Email</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email" required>
+
+        <label for="message">Your Message</label>
+        <textarea id="message" name="message" rows="5" placeholder="Enter your message" required></textarea>
+
+        <button type="submit">Send Message</button>
+    </form>
+</div>
+
+<div class="footer">
+    <p>&copy; 2024 ConstructHub. All rights reserved.</p>
+    <ul>
+        <li><a href="/terms-and-conditions">Terms and Conditions</a></li>
+        <li><a href="/privacy-policy">Privacy Policy</a></li>
+        <li><a href="/contact-us">Contact Us</a></li>
+        <li><a href="/about">About Us</a></li>
+    </ul>
+</div>
+
+</body>
+</html>

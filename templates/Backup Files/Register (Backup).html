@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration | Construction Portal</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        /* Header Section */
+        .header {
+            background-color: #003366;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .header .logo {
+            font-size: 1.5em;
+        }
+
+        /* Footer Section */
+        .footer {
+            background-color: #003366;
+            color: white;
+            text-align: center;
+            padding: 15px 20px;
+        }
+
+        /* Registration Form */
+        .registration-form {
+            background-color: white;
+            margin: 100px auto 30px;
+            padding: 30px;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .registration-form h1 {
+            text-align: center;
+            color: #003366;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 1em;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .form-group input, 
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus, 
+        .form-group select:focus {
+            outline: none;
+            border-color: #003366;
+            box-shadow: 0 0 3px rgba(0, 51, 102, 0.5);
+        }
+
+        .form-actions button {
+            background-color: #003366;
+            color: white;
+            padding: 12px 20px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .form-actions button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .form-actions button:hover:enabled {
+            background-color: #d0e0f5;
+            color: #003366;
+        }
+
+	/* Error Styling */
+	.error {
+   		color: red;          /* Makes the text red */
+    		font-size: 0.9em;    /* Slightly smaller font size */
+    		margin-top: 5px;     /* Adds space between input and error */
+	}
+
+	/* Terms and Conditions Styling */
+	.terms {
+    		color: #777;          /* Light grey text */
+    		font-size: 0.85em;    /* Slightly smaller font */
+    		text-align: center;   /* Centers the text */
+    		margin-top: 20px;     /* Adds spacing from the form fields */
+	}
+
+	/* Footer Links Styling */
+	.footer-links {
+    		text-align: center;      /* Center align the links */
+    		margin-top: 20px;        /* Add spacing from the form */
+    		font-size: 0.9em;        /* Slightly smaller font */
+    		color: #555;             /* Subtle grey color */
+	}
+
+	.footer-links a {
+    		color: #555;             /* Link color */
+    		text-decoration: none;   /* Remove underline */
+    		margin: 0 10px;          /* Space between links */
+	}
+
+	.footer-links a:hover {
+    		text-decoration: underline; /* Add underline on hover */
+    		color: #003366;            /* Highlight hover color */
+	}
+
+	/* Footer Links Styling */
+	.footer-links {
+    		text-align: center;      /* Center align the links */
+    		margin-top: 20px;        /* Add spacing from the form */
+    		font-size: 0.9em;        /* Slightly smaller font */
+    		color: #555;             /* Subtle grey color */
+	}
+
+	.footer-links a {
+    		color: #555;             /* Link color */
+    		text-decoration: none;   /* Remove underline */
+    		margin: 0 10px;          /* Space between links */
+	}
+
+	.footer-links a:hover {
+    		text-decoration: underline; /* Add underline on hover */
+    		color: #003366;            /* Highlight hover color */
+	}
+
+    </style>
+
+<script>
+    function validateForm() {
+        const email = document.getElementById("username");
+        const confirmEmail = document.getElementById("confirmEmail");
+        const password = document.getElementById("password");
+        const confirmPassword = document.getElementById("confirmPassword");
+        const termsCheckbox = document.getElementById("terms");
+        const registerButton = document.getElementById("registerButton");
+
+        let isValid = true;
+
+        // Email Validation
+        if (email.value !== confirmEmail.value || !email.value) {
+            document.getElementById("emailError").textContent = "Emails do not match.";
+            isValid = false;
+        } else {
+            document.getElementById("emailError").textContent = "";
+        }
+
+        // Password Validation
+        if (password.value !== confirmPassword.value || !password.value) {
+            document.getElementById("passwordError").textContent = "Passwords do not match.";
+            isValid = false;
+        } else {
+            document.getElementById("passwordError").textContent = "";
+        }
+
+        // Enable/Disable Register Button
+        registerButton.disabled = !termsCheckbox.checked || !isValid;
+
+        return isValid;
+    }
+
+    function setupValidation() {
+        const inputs = document.querySelectorAll("#username, #confirmEmail, #password, #confirmPassword, #terms");
+        inputs.forEach(input => input.addEventListener("input", validateForm));
+    }
+
+    document.addEventListener("DOMContentLoaded", setupValidation);
+</script>
+
+</head>
+<body>
+    <!-- Header Section -->
+    <div class="header">
+        <div class="left-nav">
+            <a href="/">
+                <img src="/static/images/constructhub-logo.png" alt="ConstructHub Logo" class="logo">
+        </a>
+        </div>
+	
+
+	<nav>
+        <a></a>
+        </nav>
+    </div>
+
+
+    <!-- Registration Form Section -->
+    <div class="registration-form">
+        <h1>Create an Account</h1>
+        <form action="/register" method="POST">
+
+            <!-- Division -->
+            <div class="form-group">
+                <label for="division">Division</label>
+                <select id="division" name="division" required>
+                    <option value="">Select your division</option>
+                    <option value="2">Division 2: Demolition</option>
+                    <option value="3">Division 3: Concrete</option>
+                    <option value="4">Division 4: Masonry</option>
+                    <option value="5">Division 5: Metals</option>
+                    <option value="6">Division 6: Wood and plastics</option>
+                    <option value="7">Division 7: Thermal and moisture protection</option>
+                    <option value="8">Division 8: Doors and windows</option>
+                    <option value="9">Division 9: Finishes</option>
+                    <option value="10">Division 10: Specialties</option>
+                    <option value="11">Division 11: Equipment</option>
+                    <option value="12">Division 12: Furnishings</option>
+                    <option value="13">Division 13: Special construction</option>
+                    <option value="14">Division 14: Conveying systems</option>
+                    <option value="15">Division 15: Mechanical</option>
+                    <option value="16">Division 16: Electrical</option>
+                </select>
+            </div>
+
+	<!-- Business Name -->
+            <div class="form-group">
+                <label for="BusinessName">Business Name</label>
+                <input type="text" id="BusinessName" name="BusinessName" required placeholder="Enter business name">
+            </div>
+
+<!-- Business Phone -->
+            <div class="form-group">
+                <label for="BusinessPhone">Business Phone</label>
+                <input type="text" id="BusinessPhone" name="BusinessPhone" required placeholder="Enter Business Phone Number">
+            </div>
+
+<!-- Business Address -->
+            <div class="form-group">
+                <label for="BusinessAddress">Business Address</label>
+                <input type="text" id="BusinessAddress" name="BusinessAddress" required placeholder="Enter Business Address">
+            </div>
+
+            <!-- Country -->
+            <div class="form-group">
+                <label for="country">Country</label>
+                <select id="country" name="country" onchange="updateProvinces()" required>
+                    <option value="">Select your country</option>
+                    <option value="Canada">Canada</option>
+                </select>
+            </div>
+
+            <!-- Province -->
+            <div class="form-group">
+                <label for="province">Province</label>
+                <select id="province" name="province" required>
+                    <option value="">Select your province</option>
+                </select>
+            </div>
+
+<!-- Business Website -->
+            <div class="form-group">
+                <label for="BusinessWebsite">Business Website</label>
+                <input type="text" id="BusinessWebsite" name="BusinessWebsite" required placeholder="Enter Business Website">
+            </div>
+
+<!-- Personal Information -->
+            <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" name="firstName" required placeholder="Enter first name">
+            </div>
+
+            <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" name="lastName" required placeholder="Enter last name">
+            </div>
+
+            <div class="form-group">
+                <label for="mobileNumber">Mobile Number</label>
+                <input type="text" id="mobileNumber" name="mobileNumber" required placeholder="Enter mobile number">
+            </div>
+
+            <div class="form-group">
+    	    <label for="username">Username (Email Address)</label>
+    	    <input type="email" id="username" name="username" placeholder="Enter email address" required oninput="validateForm()">
+	    </div>
+
+	   <div class="form-group">
+    	   <label for="confirmEmail">Confirm Email Address</label>
+    	   <input type="email" id="confirmEmail" name="confirmEmail" placeholder="Confirm email address" required oninput="validateForm()">
+    	   <div class="error" id="emailError"></div> <!-- Error message for emails -->
+    	   </div>
+
+    	   <div class="form-group">
+    	   <label for="password">Password</label>
+    	   <input type="password" id="password" name="password" placeholder="Enter password" required oninput="validateForm()">
+    	   </div>
+
+    	   <div class="form-group">
+    	   <label for="confirmPassword">Confirm Password</label>
+    	   <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm password" required oninput="validateForm()">
+    	   <div class="error" id="passwordError"></div> <!-- Error message for passwords -->
+    	   </div>
+
+
+
+
+
+
+
+
+<!-- Terms and Agreement -->
+            <div class="terms">
+            <label>
+            <input type="checkbox" id="terms" required>
+            I agree that any information entered into the website or database becomes the sole property of ConstructHub, and I have read and accept the terms and agreements.
+            </label>
+	</div>
+
+
+            
+
+
+
+            <!-- Submit Button -->
+            <div class="form-actions">
+                <button type="submit" id="registerButton" disabled>Register</button>
+            </div>
+        </form>
+    </div>
+
+
+
+
+<script>
+    function updateProvinces() {
+        const countrySelect = document.getElementById("country");
+        const provinceSelect = document.getElementById("province");
+
+        provinceSelect.innerHTML = ""; // Clear the province dropdown
+
+        if (countrySelect.value === "Canada") {
+            const canadianProvinces = [
+                "Alberta", "British Columbia", "Manitoba", "New Brunswick", 
+                "Newfoundland and Labrador", "Nova Scotia", "Ontario", 
+                "Prince Edward Island", "Quebec", "Saskatchewan"
+            ];
+            canadianProvinces.forEach(province => {
+                const option = document.createElement("option");
+                option.value = province;
+                option.textContent = province;
+                provinceSelect.appendChild(option);
+            });
+        } else if (countrySelect.value === "USA") {
+            const usStates = [
+                "California", "Texas", "Florida", "New York", "Illinois"
+            ];
+            usStates.forEach(state => {
+                const option = document.createElement("option");
+                option.value = state;
+                option.textContent = state;
+                provinceSelect.appendChild(option);
+            });
+        } else {
+            const defaultOption = document.createElement("option");
+            defaultOption.value = "";
+            defaultOption.textContent = "Select your province";
+            provinceSelect.appendChild(defaultOption);
+        }
+    }
+</script>
+
+
+
+
+
+
+<!-- Footer Section -->
+<div class="footer">
+    <p>&copy; 2024 ConstructHub. All rights reserved.</p>
+
+<div class="footer-links">
+    <a href="/privacy-policy.html" target="_blank">Privacy Policy</a> |
+    <a href="/subscription_agreement.html" target="_blank">Subscription Agreement</a> |
+    <a href="/terms-of-use.html" target="_blank">Terms of Use</a> |
+    <a href="/copyright-notice.html" target="_blank">Copyright Notice</a> 
+</div>
+
+</body>
+</html>
