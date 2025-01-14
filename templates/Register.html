@@ -205,13 +205,11 @@
 
         const addressPattern = /, *([^,]+), *([^,]+)/;
         const match = BusinessAddress.match(addressPattern);
-        console.log("match", BusinessAddress)
 
         if (!match) {
             document.getElementById('addressError').textContent = 'Providing a full address helps ensure accurate company identification and project tracking. Only city and province are required at this time.';
             const addressParts = BusinessAddress.split(',')
             const trimmedParts = addressParts.map(part => part.trim());
-            console.log(trimmedParts.length);
             
             if (trimmedParts.length == 2 || trimmedParts.length == 3) {
                 document.getElementById('addressError').textContent = ''
@@ -223,7 +221,10 @@
         }
         
         const user_domain = user_email.value.split('@')[1];
-        const company_domain = company_email.split('@')[1];
+        const company_domain = company_email.split('.').slice(-2).join('.');
+
+        console.log(user_domain, 'user_domain');
+        console.log(company_domain, 'company_domain');
 
         
         if (user_domain !== company_domain) {
@@ -310,8 +311,9 @@
             <!-- Division -->
             <div class="form-group">
                 <label for="division">Division</label>
-                <select id="division" name="division" onchange="updateScopeOptions()" required>
+                <select id="division" name="division" required>
                     <option value="">Select your division</option>
+                    <option value="1">General Contractor</option>
                     <option value="2">Division 2: Demolition</option>
                     <option value="3">Division 3: Concrete</option>
                     <option value="4">Division 4: Masonry</option>
@@ -370,7 +372,7 @@
 <!-- Business Website -->
             <div class="form-group">
                 <label for="BusinessWebsite">Business Website</label>
-                <input type="email" id="BusinessWebsite" name="BusinessWebsite" required placeholder="Enter Business Website" required oninput="validateForm()">
+                <input type="text" id="BusinessWebsite" name="BusinessWebsite" required placeholder="Enter Business Website" required oninput="validateForm()">
             </div>
 
 <!-- Personal Information -->

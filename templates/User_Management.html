@@ -16,7 +16,7 @@
         <a href="/">
         <img src="{{ url_for('static', filename='images/constructhub-logo.png') }}" alt="ConstructHub Logo" class="logo">
         </a>
-        <a href="/Dashboard">Dashboard</a>
+        <a href="/dashboard">Dashboard</a>
         <div class="dropdown">
             <a href="#">User HUB</a>
             <div class="dropdown-content">
@@ -57,7 +57,8 @@
         <table class="user-table">
             <thead>
                 <tr>
-                    <th>Name</th>
+                    <th>FirstName</th>
+                    <th>LastName</th>
                     <th>Email</th>
                     <th>Role</th>
                     <th>Actions</th>
@@ -66,8 +67,9 @@
             <tbody>
                 {% for user in users %}
                     <tr>
-                        <td>{{ user.username }}</td>
-                        <td>{{ user.email }}</td>      
+                        <td>{{ user.firstName }} </td>
+                        <td>{{ user.lastName }} </td>
+                        <td>{{ user.username }}</td>      
                         <td>{{ user.role }}</td>       
                         <td class="action-buttons">
                             <button class="edit-btn" id="editUser" onclick="editUser('{{ user.id }}')">Edit</button>   <!-- You may want to implement JavaScript for editing -->
@@ -89,16 +91,18 @@
             <h2>Edit User</h2>
                 <input type="hidden" id="userId" name="userId">
                 <div>
-                    <label for="username">Username:</label>
-                    <input type="text" id="username" name="username" required>
+                    <label for="firstName">FirstName:</label>
+                    <input type="text" id="firstName" name="firstName" required>
                 </div>
-                <!-- Email input is commented out. Uncomment if needed. -->
-                <!--
                 <div>
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" required>
+                    <label for="lastName">LastName:</label>
+                    <input type="text" id="lastName" name="lastName" required>
                 </div>
-                -->
+                <div>
+                    <label for="username">Email:</label>
+                    <input type="email" id="username" name="username" required>
+                </div>
+               
                 <div>
                     <label for="role">Role:</label>
                     <select id="role" name="role" required>

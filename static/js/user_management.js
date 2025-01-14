@@ -38,7 +38,9 @@ function editUser(user_id) {
     .then(data => {
       console.log(data); // Handle the user data here
       // You can populate your modal or form with this data
-      document.getElementById('userId').value = data.id
+      document.getElementById('userId').value = data.id;
+      document.getElementById('firstName').value = data.firstName;
+      document.getElementById('lastName').value = data.lastName;
       document.getElementById('username').value = data.username;
       document.getElementById('role').value = data.role;
       document.getElementById('editUserModal').style.display = 'block';
@@ -50,13 +52,15 @@ function editUser(user_id) {
 
 function updateUser() {
   const userId = document.getElementById('userId').value;
+  const firstName = document.getElementById('firstName').value;
+  const lastName = document.getElementById('lastName').value;
   const username = document.getElementById('username').value;
   const role = document.getElementById('role').value;
-  // const email = document.getElementById('email').value; // Uncomment if email is needed
 
   const data = {
+    firstName:firstName,
+    lastName:lastName,
     username: username,
-    // email: email, // Uncomment if email is needed
     role: role
   };
 

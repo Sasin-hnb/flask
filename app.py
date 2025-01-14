@@ -162,8 +162,9 @@ def get_user(user_id):
     
     user_data = {
         "id": user.id,
+        "firstName": user.firstName,
+        "lastName": user.lastName,
         "username": user.username,
-        # "email": user.email,
         "role": user.role
     }
 
@@ -173,8 +174,9 @@ def get_user(user_id):
 def update_user(user_id):
     try:
         data = request.get_json()
+        firstName = data.get('firstName')
+        lastName = data.get('lastName')
         username = data.get('username')
-        # email = data.get('email')  # Uncomment if email is used
         role = data.get('role')
 
         print("Updating data: username =", username, ", role =", role)
@@ -186,8 +188,9 @@ def update_user(user_id):
             return jsonify({"error": "User not found"}), 404
 
         # Update user attributes
+        user.firstName = firstName
+        user.lastName = lastName
         user.username = username
-        # user.email = email  # Uncomment if email is needed
         user.role = role
         
         db.session.commit()  # Commit the changes to the database
@@ -221,18 +224,6 @@ def add_project():
         postal_code = request.form['postal_code']
         country = request.form['country']
 
-        # Use SQLAlchemy to insert the new project into your project model
-        # You would define a Project model for this
-        # conn = sqlite3.connect('projects.db')
-        # c = conn.cursor()
-        # c.execute('''
-        #     INSERT INTO projects (name, address, city, province, postal_code, country)
-        #     VALUES (?, ?, ?, ?, ?, ?)
-        # ''', (project_name, project_address, city, province, postal_code, country))
-        # conn.commit()
-        # conn.close()
-
-        # Redirect to the search projects page
         return redirect(url_for('search_projects'))
 
     return render_template('add_project.html')
@@ -293,4 +284,5 @@ def logout():
     return redirect(url_for('home'))
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0")
+    app.run(debug=True)
+    # app.run(host="0.0.0.0")
