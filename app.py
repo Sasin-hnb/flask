@@ -82,7 +82,7 @@ def register():
         username = data.get('username')
         password = data.get('password')
         hash_password = bcrypt.generate_password_hash(password).decode('utf-8')
-        domain = BusinessWebsite.split('@')[1]
+        domain = '.'.join(BusinessWebsite.split('.')[-2:])
         
         old_domain = Company.query.filter_by(domain=domain).first()
         old_user = User.query.filter_by(username=username).first()
@@ -198,18 +198,41 @@ def update_user(user_id):
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500  # Return error message if something goes wrong
-    
+
 @app.route('/user_management/<int:user_id>', methods=['DELETE'])
+@login_required
 def delete_user(user_id):
     try:
+        # Retrieve the user to be deleted
         user = db.session.get(User, user_id)
         if user is None:
             return jsonify({"error": "User not found"}), 404
+        
+        current_username = current_user.username
 
+        # Check if the current user is trying to delete themselves
+        if current_username == user.username:
+            # Find other users in the same domain
+            other_users = User.query.filter_by(domain=user.domain).filter(User.username != user.username).all()
+            
+            if other_users:
+                # Check if any other users exist with a non-Admin role
+                for other_user in other_users:
+                    if other_user.role != 'Admin':
+                        # Change the first user's role to 'Admin'
+                        other_user.role = 'Admin'
+                        other_user.state = True
+                        db.session.add(other_user)  # Ensure the change is tracked
+
+            # Optionally, you can implement a message indicating the action taken
+            # since the primary user (current_user) may be affected.
+        
+        # Delete the user
         db.session.delete(user)
         db.session.commit()
 
         return jsonify({"message": "User deleted successfully"}), 200
+
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
@@ -284,5 +307,5 @@ def logout():
     return redirect(url_for('home'))
 
 if __name__ == '__main__':
-    # app.run(debug=True)
-    app.run(host="0.0.0.0")
+    app.run(debug=True)
+    # app.run(host="0.0.0.0")
