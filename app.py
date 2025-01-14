@@ -29,6 +29,7 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(100))
     domain = db.Column(db.String(100))
     state = db.Column(db.Boolean, default=False)
+    role = db.Column(db.String(100))
 
 class Company(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -90,7 +91,7 @@ def register():
             if old_domain:
                 new_user = User(division=division, country=country, province=province,
                                 firstName=firstName, lastName=lastName, mobileNumber=mobileNumber,
-                                username=username, password=hash_password, domain=domain)
+                                username=username, password=hash_password, domain=domain, role="Viewer")
                 db.session.add(new_user)
                 db.session.commit()
                 return jsonify({'message': 'Register Successfully'})
@@ -100,7 +101,7 @@ def register():
                                         BusinessWebsite=BusinessWebsite)
                 new_user = User(division=division, country=country, province=province,
                                 firstName=firstName, lastName=lastName, mobileNumber=mobileNumber,
-                                username=username, password=hash_password, domain=domain, state=True)
+                                username=username, password=hash_password, domain=domain, state=True, role="Admin")
 
                 db.session.add(new_company)
                 db.session.add(new_user)
@@ -120,6 +121,7 @@ def login():
         password = request.json.get('password')
 
         valid_user = User.query.filter_by(username=username).first()
+        
 
         if valid_user:
             valid_password = bcrypt.check_password_hash(valid_user.password, password)
@@ -138,7 +140,76 @@ def login():
 @app.route('/dashboard', methods=['GET'])
 @login_required
 def dashboard():
-    return render_template('Dashboard.html')
+    username = current_user.username
+    valid_user = User.query.filter_by(username=username).first()
+    print(valid_user.role, "ddddddd")
+    return render_template('Dashboard.html', valid_role=valid_user.role)
+
+@app.route('/user_management')
+@login_required
+def user_management():
+    username = current_user.username
+    valid_user = User.query.filter_by(username=username).first()
+    valid_domain = valid_user.domain
+    users_with_same_domain = User.query.filter_by(domain=valid_domain).all()
+    return render_template('User_Management.html', users=users_with_same_domain)
+
+@app.route('/user_management/<int:user_id>', methods=['GET'])
+def get_user(user_id):
+    user = User.query.filter_by(id=user_id).first()
+    if user is None:
+        return jsonify({"error": "User not found."}), 404
+    
+    user_data = {
+        "id": user.id,
+        "username": user.username,
+        # "email": user.email,
+        "role": user.role
+    }
+
+    return jsonify(user_data), 200
+
+@app.route('/user_management/<int:user_id>', methods=['PUT'])
+def update_user(user_id):
+    try:
+        data = request.get_json()
+        username = data.get('username')
+        # email = data.get('email')  # Uncomment if email is used
+        role = data.get('role')
+
+        print("Updating data: username =", username, ", role =", role)
+
+        # Use db.session to retrieve the user
+        user = db.session.get(User, user_id)  # Use Session.get() instead
+
+        if user is None:
+            return jsonify({"error": "User not found"}), 404
+
+        # Update user attributes
+        user.username = username
+        # user.email = email  # Uncomment if email is needed
+        user.role = role
+        
+        db.session.commit()  # Commit the changes to the database
+        return jsonify({"message": "User updated successfully"}), 200  # Success response
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500  # Return error message if something goes wrong
+    
+@app.route('/user_management/<int:user_id>', methods=['DELETE'])
+def delete_user(user_id):
+    try:
+        user = db.session.get(User, user_id)
+        if user is None:
+            return jsonify({"error": "User not found"}), 404
+
+        db.session.delete(user)
+        db.session.commit()
+
+        return jsonify({"message": "User deleted successfully"}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
 
 @app.route('/add_project', methods=['GET', 'POST'])
 def add_project():
@@ -197,6 +268,8 @@ def detailed_reports():
 def project_lookup():
     return render_template('project_lookup.html')
 
+
+
 @app.route('/project_entry')
 @login_required
 def project_entry():
@@ -218,6 +291,9 @@ def networking():
 def logout():
     logout_user()
     return redirect(url_for('home'))
+
+if __name__ == '__main__':
+    app.run(debug=True)
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0")

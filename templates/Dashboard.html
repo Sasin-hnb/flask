@@ -215,15 +215,17 @@
         <a href="/">
         <img src="/static/images/constructhub-logo.png" alt="ConstructHub Logo" class="logo">
         </a>
-        <a href="/Dashboard">Dashboard</a>
+        <a href="/dashboard">Dashboard</a>
         <div class="dropdown">
             <a href="#">User HUB</a>
             <div class="dropdown-content">
                 <a href="/profile">User HUB</a>
                 <a href="/profile/edit">Edit Personal Info</a>
                 <a href="/profile/notifications">Notification Settings</a>
+                {% if valid_role == "Admin" %}
                 <a href="/profile/manage_company">Manage Company (Admin Only)</a>
-                <a href="/User_Management">User Management (Admin Only)</a>
+                <a href="/user_management">User Management (Admin Only)</a>
+                {% endif %}
                 <a href="/Subscription_Details">Subscription Details</a>
             </div>
         </div>
