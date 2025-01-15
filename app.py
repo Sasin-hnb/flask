@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import login_user, login_required, LoginManager, UserMixin, logout_user, current_user
 from flask_cors import CORS
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -38,6 +39,14 @@ class Company(db.Model):
     BusinessPhone = db.Column(db.String(15))
     BusinessAddress = db.Column(db.String(255))
     BusinessWebsite = db.Column(db.String(255))
+
+class Projects(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    projectName = db.Column(db.String(100))
+    closingDate = db.Column(db.DateTime)
+    address = db.Column(db.String(255))
+    city = db.Column(db.String(100))
+    province = db.Column(db.String(100))
 
 @app.before_request
 def create_tables():
@@ -240,16 +249,34 @@ def delete_user(user_id):
 @app.route('/add_project', methods=['GET', 'POST'])
 def add_project():
     if request.method == 'POST':
-        project_name = request.form['project_name']
-        project_address = request.form['project_address']
-        city = request.form['city']
-        province = request.form['province']
-        postal_code = request.form['postal_code']
-        country = request.form['country']
+        closingDate = request.json.get('closingDate')
+        projectName = request.json.get('projectName')
+        address = request.json.get('address')
+        city = request.json.get('city')
+        province = request.json.get('province')
+
+        try:
+            closingDates = datetime.strptime(closingDate, '%Y-%m-%d')
+        except ValueError as e:
+            return jsonify({"error": "Invalid date format. Use YYYY-MM-DD."}), 400
+
+        new_project = Projects(
+            projectName=projectName,
+            closingDate=closingDates,
+            address=address,
+            city=city,
+            province=province
+        )   
+
+    # Add the new project to the session and commit
+        db.session.add(new_project)
+        db.session.commit()
+        return jsonify({'message': 'Add project successfully!'})
+
 
         return redirect(url_for('search_projects'))
 
-    return render_template('add_project.html')
+    return render_template('Add_Project.html')
 
 
 @app.route('/search-projects', methods=['GET', 'POST'])
@@ -282,6 +309,11 @@ def detailed_reports():
 def project_lookup():
     return render_template('project_lookup.html')
 
+@app.route('/Project_Search')
+@login_required
+def Project_Search():
+    return render_template('Project_Search.html')
+
 
 
 @app.route('/project_entry')
@@ -307,5 +339,5 @@ def logout():
     return redirect(url_for('home'))
 
 if __name__ == '__main__':
-    # app.run(debug=True)
-    app.run(host="0.0.0.0")
+    app.run(debug=True)
+    # app.run(host="0.0.0.0")

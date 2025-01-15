@@ -130,10 +130,21 @@ z-index: 10; /* Ensure it stays on top */
     color: white;
     text-align: center;
     padding: 15px;
-    width: calc(100% - 200px);
+    width: 100%;
     box-sizing: border-box;
-    margin-left: 200px;
-    position: relative;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+}
+
+.footer-links a {
+    color: white;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+.footer-links a:hover {
+    text-decoration: underline;
 }
 
 /* Popup Overlay Background */

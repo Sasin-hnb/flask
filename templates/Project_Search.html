@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Lookup | ConstructHub</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #f9f9f9;
+        }
+
+	.sidebar .logo {
+    	max-width: 100%;  /* Limit width to 100% of sidebar */
+    	height: auto;    /* Maintain aspect ratio */
+    	display: block;
+    	margin-left: auto;
+	margin-right: auto;
+	}
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 200px;
+            background-color: #003366;
+            color: white;
+            height: 100vh;
+            position: fixed;
+            display: flex;
+            flex-direction: column;
+            padding-top: 20px;
+        }
+
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            padding: 15px 20px;
+            display: block;
+	    font-size: 1.2em;
+        }
+
+        .sidebar a:hover {
+            background-color: #00509e;
+        }
+
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            min-width: 200px;
+            right: 0;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 10px 20px;
+            text-decoration: none;
+            display: block;
+            transition: background 0.3s;
+    	    font-size: 0.9em; /* Reduced font size */
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .sidebar .logo {
+            font-size: 1.8em;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            margin-left: 200px;
+            width: calc(100% - 200px);
+            text-align: center;
+            flex-grow: 1;
+            padding-bottom: 70px;
+            position: relative;
+        }
+
+        .notifications {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .notifications img {
+            width: 30px;
+            cursor: pointer;
+        }
+        .search-section {
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            width: 80%;
+            margin: 5px 0;
+        }
+
+        .project-list {
+            margin-top: 20px;
+        }
+
+        .project-item {
+            background-color: white;
+            margin: 10px 0;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+.footer {
+            background-color: #003366;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            width: calc(100% - 200px);
+            box-sizing: border-box;
+            margin-left: 200px;
+            position: relative;
+        }
+
+	/* Popup Overlay Background */
+	.popup-overlay {
+    		position: fixed;
+   		top: 0;
+    		left: 0;
+    		width: 100%;
+    		height: 100%;
+    		background-color: rgba(0, 0, 0, 0.5);
+    		display: flex;
+    		justify-content: center;
+    		align-items: center;
+    		z-index: 1000;
+	}
+
+	/* Popup Content Box */
+	.popup-content {
+    		background-color: white;	/* Background color for the popup */
+		color: black;	/* Text color for readability*/
+    		padding: 20px;
+    		border-radius: 8px;
+    		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    		text-align: center;
+    		width: 350px;
+	}
+
+	.popup-content h3 {
+    	margin-top: 0;
+    	color: #003366;
+	}
+
+	.popup-content button {
+    	margin: 10px;
+    	padding: 10px 20px;
+    	border: none;
+    	border-radius: 5px;
+    	cursor: pointer;
+    	font-size: 1em;
+	}
+
+	.popup-content button:hover {
+    	opacity: 0.9;
+	}
+
+	.popup-content button:nth-child(1) {
+    	background-color: #003366;
+    	color: white;
+	}
+
+	.popup-content button:nth-child(2) {
+    	background-color: #d0e0f5;
+    	color: #003366;
+	}
+
+    </style>
+</head>
+
+<body>
+
+
+
+
+
+
+<!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="left-nav">
+        <a href="/">
+        <img src="/static/images/constructhub-logo.png" alt="ConstructHub Logo" class="logo">
+        </a>
+        <a href="/Dashboard">Dashboard</a>
+        <div class="dropdown">
+            <a href="#">User HUB</a>
+            <div class="dropdown-content">
+                <a href="/profile">User HUB</a>
+                <a href="/profile/edit">Edit Personal Info</a>
+                <a href="/profile/notifications">Notification Settings</a>
+                <a href="/profile/manage_company">Manage Company (Admin Only)</a>
+                <a href="/User_Management">User Management (Admin Only)</a>
+                <a href="/Subscription_Details">Subscription Details</a>
+            </div>
+        </div>
+
+        </div>
+        <a href="/Project_Search">Search Projects</a>
+        <a href="/Add_Project">Add Project</a>
+        <a href="/detailed_reports">Reports</a>
+        <a href="/Bidding_History">Bidding History</a>
+	<a href="#" onclick="showLogoutPopup()">Logout</a>
+    </div>
+
+
+
+<!-- Main Content -->
+    <div class="main-content">
+        <h1>Project Lookup</h1>
+
+        <div class="search-section">
+            <h3>Search by Project Name</h3>
+            <input type="text" id="projectSearch" onkeyup="filterProjects()" placeholder="Enter project name...">
+
+            <h3>Advanced Search (Address, City, Province, Postal Code)</h3>
+            <input type="text" id="addressSearch" onkeyup="filterProjects()" placeholder="Address">
+            <input type="text" id="citySearch" onkeyup="filterProjects()" placeholder="City">
+            <input type="text" id="provinceSearch" onkeyup="filterProjects()" placeholder="Province">
+            <input type="text" id="postalCodeSearch" onkeyup="filterProjects()" placeholder="Postal Code">
+        </div>
+
+        <div class="project-list" id="projectList">
+            <div class="project-item" data-name="Downtown Highrise" data-address="123 Main St" data-city="Vancouver" data-province="BC" data-postal="V6B1A1">
+                <h3>Downtown Highrise</h3>
+                <p>123 Main St, Vancouver, BC, V6B1A1</p>
+            </div>
+
+            <div class="project-item" data-name="Skyline Plaza" data-address="456 Oak Ave" data-city="Toronto" data-province="ON" data-postal="M5H2N2">
+                <h3>Skyline Plaza</h3>
+                <p>456 Oak Ave, Toronto, ON, M5H2N2</p>
+            </div>
+
+            <div class="project-item" data-name="Riverfront Mall" data-address="789 River Rd" data-city="Calgary" data-province="AB" data-postal="T2P3G7">
+                <h3>Riverfront Mall</h3>
+                <p>789 River Rd, Calgary, AB, T2P3G7</p>
+            </div>
+        </div>
+    </div>
+
+
+<!-- Footer Section -->
+	<div class="footer">
+    		<p>&copy; 2024 ConstructHub. All rights reserved.</p>
+
+		<div class="footer-links">
+    		<a href="/privacy-policy.html" target="_blank">Privacy Policy</a> |
+    		<a href="/subscription_agreement.html" target="_blank">Subscription Agreement</a> |
+    		<a href="/terms-of-use.html" target="_blank">Terms of Use</a>
+	</div>
+
+
+
+
+
+<!-- Popup Confirmation Window -->
+        <div id="logoutPopup" class="popup-overlay" style="display: none;">
+            <div class="popup-content">
+                <h3>Confirm Logout</h3>
+                <p>Are you sure you want to log out?</p>
+                <button onclick="confirmLogout()">Yes, Log Out</button>
+                <button onclick="closeLogoutPopup()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+    <script>
+        function showLogoutPopup() {
+            document.getElementById('logoutPopup').style.display = 'flex';
+        }
+
+        function closeLogoutPopup() {
+            document.getElementById('logoutPopup').style.display = 'none';
+        }
+
+        function confirmLogout() {
+            window.location.href = 'index.html';  // Redirect to the homepage
+        }
+    </script>
+
+
+
+    <script>
+        function filterProjects() {
+            const projectInput = document.getElementById('projectSearch').value.toLowerCase();
+            const addressInput = document.getElementById('addressSearch').value.toLowerCase();
+            const cityInput = document.getElementById('citySearch').value.toLowerCase();
+            const provinceInput = document.getElementById('provinceSearch').value.toLowerCase();
+            const postalInput = document.getElementById('postalCodeSearch').value.toLowerCase();
+            
+            const projectItems = document.querySelectorAll('.project-item');
+
+            projectItems.forEach(item => {
+                const name = item.getAttribute('data-name').toLowerCase();
+                const address = item.getAttribute('data-address').toLowerCase();
+                const city = item.getAttribute('data-city').toLowerCase();
+                const province = item.getAttribute('data-province').toLowerCase();
+                const postal = item.getAttribute('data-postal').toLowerCase();
+
+                const matchesName = name.includes(projectInput);
+                const matchesAddress = address.includes(addressInput);
+                const matchesCity = city.includes(cityInput);
+                const matchesProvince = province.includes(provinceInput);
+                const matchesPostal = postal.includes(postalInput);
+
+                if (
+                    (matchesName || projectInput === '') &&
+                    (matchesAddress || addressInput === '') &&
+                    (matchesCity || cityInput === '') &&
+                    (matchesProvince || provinceInput === '') &&
+                    (matchesPostal || postalInput === '')
+                ) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+</script>
+
+</body>
+</html>
