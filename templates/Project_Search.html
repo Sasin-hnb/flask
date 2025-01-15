@@ -44,32 +44,40 @@
     <div class="main-content">
         <h1>Project Lookup</h1>
 
-        <div class="search-section">
+        <form id="searchForm">
             <h3>Search by Project Name</h3>
-            <input type="text" id="projectSearch" onkeyup="filterProjects()" placeholder="Enter project name...">
+            <input type="text" id="projectName" placeholder="Enter project name...">
 
             <h3>Advanced Search (Address, City, Province, Postal Code)</h3>
-            <input type="text" id="addressSearch" onkeyup="filterProjects()" placeholder="Address">
-            <input type="text" id="citySearch" onkeyup="filterProjects()" placeholder="City">
-            <input type="text" id="provinceSearch" onkeyup="filterProjects()" placeholder="Province">
-            <input type="text" id="postalCodeSearch" onkeyup="filterProjects()" placeholder="Postal Code">
-        </div>
+            <input type="text" id="address" placeholder="Address">
+            <input type="text" id="city" placeholder="City">
+            <input type="text" id="province" placeholder="Province">
+            <input type="text" id="postalCode" placeholder="Postal Code">
+            <button type="submit">Search</button>
+        </form>
 
         <div class="project-list" id="projectList">
-            <div class="project-item" data-name="Downtown Highrise" data-address="123 Main St" data-city="Vancouver" data-province="BC" data-postal="V6B1A1">
-                <h3>Downtown Highrise</h3>
-                <p>123 Main St, Vancouver, BC, V6B1A1</p>
-            </div>
+        </div>
+        <div id="errorContainer"></div>
+    </div>
 
-            <div class="project-item" data-name="Skyline Plaza" data-address="456 Oak Ave" data-city="Toronto" data-province="ON" data-postal="M5H2N2">
-                <h3>Skyline Plaza</h3>
-                <p>456 Oak Ave, Toronto, ON, M5H2N2</p>
-            </div>
+    <div id="bidConfirmationModal" class="modal" style="display: none;">
+        <span class="close" onclick="closeBidConfirmation()">X</span>
 
-            <div class="project-item" data-name="Riverfront Mall" data-address="789 River Rd" data-city="Calgary" data-province="AB" data-postal="T2P3G7">
-                <h3>Riverfront Mall</h3>
-                <p>789 River Rd, Calgary, AB, T2P3G7</p>
-            </div>
+        <div class="modal-content">
+            <p>Do you wish to submit a bid for this project?</p>
+            <button id="confirmBid">Yes</button>
+            <button id="cancelBid">No</button>
+        </div>
+    </div>
+
+    <div id="ConfirmationModal" class="modal" style="display: none;">
+        <span class="close" onclick="closeBidConfirmation()">X</span>
+
+        <div class="modal-content">
+            <p>Do you wish to add a project ?</p>
+            <button id="confirmtogoproject">Yes</button>
+            <button id="cancelBid">No</button>
         </div>
     </div>
 
@@ -119,45 +127,8 @@
         }
     </script>
 
+<script src="{{ url_for('static', filename='js/project_search.js') }}"></script>
 
-
-    <script>
-        function filterProjects() {
-            const projectInput = document.getElementById('projectSearch').value.toLowerCase();
-            const addressInput = document.getElementById('addressSearch').value.toLowerCase();
-            const cityInput = document.getElementById('citySearch').value.toLowerCase();
-            const provinceInput = document.getElementById('provinceSearch').value.toLowerCase();
-            const postalInput = document.getElementById('postalCodeSearch').value.toLowerCase();
-            
-            const projectItems = document.querySelectorAll('.project-item');
-
-            projectItems.forEach(item => {
-                const name = item.getAttribute('data-name').toLowerCase();
-                const address = item.getAttribute('data-address').toLowerCase();
-                const city = item.getAttribute('data-city').toLowerCase();
-                const province = item.getAttribute('data-province').toLowerCase();
-                const postal = item.getAttribute('data-postal').toLowerCase();
-
-                const matchesName = name.includes(projectInput);
-                const matchesAddress = address.includes(addressInput);
-                const matchesCity = city.includes(cityInput);
-                const matchesProvince = province.includes(provinceInput);
-                const matchesPostal = postal.includes(postalInput);
-
-                if (
-                    (matchesName || projectInput === '') &&
-                    (matchesAddress || addressInput === '') &&
-                    (matchesCity || cityInput === '') &&
-                    (matchesProvince || provinceInput === '') &&
-                    (matchesPostal || postalInput === '')
-                ) {
-                    item.style.display = 'block';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-        }
-</script>
 
 </body>
 </html>

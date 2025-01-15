@@ -41,12 +41,30 @@ class Company(db.Model):
     BusinessWebsite = db.Column(db.String(255))
 
 class Projects(db.Model):
+    __tablename__ = 'projects'  # Optional: Explicitly setting the table name
     id = db.Column(db.Integer, primary_key=True)
     projectName = db.Column(db.String(100))
     closingDate = db.Column(db.DateTime)
     address = db.Column(db.String(255))
     city = db.Column(db.String(100))
     province = db.Column(db.String(100))
+    postalCode = db.Column(db.String(100))
+    
+    # Relationship to Bids
+    bids = db.relationship('Bids', backref='project', lazy=True)
+
+class Bids(db.Model):
+    __tablename__ = 'bids'  # Optional: Explicitly setting the table name
+    id = db.Column(db.Integer, primary_key=True)
+    projectName = db.Column(db.String(100))
+    closingDate = db.Column(db.DateTime)
+    address = db.Column(db.String(255))
+    city = db.Column(db.String(100))
+    province = db.Column(db.String(100))
+    postalCode = db.Column(db.String(100))
+    bidAmount = db.Column(db.Float)  
+    project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)  
+
 
 @app.before_request
 def create_tables():
@@ -254,6 +272,7 @@ def add_project():
         address = request.json.get('address')
         city = request.json.get('city')
         province = request.json.get('province')
+        postalCode = request.json.get('postalCode')
 
         try:
             closingDates = datetime.strptime(closingDate, '%Y-%m-%d')
@@ -265,7 +284,8 @@ def add_project():
             closingDate=closingDates,
             address=address,
             city=city,
-            province=province
+            province=province,
+            postalCode=postalCode
         )   
 
     # Add the new project to the session and commit
@@ -292,27 +312,88 @@ def profile():
         return redirect(url_for('dashboard'))
     return render_template('profile.html')
 
-@app.route('/detailed_reports')
-@login_required
-def detailed_reports():
-    return render_template('detailed_report.html')
-
-@app.route('/project_lookup')
-@login_required
-def project_lookup():
-    return render_template('project_lookup.html')
-
 @app.route('/Project_Search')
 @login_required
 def Project_Search():
     return render_template('Project_Search.html')
 
+@app.route('/project_search/search', methods=['GET'])
+def search_projects():
+    # Extract query parameters
+    project_name = request.args.get('projectName', '').strip()
+    address = request.args.get('address', '').strip()
+    city = request.args.get('city', '').strip()
+    province = request.args.get('province', '').strip()
+    postalCode = request.args.get('postalCode', '').strip()
+    
+    # Query the Projects table for matching records
+    query = Projects.query
+
+    # Apply filters if parameters are provided
+    if project_name:
+        query = query.filter(Projects.projectName.ilike(f'%{project_name}%'))
+    if address:
+        query = query.filter(Projects.address.ilike(f'%{address}%'))
+    if city:
+        query = query.filter(Projects.city.ilike(f'%{city}%'))
+    if province:
+        query = query.filter(Projects.province.ilike(f'%{province}%'))
+    if postalCode:
+        query = query.filter(Projects.province.ilike(f'%{postalCode}%'))
 
 
-@app.route('/project_entry')
+    
+    results = query.all()  # Fetch all matching records
+
+    # Prepare response data
+    projects_list = [{
+        'id': project.id,
+        'projectName': project.projectName,
+        'closingDate': project.closingDate.strftime('%Y-%m-%d') if project.closingDate else None,
+        'address': project.address,
+        'city': project.city,
+        'province': project.province,
+        'postalCode':project.postalCode
+    } for project in results]
+
+    return jsonify(projects_list)
+
+@app.route('/Bid_Entry/<int:projectId>', methods=['GET', 'POST'])
 @login_required
-def project_entry():
-    return render_template('project_entry.html')
+def project_entry(projectId):
+    if request.method == 'GET':
+        user_name = current_user.username
+        user = User.query.filter_by(username=user_name).first()
+        user_division = user.division
+        return render_template('Bid_Entry.html', division=user_division, projectId=projectId)
+    
+    if request.method == 'POST':
+        closingDate = request.json.get('closingDate')
+        projectName = request.json.get('projectName')
+        address = request.json.get('address')
+        city = request.json.get('city')
+        province = request.json.get('province')
+        totalValue = request.json.get('totalValue')
+
+        try:
+            closingDates = datetime.strptime(closingDate, '%Y-%m-%d')
+        except ValueError as e:
+            return jsonify({"error": "Invalid date format. Use YYYY-MM-DD."}), 400
+
+        new_bid = Bids(
+            projectName=projectName,
+            closingDate=closingDates,
+            address=address,
+            city=city,
+            province=province,
+            bidAmount=totalValue,
+            project_id=projectId
+        )   
+        db.session.add(new_bid)
+        db.session.commit()
+        return jsonify({'message': 'Bid to the project successfully!'})
+
+
 
 @app.route('/bidding_history')
 @login_required

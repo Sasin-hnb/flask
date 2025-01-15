@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bid Entry | ConstructHub</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/dashboard_global.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/bid_entry.css') }}">
+
+</head>
+
+<body>
+
+<!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="left-nav">
+        <a href="/">
+        <img src="/static/images/constructhub-logo.png" alt="ConstructHub Logo" class="logo">
+        </a>
+        <a href="/Dashboard">Dashboard</a>
+        <div class="dropdown">
+            <a href="#">User HUB</a>
+            <div class="dropdown-content">
+                <a href="/profile">User HUB</a>
+                <a href="/profile/edit">Edit Personal Info</a>
+                <a href="/profile/notifications">Notification Settings</a>
+                <a href="/profile/manage_company">Manage Company (Admin Only)</a>
+                <a href="/User_Management">User Management (Admin Only)</a>
+                <a href="/Subscription_Details">Subscription Details</a>
+            </div>
+        </div>
+
+        </div>
+        <a href="/Project_Search">Search Projects</a>
+        <a href="/Add_Project">Add Project</a>
+        <a href="/detailed_reports">Reports</a>
+        <a href="/Bidding_History">Bidding History</a>
+	<a href="#" onclick="showLogoutPopup()">Logout</a>
+    </div>
+
+    <div class="main-content">
+        <h1>Bid Entry</h1>
+        <div class="dashboard-card">
+		<div style="margin-bottom: 10px;">
+    	   	    <label for="closingDate">Anticipated Closing Date</label>
+    		    <input type="date" id="closingDate" name="closingDate" class="input-field" required>
+		</div>
+                <div style="margin-bottom: 10px;">
+                    <label for="projectName">Project Name</label>
+                    <input type="text" id="projectName" name="projectName" class="input-field" required>
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <label for="address">Address</label>
+                    <input type="text" id="address" name="address" class="input-field" required>
+                </div>
+                <div class="form-row">
+                    <div>
+                <div style="margin-bottom: 10px;">
+
+                        <label for="city">City</label>
+                        <input type="text" id="city" name="city" class="input-field" required>
+                    </div>
+                    <div>
+                        <label for="province">Province</label>
+                        <select id="province" name="province" class="input-field" required>
+                            <option value="">Select Province</option>
+                            <option value="BC">British Columbia</option>
+                            <option value="AB">Alberta</option>
+                            <option value="ON">Ontario</option>
+                        </select>
+                    </div>
+                </div>
+                <input type="hidden" id="projectId" value="{{ projectId }}">
+                {% if division == "1" %}
+                <h2 style="text-align: left;">General Contractor Pricing Scheme</h2>
+                <div class="scope-item">
+                    <label for="generalCondition">Division 1 - General Conditions</label>
+                    <input type="number" id="generalCondition" name="generalCondition" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="Div2">Division 2 - Site Work & Demolition Services</label>
+                    <input type="number" id="Div2" name="Div2" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="Div3">Division 3 - Concrete Work & Services</label>
+                    <input type="number" id="Div3" name="Div3" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="Div4">Division 4 - Masonry Work & Services</label>
+                    <input type="number" id="Div4" name="Div4" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="Div5">Division 5 - Metals Fabrication & Structural Steel</label>
+                    <input type="number" id="Div5" name="Div5" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="Div6">Division 6 - Carpentry & Willwork</label>
+                    <input type="number" id="Div6" name="Div6" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="Div7">Division 7 - Exterior, Thermal & Moisture Protection</label>
+                    <input type="number" id="Div7" name="Div7" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="Div8">Division 8 - Doors, Windows & Hardware</label>
+                    <input type="number" id="Div8" name="Div8" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="Div9">Division 9 - Finishes</label>
+                    <input type="number" id="Div9" name="Div9" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="Div10">Division 10 - Specialty Service</label>
+                    <input type="number" id="Div10" name="Div10" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="Div11">Division 11 - Equipment Services</label>
+                    <input type="number" id="Div11" name="Div11" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="Div12">Division 12 - Furnishing Services</label>
+                    <input type="number" id="Div12" name="Div12" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="Div13">Division 13 - Specialty Services</label>
+                    <input type="number" id="Div13" name="Div13" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="Div14">Division 14 - Conveying Systems</label>
+                    <input type="number" id="Div14" name="Div14" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="Div15">Division 15 - Mechanical (Plumbing, Gas, Sprinkler, Refrigeration, HVAC)</label>
+                    <input type="number" id="Div15" name="Div15" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="Div16">Division 16 - Electrical</label>
+                    <input type="number" id="Div16" name="Div16" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="ohp">Overhead & Profit</label>
+                    <input type="number" id="ohp" name="ohp" class="input-field value-field" min="0">
+                </div>
+                <hr>
+                {% endif %}
+                
+                {% if division == "2" %}
+                <h2 style="text-align: left;">Division 2 Scope of Work</h2>
+                <div class="scope-item">
+                    <label for="demolition">Demolition</label>
+                    <input type="number" id="demolition" name="demolition" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="abatement">Hazardous Materials Abatement</label>
+                    <input type="number" id="abatement" name="abatement" class="input-field value-field" min="0">
+                </div>
+                <hr>
+                {% endif %}
+                
+                {% if division == "3" %}
+                <h2 style="text-align: left;">Division 3 Scope of Work</h2>
+                <div class="scope-item">
+                    <label for="reinforcement">Concrete Reinforcement</label>
+                    <input type="number" id="reinforcement" name="reinforcement" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="Cast">Cast in Place Concrete</label>
+                    <input type="number" id="Cast" name="Cast" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="preCast">Pre-cast Concrete</label>
+                    <input type="number" id="preCast" name="preCast" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="groute">Groute</label>
+                    <input type="number" id="groute" name="groute" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="concreteScanning">Concrete Scanning</label>
+                    <input type="number" id="concreteScanning" name="concreteScanning" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="concreteCutting">Concrete Cutting</label>
+                    <input type="number" id="concreteCutting" name="concreteCutting" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="concreteGrinding">Concrete Grinding & Repairs</label>
+                    <input type="number" id="concreteGrinding" name="concreteGrinding" class="input-field value-field" min="0">
+                </div>
+                <hr>
+                {% endif %}
+
+                {% if division == "4" %}
+                <h2 style="text-align: left;">Division 4 Scope of Work</h2>
+                <div class="scope-item">
+                    <label for="Masonry">Masonry Work</label>
+                    <input type="number" id="Masonry" name="Masonry" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="Stone">Stone Work</label>
+                    <input type="number" id="Stone" name="Stone" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="simulatedMasonry">Simulated Masonry</label>
+                    <input type="number" id="simulatedMasonry" name="simulatedMasonry" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="restoration">Restoration & Cleaning</label>
+                    <input type="number" id="restoration" name="restoration" class="input-field value-field" min="0">
+                </div>
+                <hr>
+                {% endif %}
+
+                {% if division == "5" %}
+                <h2 style="text-align: left;">Division 5 Scope of Work</h2>
+                <div class="scope-item">
+                    <label for="structuralSteel">Structural Steel</label>
+                    <input type="number" id="structuralSteel" name="structuralSteel" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="joists">Joists</label>
+                    <input type="number" id="joists" name="joists" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="metalDeck">Metal Deck</label>
+                    <input type="number" id="metalDeck" name="metalDeck" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="Fabrication">Metal Fabrication</label>
+                    <input type="number" id="Fabrication" name="Fabrication" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="miscMetal">Miscellaneous Metals</label>
+                    <input type="number" id="miscMetal" name="miscMetal" class="input-field value-field" min="0">
+		            </div>
+                <hr>
+                {% endif %}
+
+                {% if division == "6" %}
+                <h2 style="text-align: left;">Division 6 Scope of Work</h2>
+                <div class="scope-item">
+                    <label for="roughCarpentry">Rough Carpentry</label>
+                    <input type="number" id="roughCarpentry" name="roughCarpentry" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="finishCarpentry">Finish Carpentry</label>
+                    <input type="number" id="finishCarpentry" name="finishCarpentry" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="Millwork">Millwork</label>
+                    <input type="number" id="Millwork" name="Millwork" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="FRP">Fiber Reinforced Panels (FRP)</label>
+                    <input type="number" id="miscMetal" name="miscMetal" class="input-field value-field" min="0">
+		            </div>
+                <hr>
+                {% endif %}
+
+                {% if division == "7" %}
+                <h2 style="text-align: left;">Division 7 Scope of Work</h2>
+                <div class="scope-item">
+                    <label for="dampproofing">Dampproofing & Waterproofing</label>
+                    <input type="number" id="dampproofing" name="dampproofing" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="thermalProtection">Thermal Protection</label>
+                    <input type="number" id="thermalProtection" name="thermalProtection" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="Roofing">Roofing & Siding Panels</label>
+                    <input type="number" id="Roofing" name="Roofing" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="roofingMembrane">Roofing Membrane</label>
+                    <input type="number" id="roofingMembrane" name="roofingMembrane" class="input-field value-field" min="0">
+		            </div>
+                <div class="scope-item">
+                    <label for="Flashing">Flashing & Sheetmetal</label>
+                    <input type="number" id="Flashing" name="Flashing" class="input-field value-field" min="0">
+		            </div>
+                <hr>
+                {% endif %}
+
+                {% if division == "8" %}
+                <h2 style="text-align: left;">Division 8 Scope of Work</h2>
+                <div class="scope-item">
+                    <label for="metalDoors">Metal Doors & Frames</label>
+                    <input type="number" id="metalDoors" name="metalDoors" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="woodDoors">Wood & Plastic Doors</label>
+                    <input type="number" id="woodDoors" name="woodDoors" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="ado">Automatic Door Operators (ADO)</label>
+                    <input type="number" id="ado" name="ado" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="storefronts">Entrances & Storefronts</label>
+                    <input type="number" id="storefronts" name="storefronts" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="windowFilm">Window Film</label>
+                    <input type="number" id="windowFilm" name="windowFilm" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="doorHardware">Door Hardware</label>
+                    <input type="number" id="doorHardware" name="doorHardware" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="glazing">Glazing</label>
+                    <input type="number" id="glazing" name="glazing" class="input-field value-field" min="0">
+                </div>
+		            <hr>
+                {% endif %}
+
+                {% if division == "9" %}
+                <h2 style="text-align: left;">Division 9 Scope of Work</h2>
+                <div class="scope-item">
+                    <label for="gypsumBoard">Gypsum Board</label>
+                    <input type="number" id="gypsumBoard" name="gypsumBoard" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="Tile">Tile</label>
+                    <input type="number" id="tile" name="tile" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="acousticCeiling">Acoustic/Suspended Ceiling</label>
+                    <input type="number" id="acousticCeiling" name="acousticCeiling" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="flooring">Flooring</label>
+                    <input type="number" id="flooring" name="flooring" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="wallFinishes">Wall Finishes</label>
+                    <input type="number" id="wallFinishes" name="wallFinishes" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="paintCoatings">Paint & Coatings</label>
+                    <input type="number" id="paintCoatings" name="paintCoatings" class="input-field value-field" min="0">
+                </div>
+		            <hr>
+                {% endif %}
+
+                {% if division == "10" %}
+                <h2 style="text-align: left;">Division 10 Scope of Work</h2>
+                <div class="scope-item">
+                    <label for="toiletPartitions">Toilet Partitions</label>
+                    <input type="number" id="toiletPartitions" name="toiletPartitions" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="cornerguard">Wall & Cornerguards</label>
+                    <input type="number" id="cornerguard" name="cornerguard" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="signage">Signage</label>
+                    <input type="number" id="signage" name="signage" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="washroomAccessories">Washroom Accessories</label>
+                    <input type="number" id="washroomAccessories" name="washroomAccessories" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="FRP">Fiber-Reinforced Panels (FRP)</label>
+                    <input type="number" id="FRP" name="FRP" class="input-field value-field" min="0">
+                </div>
+		            <hr>
+                {% endif %}
+
+                {% if division == "11" %}
+                <h2 style="text-align: left;">Division 11 Scope of Work</h2>
+                <div class="scope-item">
+                    <label for="equipmentInstall">Equipment Installation Service</label>
+                    <input type="number" id="equipmentInstall" name="equipmentInstall" class="input-field value-field" min="0">
+                </div>
+                <hr>
+                {% endif %}
+
+                {% if division == "12" %}
+                <h2 style="text-align: left;">Division 12 Scope of Work</h2>
+                <div class="scope-item">
+                    <label for="furnishingAccessories">Furnishing & Accessories</label>
+                    <input type="number" id="furnishingAccessories" name="furnishingAccessories" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="furniture">Furniture</label>
+                    <input type="number" id="furniture" name="furniture" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="furnitureInstallation">Furniture Installation Services</label>
+                    <input type="number" id="furnitureInstallation" name="furnitureInstallation" class="input-field value-field" min="0">
+                </div>
+                <hr>
+                {% endif %}
+
+                {% if division == "15" %}
+                <h2 style="text-align: left;">Division 15 Scope of Work</h2>
+                <div class="scope-item">
+                    <label for="plumbing">Plumbing</label>
+                    <input type="number" id="plumbing" name="plumbing" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="Gas">Gas</label>
+                    <input type="number" id="Gas" name="Gas" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="fireProtection">Fire Protection (Sprinklers)</label>
+                    <input type="number" id="fireProtection" name="fireProtection" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="Refrigeration">Refrigeration</label>
+                    <input type="number" id="Refrigeration" name="Refrigeration" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="HVAC">HVAC (Sheet Metal, and Labour)</label>
+                    <input type="number" id="HVAC" name="HVAC" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="airDistribution">Air Distribution (Grilles, Registers, Diffusers)</label>
+                    <input type="number" id="airDistribution" name="airDistribution" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="airBalancing">Air Balancing</label>
+                    <input type="number" id="airBalancing" name="airBalancing" class="input-field value-field" min="0">
+                </div>
+                <hr>
+                {% endif %}
+
+                {% if division == "16" %}
+                <h2 style="text-align: left;">Division 16 Scope of Work</h2>
+                <div class="scope-item">
+                    <label for="Electrical">Electrical (Rough-In, Wiring and associated Labour)</label>
+                    <input type="number" id="Electrical" name="Electrical" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="Fixtures">Light Fixtures</label>
+                    <input type="number" id="Fixtures" name="Fixtures" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="Communication">Communications & Data</label>
+                    <input type="number" id="Communication" name="Communication" class="input-field value-field" min="0">
+                </div>
+                <div class="scope-item">
+                    <label for="fireAlarm">Fire Alarm</label>
+                    <input type="number" id="fireAlarm" name="fireAlarm" class="input-field value-field" min="0">
+                </div>
+                <hr>
+                {% endif %}
+
+                <div class="scope-item">
+                  <label for="totalValue" style="font-weight: bold;">Total Value (CAD)</label>
+                  <input type="number" id="totalValue" name="totalValue" class="input-field" readonly>
+                </div>
+
+                <div>
+                    <button type="submit" class="submit-button" onclick="bid_sum()">Submit Bid</button>
+                </div>
+        </div>
+    </div>
+
+    <div id="bidConfirmationModal" class="modal" style="display: none;">
+      <span class="close" onclick="closeBidConfirmation()">X</span>
+
+      <div class="modal-content">
+          <p>Confirm total matches your bid.</p>
+          <button id="confirmBid">Submit</button>
+          <button id="cancelBid">Edit</button>
+      </div>
+  </div>
+
+
+
+
+
+
+
+<!-- Footer Section -->
+	<div class="footer">
+	    <p>&copy; 2024 ConstructHub. All rights reserved.</p>
+    	    <div class="footer-links">
+            <a href="/privacy-policy.html" target="_blank">Privacy Policy</a> |
+            <a href="/subscription_agreement.html" target="_blank">Subscription Agreement</a> |
+            <a href="/terms-of-use.html" target="_blank">Terms of Use</a>
+    </div>
+
+
+
+
+</div>  <!-- Missing closing div -->
+
+<!-- Popup Confirmation Window -->
+        <div id="logoutPopup" class="popup-overlay" style="display: none;">
+            <div class="popup-content">
+                <h3>Confirm Logout</h3>
+                <p>Are you sure you want to log out?</p>
+                <button onclick="confirmLogout()">Yes, Log Out</button>
+                <button onclick="closeLogoutPopup()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showLogoutPopup() {
+            document.getElementById('logoutPopup').style.display = 'flex';
+        }
+
+        function closeLogoutPopup() {
+            document.getElementById('logoutPopup').style.display = 'none';
+        }
+
+        function confirmLogout() {
+            window.location.href = '/Index.html';  // Redirect to the homepage
+        }
+    </script>
+
+
+
+<script src="{{ url_for('static', filename='js/bid_entry.js') }}"></script>
+
+</body>
+</html>
