@@ -274,16 +274,9 @@ def add_project():
         return jsonify({'message': 'Add project successfully!'})
 
 
-        return redirect(url_for('search_projects'))
 
     return render_template('Add_Project.html')
 
-
-@app.route('/search-projects', methods=['GET', 'POST'])
-def search_projects():
-    # Retrieve projects from the database and pass it to the search results page
-    # You would define a Project model for this
-    return render_template('search_results.html')
 
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required
