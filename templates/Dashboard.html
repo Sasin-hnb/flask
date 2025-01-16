@@ -59,12 +59,6 @@
             <canvas id="biddingChart" width="600" height="300"></canvas>
         </div>
 
-
-
-
-
-
-
 <!-- Other Dashboard Sections -->
     	<div class="dashboard">
 	    <div class="dashboard-card" id="active-users-card">
@@ -142,21 +136,25 @@
         document.getElementById('bidsSubmitted').textContent = 168;
 
         const ctx = document.getElementById('biddingChart').getContext('2d');
-        const biddingChart = new Chart(ctx, {
+
+        fetch('/dashboard/chart')
+        .then(response => response.json())
+        .then(data => {
+            const biddingChart = new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
                 datasets: [
                     {
                         label: 'Market Bids',
-                        data: [15, 25, 20, 35, 30, 45, 50, 40, 30, 35, 45, 50],
+                        data: data.projects,
                         backgroundColor: 'rgba(0, 123, 255, 0.5)',
                         borderColor: 'rgba(0, 123, 255, 1)',
                         borderWidth: 1
                     },
                     {
                         label: 'Contractor Bids',
-                        data: [10, 20, 15, 30, 25, 40, 45, 35, 25, 30, 40, 45],
+                        data: data.bids,
                         backgroundColor: 'rgba(0, 51, 102, 0.7)',
                         borderColor: 'rgba(0, 51, 102, 1)',
                         borderWidth: 1
@@ -170,6 +168,8 @@
                 }
             }
         });
+        })
+
     </script>
 
 

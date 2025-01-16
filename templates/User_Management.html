@@ -61,6 +61,7 @@
                     <th>LastName</th>
                     <th>Email</th>
                     <th>Role</th>
+                    <th>State</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -70,7 +71,8 @@
                         <td>{{ user.firstName }} </td>
                         <td>{{ user.lastName }} </td>
                         <td>{{ user.username }}</td>      
-                        <td>{{ user.role }}</td>       
+                        <td>{{ user.role }}</td>   
+                        <td>{{ user.state }}</td>    
                         <td class="action-buttons">
                             <button class="edit-btn" id="editUser" onclick="editUser('{{ user.id }}')">Edit</button>   <!-- You may want to implement JavaScript for editing -->
                             <button class="remove-btn" id="removeUser" onclick="removeUser('{{ user.id }}')">Remove</button> <!-- JavaScript for removing -->
@@ -112,6 +114,15 @@
                         <option value="User">User</option>
                     </select>
                 </div>
+
+                <div>
+                    <label for="state">State:</label>
+                    <select name="state" id="state">
+                        <option value="" disabled selected>Select State</option>
+                        <option value="true">True</option>
+                        <option value="false">False</option>
+                    </select>
+                </div>
                 <button id="edit_btn" onclick="updateUser()">Save</button>
         </div>
     </div>
@@ -138,42 +149,6 @@
     <a href="/subscription_agreement.html" target="_blank">Subscription Agreement</a> |
     <a href="/terms-of-use.html" target="_blank">Terms of Use</a>
 </div>
-
-    <!-- <script>
-        document.getElementById('activeUsers').textContent = 5;
-        document.getElementById('totalProjects').textContent = 330;
-        document.getElementById('bidsSubmitted').textContent = 168;
-
-        const ctx = document.getElementById('biddingChart').getContext('2d');
-        const biddingChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                datasets: [
-                    {
-                        label: 'Market Bids',
-                        data: [15, 25, 20, 35, 30, 45, 50, 40, 30, 35, 45, 50],
-                        backgroundColor: 'rgba(0, 123, 255, 0.5)',
-                        borderColor: 'rgba(0, 123, 255, 1)',
-                        borderWidth: 1
-                    },
-                    {
-                        label: 'Contractor Bids',
-                        data: [10, 20, 15, 30, 25, 40, 45, 35, 25, 30, 40, 45],
-                        backgroundColor: 'rgba(0, 51, 102, 0.7)',
-                        borderColor: 'rgba(0, 51, 102, 1)',
-                        borderWidth: 1
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: { beginAtZero: true }
-                }
-            }
-        });
-    </script> -->
 
 
 <!-- Popup Confirmation Window -->

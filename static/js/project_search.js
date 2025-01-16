@@ -93,3 +93,7 @@ document.getElementById('confirmtogoproject').onclick = function () {
 function closeBidConfirmation() {
     document.getElementById('bidConfirmationModal').style.display = 'none';
 }
+
+function cancelConfirm() {
+    document.getElementById('ConfirmationModal').style.display = 'none';
+}

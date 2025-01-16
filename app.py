@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import login_user, login_required, LoginManager, UserMixin, logout_user, current_user
 from flask_cors import CORS
-from datetime import datetime
+from datetime import datetime, timezone, date
 
 app = Flask(__name__)
 
@@ -31,27 +31,35 @@ class User(UserMixin, db.Model):
     domain = db.Column(db.String(100))
     state = db.Column(db.Boolean, default=False)
     role = db.Column(db.String(100))
+    created_at = db.Column(db.Date, default=date.today)
+    updated_at = db.Column(db.Date, default=date.today, onupdate=date.today)
+
 
 class Company(db.Model):
+    __tablename__ = 'company'  # Optional: Explicitly setting the table name
     id = db.Column(db.Integer, primary_key=True)
     domain = db.Column(db.String(100), unique=True)
     BusinessName = db.Column(db.String(100))
     BusinessPhone = db.Column(db.String(15))
     BusinessAddress = db.Column(db.String(255))
     BusinessWebsite = db.Column(db.String(255))
+    created_at = db.Column(db.Date, default=date.today)
+    updated_at = db.Column(db.Date, default=date.today, onupdate=date.today)
 
 class Projects(db.Model):
     __tablename__ = 'projects'  # Optional: Explicitly setting the table name
     id = db.Column(db.Integer, primary_key=True)
     projectName = db.Column(db.String(100))
-    closingDate = db.Column(db.DateTime)
+    closingDate = db.Column(db.Date)
     address = db.Column(db.String(255))
     city = db.Column(db.String(100))
     province = db.Column(db.String(100))
     postalCode = db.Column(db.String(100))
-    
-    # Relationship to Bids
+    created_at = db.Column(db.Date, default=date.today)
+    updated_at = db.Column(db.Date, default=date.today, onupdate=date.today)
     bids = db.relationship('Bids', backref='project', lazy=True)
+
+
 
 class Bids(db.Model):
     __tablename__ = 'bids'  # Optional: Explicitly setting the table name
@@ -64,6 +72,9 @@ class Bids(db.Model):
     postalCode = db.Column(db.String(100))
     bidAmount = db.Column(db.Float)  
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)  
+    company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=False)  
+    created_at = db.Column(db.Date, default=date.today)
+    updated_at = db.Column(db.Date, default=date.today, onupdate=date.today)
 
 
 @app.before_request
@@ -169,8 +180,30 @@ def login():
 def dashboard():
     username = current_user.username
     valid_user = User.query.filter_by(username=username).first()
-    print(valid_user.role, "ddddddd")
+    
     return render_template('Dashboard.html', valid_role=valid_user.role)
+
+@app.route('/dashboard/chart', methods=['GET'])
+@login_required
+def dashboard_chart():
+    current_year = datetime.now().year
+    projects_count = [0] * 12
+    bid_projects_count = [0] * 12
+    projects = Projects.query.filter(Projects.created_at >= f'{current_year}-01-01').all()
+    bids = Bids.query.filter(Bids.created_at >= f'{current_year}-01-01').all()
+
+    for project in projects:
+        month_index = project.created_at.month - 1  # Months are 1-12
+        projects_count[month_index] += 1
+
+    for bid in bids:
+        month_index = bid.created_at.month - 1
+        bid_projects_count[month_index] += 1
+
+    return jsonify({
+        'projects': projects_count,
+        'bids': bid_projects_count
+    })
 
 @app.route('/user_management')
 @login_required
@@ -184,6 +217,7 @@ def user_management():
 @app.route('/user_management/<int:user_id>', methods=['GET'])
 def get_user(user_id):
     user = User.query.filter_by(id=user_id).first()
+    print("pppppp", user.state)
     if user is None:
         return jsonify({"error": "User not found."}), 404
     
@@ -192,7 +226,8 @@ def get_user(user_id):
         "firstName": user.firstName,
         "lastName": user.lastName,
         "username": user.username,
-        "role": user.role
+        "role": user.role,
+        "state": user.state
     }
 
     return jsonify(user_data), 200
@@ -205,9 +240,13 @@ def update_user(user_id):
         lastName = data.get('lastName')
         username = data.get('username')
         role = data.get('role')
+        state = data.get('state')
 
-        print("Updating data: username =", username, ", role =", role)
-
+        print("Updating data: username =", username, ", state =", state)
+        if state == "true":
+            states = 1
+        else:
+            states = 0
         # Use db.session to retrieve the user
         user = db.session.get(User, user_id)  # Use Session.get() instead
 
@@ -219,6 +258,7 @@ def update_user(user_id):
         user.lastName = lastName
         user.username = username
         user.role = role
+        user.state = states
         
         db.session.commit()  # Commit the changes to the database
         return jsonify({"message": "User updated successfully"}), 200  # Success response
@@ -339,10 +379,8 @@ def search_projects():
     if province:
         query = query.filter(Projects.province.ilike(f'%{province}%'))
     if postalCode:
-        query = query.filter(Projects.province.ilike(f'%{postalCode}%'))
+        query = query.filter(Projects.postalCode.ilike(f'%{postalCode}%'))
 
-
-    
     results = query.all()  # Fetch all matching records
 
     # Prepare response data
@@ -368,6 +406,12 @@ def project_entry(projectId):
         return render_template('Bid_Entry.html', division=user_division, projectId=projectId)
     
     if request.method == 'POST':
+        user_name = current_user.username
+        user = User.query.filter_by(username=user_name).first()
+        user_division = user.division
+        user_domain = user.domain
+        company = Company.query.filter_by(domain=user_domain ).first()
+        companyId = company.id
         closingDate = request.json.get('closingDate')
         projectName = request.json.get('projectName')
         address = request.json.get('address')
@@ -387,13 +431,17 @@ def project_entry(projectId):
             city=city,
             province=province,
             bidAmount=totalValue,
-            project_id=projectId
+            project_id=projectId,
+            company_id=companyId
         )   
         db.session.add(new_bid)
         db.session.commit()
         return jsonify({'message': 'Bid to the project successfully!'})
 
-
+@app.route('/detailed_reports')
+@login_required
+def detailed_reports():
+    return render_template('detailed_reports.html')
 
 @app.route('/bidding_history')
 @login_required

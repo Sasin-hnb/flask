@@ -36,13 +36,14 @@ function editUser(user_id) {
       return response.json();
     })
     .then(data => {
-      console.log(data); // Handle the user data here
+      console.log(data.state); // Handle the user data here
       // You can populate your modal or form with this data
       document.getElementById('userId').value = data.id;
       document.getElementById('firstName').value = data.firstName;
       document.getElementById('lastName').value = data.lastName;
       document.getElementById('username').value = data.username;
       document.getElementById('role').value = data.role;
+      document.getElementById('state').value = data.state;
       document.getElementById('editUserModal').style.display = 'block';
     })
     .catch(error => {
@@ -56,13 +57,17 @@ function updateUser() {
   const lastName = document.getElementById('lastName').value;
   const username = document.getElementById('username').value;
   const role = document.getElementById('role').value;
+  const state = document.getElementById('state').value;
 
   const data = {
     firstName:firstName,
     lastName:lastName,
     username: username,
-    role: role
+    role: role,
+    state: state
   };
+
+  console.log("data", data)
 
   fetch(`/user_management/${userId}`, {
     method: 'PUT',

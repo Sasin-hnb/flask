@@ -51,7 +51,22 @@
             <h3>Advanced Search (Address, City, Province, Postal Code)</h3>
             <input type="text" id="address" placeholder="Address">
             <input type="text" id="city" placeholder="City">
-            <input type="text" id="province" placeholder="Province">
+            <div>
+                <select id="province" name="province" class="input-field">
+                    <option value="">Select Province</option>
+                    <option value="Alberta">Alberta</option>
+                    <option value="British Columbia">British Columbia</option>
+                    <option value="Manitoba">Manitoba</option>
+                    <option value="New Brunswick">New Brunswick</option>
+                    <option value="Newfoundland and Labrador">Newfoundland and Labrador</option>
+                    <option value="Nova Scotia">Nova Scotia</option>
+                    <option value="Ontario">Ontario</option>
+                    <option value="Prince Edward Island">Prince Edward Island</option>
+                    <option value="Manitoba">Manitoba</option>
+                    <option value="Quebec">Quebec</option>
+                    <option value="Saskatchewan">Saskatchewan</option>
+                </select>
+            </div>
             <input type="text" id="postalCode" placeholder="Postal Code">
             <button type="submit">Search</button>
         </form>
@@ -77,7 +92,7 @@
         <div class="modal-content">
             <p>Do you wish to add a project ?</p>
             <button id="confirmtogoproject">Yes</button>
-            <button id="cancelBid">No</button>
+            <button onclick="cancelConfirm()">No</button>
         </div>
     </div>
 
