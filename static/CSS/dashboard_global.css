@@ -130,11 +130,10 @@ z-index: 10; /* Ensure it stays on top */
     color: white;
     text-align: center;
     padding: 15px;
-    width: 100%;
+    width: calc(100% - 200px);
     box-sizing: border-box;
-    position: fixed;
-    bottom: 0;
-    left: 0;
+    margin-left: 200px;
+    position: relative;
 }
 
 .footer-links a {

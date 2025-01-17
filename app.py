@@ -19,6 +19,7 @@ login_manager.login_view = 'login'
 db = SQLAlchemy(app)
 
 class User(UserMixin, db.Model):
+    __tablename__ = 'user'  # Optional: Explicitly setting the table name
     id = db.Column(db.Integer, primary_key=True)
     division = db.Column(db.String(100))
     country = db.Column(db.String(100))
@@ -65,7 +66,7 @@ class Bids(db.Model):
     __tablename__ = 'bids'  # Optional: Explicitly setting the table name
     id = db.Column(db.Integer, primary_key=True)
     projectName = db.Column(db.String(100))
-    closingDate = db.Column(db.DateTime)
+    closingDate = db.Column(db.Date)
     address = db.Column(db.String(255))
     city = db.Column(db.String(100))
     province = db.Column(db.String(100))
@@ -73,6 +74,7 @@ class Bids(db.Model):
     bidAmount = db.Column(db.Float)  
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)  
     company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=False)  
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     created_at = db.Column(db.Date, default=date.today)
     updated_at = db.Column(db.Date, default=date.today, onupdate=date.today)
 
@@ -204,6 +206,158 @@ def dashboard_chart():
         'projects': projects_count,
         'bids': bid_projects_count
     })
+
+@app.route('/detailed_reports/chart/project', methods=['GET'])
+@login_required
+def reports_chart_project():
+    current_year = datetime.now().year
+    projects_count = [0] * 12
+    bid_projects_count = [0] * 12
+
+    # Get the current user's information
+    username = current_user.username
+    valid_user = User.query.filter_by(username=username).first()
+    domain = valid_user.domain
+    
+    # Find the company associated with the current user's domain
+    company = Company.query.filter_by(domain=domain).first()
+    
+    # if not company:
+    #     # If no company is found for the user, return empty counts
+    #     return jsonify({
+    #         'totalprojects': projects_count,
+    #         'userbids': bid_projects_count
+    #     })
+
+    company_id = company.id
+
+    # Query projects created in the current year
+    projects = Projects.query.filter(Projects.created_at >= f'{current_year}-01-01').all()
+
+    # Count projects by month
+    for project in projects:
+        month_index = project.created_at.month - 1  # Months are 1-12
+        projects_count[month_index] += 1
+
+    # Query bids for the current year belonging to the current user company
+    bids = Bids.query.filter(
+        Bids.created_at >= f'{current_year}-01-01',
+        Bids.company_id == company_id  # Assuming Bids table has a company_id field
+    ).all()
+
+    # Count bids associated with the company by month
+    for bid in bids:
+        month_index = bid.created_at.month - 1
+        bid_projects_count[month_index] += 1
+
+    return jsonify({
+        'totalprojects': projects_count,
+        'userbids': bid_projects_count
+    })
+
+@app.route('/detailed_reports/chart/bid/', methods=['GET'])
+@login_required
+def reports_chart_bid():
+    year = int(request.args.get('year'))
+    month = int(request.args.get('month'))
+
+    # Get current user's company details
+    username = current_user.username
+    valid_user = User.query.filter_by(username=username).first()
+    domain = valid_user.domain
+    company = Company.query.filter_by(domain=domain).first()
+    
+    if not company:
+        return jsonify({"error": "Company not found for the user."}), 404
+
+    company_id = company.id
+
+    # Fetch bids by the company's user for the specified year and month
+    bids = Bids.query.filter(
+        Bids.company_id == company_id,
+        db.extract('year', Bids.created_at) == year,
+        db.extract('month', Bids.created_at) == month
+    ).all()
+
+    # Retrieve project_ids from bids made by the user
+    project_ids_with_bids = set(bid.project_id for bid in bids)
+
+    # Get all projects that have bids
+    projects = Projects.query.filter(Projects.id.in_(project_ids_with_bids)).all()
+
+    # Create a mapping from project id to all bids for that project to find the lowest
+    project_bids = {project.id: [] for project in projects}
+
+    # Populate project_bids with all relevant bids
+    all_bids = Bids.query.filter(Bids.project_id.in_(project_ids_with_bids)).all()
+    for bid in all_bids:
+        if bid.project_id in project_bids:
+            project_bids[bid.project_id].append(bid.bidAmount)
+
+    project_ids = []
+    contractor_prices = []
+    lowest_prices = []
+    project_name = []
+
+    # Now gather data for each project
+    for project in projects:
+        project_ids.append(f"CH-{str(project.id).zfill(2)}")
+        project_name.append(project.projectName)
+        
+        # Get the user's bid for the project, if any
+        user_bid = next((bid.bidAmount for bid in bids if bid.project_id == project.id), 0)
+
+        # Aggregate prices and find the lowest price
+        amounts = project_bids[project.id]
+        contractor_prices.append(user_bid)  # User's bid for the project
+        lowest_prices.append(min(amounts) if amounts else 0)  # Lowest bid among all bids
+
+    return jsonify({
+        "projectIds": project_ids,
+        "contractorPrices": contractor_prices,
+        "lowestPrices": lowest_prices,
+        "project_name": project_name
+    })
+
+@app.route('/detailed_report/project/table', methods=['POST'])
+@login_required
+def detailed_report_project():
+    project_id = request.json.get('projectId')
+    projectId = project_id.split('-')[1]  # This will get '01'
+    projectId = int(projectId)  # Convert '01' to an integer, resulting in 1
+    project = Projects.query.filter_by(id=projectId).first()
+    bids = Bids.query.filter_by(project_id=projectId).all()
+    number_of_bids = len(bids)
+    print("llllllllllllllllll", number_of_bids)
+    current_user_id = current_user.id  # Get the logged user's ID
+    user_bid_amount = None
+
+    for bid in bids:
+        if bid.user_id == current_user_id:
+            user_bid_amount = bid.bidAmount
+            break
+
+    # Calculate the user's rank based on the bid amounts
+    if user_bid_amount is not None:
+        # Get all bid amounts and sort them
+        ranked_bids = sorted(bid.bidAmount for bid in bids)
+        # Ranking: highest bid gets rank 1
+        user_rank = 1 + sum(amount > user_bid_amount for amount in ranked_bids)
+    else:
+        user_rank = None  # No bid from this user
+    data = {
+        'projectname':project.projectName,
+        'closingDate':project.closingDate,
+        'address':project.address,
+        'city':project.city,
+        'province':project.province,
+        'postalCode':project.postalCode,
+        'bids':number_of_bids,
+        'ranking':user_rank
+    }
+
+    return jsonify(data)
+
 
 @app.route('/user_management')
 @login_required

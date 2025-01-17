@@ -1,314 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detailed Reports | ConstructHub</title>
-    <style>
-        /* Global Styles */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            background-color: #f9f9f9;
-        }
-
-	.sidebar .logo {
-    	max-width: 100%;  /* Limit width to 100% of sidebar */
-    	height: auto;    /* Maintain aspect ratio */
-    	display: block;
-    	margin-left: auto;
-	margin-right: auto;
-	}
-
-        /* Sidebar Navigation */
-        .sidebar {
-            width: 200px;
-            background-color: #003366;
-            color: white;
-            height: 100vh;
-            position: fixed;
-            display: flex;
-            flex-direction: column;
-            padding-top: 20px;
-        }
-
-        .sidebar a {
-            color: white;
-            text-decoration: none;
-            padding: 15px 20px;
-            font-size: 1.2em;
-            display: block;
-            transition: background 0.3s;
-        }
-
-        .sidebar a:hover {
-            background-color: #00509e;
-        }
-
-        .sidebar .logo {
-            font-size: 1.8em;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .dropdown {
-            position: relative;
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: white;
-            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-            z-index: 1;
-            min-width: 200px;
-            right: 0;
-        }
-
-        .dropdown-content a {
-            color: black;
-            padding: 10px 20px;
-            text-decoration: none;
-            display: block;
-            transition: background 0.3s;
-    	    font-size: 0.9em; /* Reduced font size */
-        }
-
-        .dropdown-content a:hover {
-            background-color: #f1f1f1;
-        }
-
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-
-        /* Main Content Area */
-	.main-content {
-    	    margin-left: 200px;
-    	    width: calc(100% - 200px);
-    	    text-align: center;
-    	    flex-grow: 1;
-    	    padding-bottom: 70px;
-    	    position: relative;
-	}
-
-        .notifications {
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            display: flex;
-            gap: 20px;
-        }
-
-        .notifications img {
-            width: 30px;
-            cursor: pointer;
-        }
-
-        .bidding-metrics {
-            margin: 70px auto 20px auto;
-            width: 80%;
-        }
-
-        .dashboard {
-            padding: 20px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .dashboard-card {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            text-align: center;
-
-        }
-
-        .footer {
-            background-color: #003366;
-            color: white;
-            text-align: center;
-            padding: 15px;
-            width: calc(100% - 200px);
-            box-sizing: border-box;
-            margin-left: 200px;
-            position: relative;
-        }
-
-	/* Popup Overlay Background */
-	.popup-overlay {
-    		position: fixed;
-   		top: 0;
-    		left: 0;
-    		width: 100%;
-    		height: 100%;
-    		background-color: rgba(0, 0, 0, 0.5);
-    		display: flex;
-    		justify-content: center;
-    		align-items: center;
-    		z-index: 1000;
-	}
-
-	/* Popup Content Box */
-	.popup-content {
-    		background-color: white;	/* Background color for the popup */
-		color: black;	/* Text color for readability*/
-    		padding: 20px;
-    		border-radius: 8px;
-    		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    		text-align: center;
-    		width: 350px;
-	}
-
-	.popup-content h3 {
-    	margin-top: 0;
-    	color: #003366;
-	}
-
-	.popup-content button {
-    	margin: 10px;
-    	padding: 10px 20px;
-    	border: none;
-    	border-radius: 5px;
-    	cursor: pointer;
-    	font-size: 1em;
-	}
-
-	.popup-content button:hover {
-    	opacity: 0.9;
-	}
-
-	.popup-content button:nth-child(1) {
-    	background-color: #003366;
-    	color: white;
-	}
-
-	.popup-content button:nth-child(2) {
-    	background-color: #d0e0f5;
-    	color: #003366;
-	}
-
-
-        .container {
-            max-width: 100%;
-            overflow-y: auto;
-            padding: 100px;
-        }
-
-        .chart-section {
-            background-color: white;
-            padding: 20px;
-            border: 1px solid #ddd;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .date-slider-container {
-            text-align: center;
-            margin: 30px 0;
-        }
-
-        .slider {
-            width: 50%;
-            margin: 20px 0;
-        }
-
-        .month-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            max-width: 400px;
-            margin: 0 auto;
-        }
-
-        .month-grid button {
-            padding: 10px;
-            border: none;
-            background-color: #ddd;
-            cursor: pointer;
-            font-weight: bold;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-
-        .month-grid button:hover, .month-grid button.active {
-            background-color: #007BFF;
-            color: white;
-        }
-
-
-
-/* Report Content Section */
-        .container {
-            margin-top: 0px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            width: 80%;
-        }
-        .chart-section {
-            background-color: white;
-            padding: 20px;
-            border: 1px solid #ddd;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-.report-content {
-    display: flex;
-    justify-content: center;  /* Center horizontally */
-    gap: 20px;
-    max-width: 1000px;
-    margin: 0 auto;
-    padding-left: 200px;  /* Accounts for sidebar */
-    box-sizing: border-box;
-    width: 100%;  /* Ensures content scales with screen */
-}
-
-.project-list, .project-details {
-    flex: 1;
-    max-height: 600px;
-    overflow-y: auto;
-    border: 1px solid #ddd;
-    padding: 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    background-color: white;
-}
-
-
-
-        .project-list ul {
-            list-style: none;
-            padding: 0;
-        }
-        .project-list li {
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
-        }
-        .project-details p {
-            margin: 10px 0;
-        }
-
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/dashboard_global.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/detailed_reports.css') }}">
 </head>
 
-
-
-
-
-
-
 <!-- Sidebar Navigation -->
-    <div class="sidebar">
-        <div class="left-nav">
+<div class="sidebar">
+    <div class="left-nav">
         <a href="/">
-        <img src="/static/images/constructhub-logo.png" alt="ConstructHub Logo" class="logo">
+            <img src="/static/images/constructhub-logo.png" alt="ConstructHub Logo" class="logo">
         </a>
-        <a href="/Dashboard">Dashboard</a>
+        <a href="/dashboard">Dashboard</a>
         <div class="dropdown">
             <a href="#">User HUB</a>
             <div class="dropdown-content">
@@ -321,80 +28,80 @@
             </div>
         </div>
 
-        </div>
-        <a href="/Project_Search">Search Projects</a>
-        <a href="/Add_Project">Add Project</a>
-        <a href="/detailed_reports">Reports</a>
-        <a href="/Bidding_History">Bidding History</a>
-	<a href="#" onclick="showLogoutPopup()">Logout</a>
     </div>
+    <a href="/Project_Search">Search Projects</a>
+    <a href="/Add_Project">Add Project</a>
+    <a href="/detailed_reports">Reports</a>
+    <a href="/Bidding_History">Bidding History</a>
+    <a href="#" onclick="showLogoutPopup()">Logout</a>
+</div>
 
 
 
 
 
 <!-- Main Content -->
-    <div class="main-content">
-        <!-- Notification Icons -->
-        <div class="notifications">
-            <img src="/static/Tabs/Globe_Icon.png" alt="Community Notifications" title="Community Notifications">
-            <img src="/static/Tabs/Bell_Icon.png" alt="Project Alerts" title="Project Alerts">
-        </div>
-
-
-
-
-
-<body>
-
-
-
-
-
-
-
-<!-- Body Section -->
-    <div class="container">
-        <h1 style="text-align: center;">Detailed Report</h1>
-
-<!-- Year to Date Graph Section -->
-        <section class="chart-section">
-            <h2 style="text-align: center;">Year-to-Date Project Bids</h2>
-            <canvas id="yearChart"></canvas>
-        </section>
-
-
-
-
-<!-- Sliding Date Selector -->
-        <div class="date-slider-container">
-            <label for="yearRange">Select Year:</label>
-            <input type="range" min="2020" max="2025" value="2024" id="yearRange" class="slider">
-            <span id="yearLabel">2024</span>
-
-            <div class="month-grid">
-                <button onclick="selectMonth(this)">Jan</button>
-                <button onclick="selectMonth(this)">Feb</button>
-                <button onclick="selectMonth(this)">Mar</button>
-                <button onclick="selectMonth(this)">Apr</button>
-                <button onclick="selectMonth(this)">May</button>
-                <button onclick="selectMonth(this)">Jun</button>
-                <button onclick="selectMonth(this)">Jul</button>
-                <button onclick="selectMonth(this)">Aug</button>
-                <button onclick="selectMonth(this)">Sep</button>
-                <button onclick="selectMonth(this)">Oct</button>
-                <button onclick="selectMonth(this)">Nov</button>
-                <button onclick="selectMonth(this)">Dec</button>
-            </div>
-	    </div>
-<div class="chart-section">
-    <h2 style="text-align: center;">Projects for Selected Month</h2>
-    <canvas id="monthlyProjectChart"></canvas>
-</div>
-
-        </div>
-
+<div class="main-content">
+    <!-- Notification Icons -->
+    <div class="notifications">
+        <img src="/static/Tabs/Globe_Icon.png" alt="Community Notifications" title="Community Notifications">
+        <img src="/static/Tabs/Bell_Icon.png" alt="Project Alerts" title="Project Alerts">
     </div>
+
+
+
+
+
+    <body>
+
+
+
+
+
+
+
+        <!-- Body Section -->
+        <div class="container">
+            <h1 style="text-align: center;">Detailed Report</h1>
+
+            <!-- Year to Date Graph Section -->
+            <section class="chart-section">
+                <h2 style="text-align: center;">Year-to-Date Project Bids</h2>
+                <canvas id="yearChart"></canvas>
+            </section>
+
+
+
+
+            <!-- Sliding Date Selector -->
+            <div class="date-slider-container">
+                <label for="yearRange">Select Year:</label>
+                <input type="range" min="2020" max="2025" value="2024" id="yearRange" class="slider">
+                <span id="yearLabel">2024</span>
+
+                <div class="month-grid">
+                    <button value="1" onclick="selectMonth(this)">Jan</button>
+                    <button value="2" onclick="selectMonth(this)">Feb</button>
+                    <button value="3" onclick="selectMonth(this)">Mar</button>
+                    <button value="4" onclick="selectMonth(this)">Apr</button>
+                    <button value="5" onclick="selectMonth(this)">May</button>
+                    <button value="6" onclick="selectMonth(this)">Jun</button>
+                    <button value="7" onclick="selectMonth(this)">Jul</button>
+                    <button value="8" onclick="selectMonth(this)">Aug</button>
+                    <button value="9" onclick="selectMonth(this)">Sep</button>
+                    <button value="10" onclick="selectMonth(this)">Oct</button>
+                    <button value="11" onclick="selectMonth(this)">Nov</button>
+                    <button value="12" onclick="selectMonth(this)">Dec</button>
+                </div>
+            </div>
+            <div class="chart-section">
+                <h2 style="text-align: center;">Projects for Selected Month</h2>
+                <canvas id="monthlyProjectChart"></canvas>
+            </div>
+
+        </div>
+
+</div>
 
 
 
@@ -410,79 +117,29 @@
                         <th style="padding: 10px; border-bottom: 1px solid #ddd;">Project Name</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td style="padding: 10px;">CH-01</td>
-                        <td style="padding: 10px;">Project 1</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 10px;">CH-02</td>
-                        <td style="padding: 10px;">Project 2</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 10px;">CH-03</td>
-                        <td style="padding: 10px;">Project 3</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 10px;">CH-04</td>
-                        <td style="padding: 10px;">Project 4</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 10px;">CH-05</td>
-                        <td style="padding: 10px;">Project 5</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 10px;">CH-06</td>
-                        <td style="padding: 10px;">Project 6</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 10px;">CH-07</td>
-                        <td style="padding: 10px;">Project 7</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 10px;">CH-08</td>
-                        <td style="padding: 10px;">Project 8</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 10px;">CH-09</td>
-                        <td style="padding: 10px;">Project 9</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 10px;">CH-10</td>
-                        <td style="padding: 10px;">Project 10</td>
-                    </tr>
+                <tbody id="project-list-table-body">
                 </tbody>
             </table>
         </div>
     </div>
 
-<!-- Project Details Section -->
-    <div class="project-details" style="flex: 1;">
+    <!-- Project Details Section -->
+    <div class="project-details" style="flex: 1; margin-left: 20px;">
         <h3 style="text-align: center;">Project Details</h3>
-        <p><strong>Project Name:</strong> Project A</p>
-        <p><strong>Address:</strong> 123 Main St, Vancouver, BC</p>
-        <p><strong>Closing Date:</strong> December 20, 2024</p>
-        <p><strong>Bidders:</strong> 5</p>
-        <p><strong>Ranking:</strong> 3rd of 5</p>
+        <div style="padding: 20px;" id="project_details">
+        </div>
     </div>
 </div>
-
-
-
-
-
-
-
 
 <!-- Footer Section -->
 <div class="footer">
     <p>&copy; 2024 ConstructHub. All rights reserved.</p>
 
-<div class="footer-links">
-    <a href="/privacy-policy.html" target="_blank">Privacy Policy</a> |
-    <a href="/subscription_agreement.html" target="_blank">Subscription Agreement</a> |
-    <a href="/terms-of-use.html" target="_blank">Terms of Use</a>
-</div>
+    <div class="footer-links">
+        <a href="/privacy-policy.html" target="_blank">Privacy Policy</a> |
+        <a href="/subscription_agreement.html" target="_blank">Subscription Agreement</a> |
+        <a href="/terms-of-use.html" target="_blank">Terms of Use</a>
+    </div>
 
 
 
@@ -491,289 +148,206 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         const ctx1 = document.getElementById('yearChart').getContext('2d');
-        const totalProjects = [12, 15, 18, 10, 22, 30, 25, 20, 23, 28, 30, 35];
-        const userBids = [5, 6, 7, 4, 10, 15, 12, 8, 9, 11, 13, 14];
 
-        const yearChart = new Chart(ctx1, {
-            type: 'bar',
-            data: {
-                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-                datasets: [
-                    {
-                        label: 'Total Projects',
-                        data: totalProjects,
-                        backgroundColor: 'rgba(54, 162, 235, 0.5)'
+        fetch('/detailed_reports/chart/project')
+            .then(response => response.json())
+            .then(data => {
+                const totalProjects = data.totalprojects;
+                const userBids = data.userbids;
+                console.log("ddddd", totalProjects, userBids)
+                const yearChart = new Chart(ctx1, {
+                    type: 'bar',
+                    data: {
+                        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                        datasets: [
+                            {
+                                label: 'Total Projects',
+                                data: totalProjects,
+                                backgroundColor: 'rgba(54, 162, 235, 0.5)'
+                            },
+                            {
+                                label: 'Your Bids',
+                                data: userBids,
+                                borderColor: 'rgba(255, 99, 132, 1)',
+                                type: 'line'
+                            }
+                        ]
                     },
-                    {
-                        label: 'Your Bids',
-                        data: userBids,
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        type: 'line'
-                    }
-                ]
-            },
-            options: {
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (context.parsed.y !== null) {
-                                    label += `: ${context.parsed.y}`;
+                    options: {
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function (context) {
+                                        let label = context.dataset.label || '';
+                                        if (context.parsed.y !== null) {
+                                            label += `: ${context.parsed.y}`;
+                                        }
+                                        const index = context.dataIndex;
+                                        label += ` (Your Bids: ${userBids[index]})`;
+                                        return label;
+                                    }
                                 }
-                                const index = context.dataIndex;
-                                label += ` (Your Bids: ${userBids[index]})`;
-                                return label;
                             }
                         }
                     }
-                }
-            }
-        });
+                });
 
 
-
-    function selectMonth(selected) {
-        const buttons = document.querySelectorAll('.month-grid button');
-        buttons.forEach(button => button.classList.remove('active'));
-        selected.classList.add('active');
-    }
-</script>
+            })
 
     </script>
-<script>
-    // Get the slider and label elements
-    const yearRange = document.getElementById('yearRange');
-    const yearLabel = document.getElementById('yearLabel');
-
-    // Set the initial label to match the slider's value
-    yearLabel.textContent = yearRange.value;
-
-    // Update the label whenever the slider changes
-    yearRange.addEventListener('input', function() {
-        yearLabel.textContent = yearRange.value;
-    });
-</script>
-
-
-
-
-
-<script>
-    const ctx2 = document.getElementById('monthlyProjectChart').getContext('2d');
-const projectIds = ['CH-01', 'CH-02', 'CH-03', 'CH-04', 'CH-05', 'CH-06', 'CH-07', 'CH-08', 'CH-09', 'CH-10'];
-
-// Simulated contractor prices and lowest prices
-let contractorPrices = [15000, 35000, 25000, 10000, 30000, 100000, 250000, 80000];
-let lowestPrices = [12000, 30000, 20000, 9000, 28000, 105000, 160000, 190000, 200000];
-
-const monthlyChart = new Chart(ctx2, {
-    type: 'line',  // Line chart
-    data: {
-        labels: projectIds,
-        datasets: [
-            {
-                label: 'Your Price',
-                data: contractorPrices,
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 2,
-                fill: false
-            },
-            {
-                label: 'Lowest Price',
-                data: lowestPrices,
-                borderColor: 'rgba(255, 99, 132, 1)',
-                borderWidth: 2,
-                borderDash: [5, 5],  // Dashed line for lowest price
-                fill: false
-            }
-        ]
-    },
-    options: {
-        scales: {
-            y: {
-                beginAtZero: true,
-                ticks: {
-                    stepSize: 10000  // Y-axis increments by 10,000
-                }
-            }
-        },
-        plugins: {
-            tooltip: {
-                callbacks: {
-                    label: function(context) {
-                        let label = context.dataset.label || '';
-                        if (context.parsed.y !== null) {
-                            label += `: $${context.parsed.y.toLocaleString()}`;
-                        }
-                        return label;
-                    }
-                }
-            }
-        }
-    }
-});
-
-	function updateMonthlyChart(selectedYear, selectedMonth) {
-    	contractorPrices = contractorPrices.map(() => Math.floor(Math.random() * 50000) + 5000);
-    	lowestPrices = lowestPrices.map(() => Math.floor(Math.random() * 45000) + 5000);
-    
-    	monthlyChart.data.datasets[0].data = contractorPrices;
-    	monthlyChart.data.datasets[1].data = lowestPrices;
-    	monthlyChart.update();
-}
-
-
-
-
-
-
-
-
-// Event Listeners for Year and Month Selection
-	yearRange.addEventListener('input', function() {
-   	const selectedMonth = document.querySelector('.month-grid button.active')
-        ? Array.from(document.querySelectorAll('.month-grid button')).indexOf(document.querySelector('.month-grid button.active')) + 1
-        : 1;  // Default to January if no month is selected
-    
-    	updateProjectList(yearRange.value, selectedMonth);
-    	updateMonthlyChart(yearRange.value, selectedMonth);
-	});
-
-	function selectMonth(selected) {
-    	const buttons = document.querySelectorAll('.month-grid button');
-    	buttons.forEach(button => button.classList.remove('active'));
-    	selected.classList.add('active');
-
-    	const monthIndex = Array.from(buttons).indexOf(selected) + 1;
-    	updateProjectList(yearRange.value, monthIndex);
-    	updateMonthlyChart(yearRange.value, monthIndex);
-	}
-
-
-
-
-
-// Sample Project Data (Simulated)
-	const projects = [
-    	{ year: 2020, month: 1, projectId: 'CH-01', projectName: 'Project Alpha' },
-    	{ year: 2020, month: 2, projectId: 'CH-02', projectName: 'Project Beta' },
-    	{ year: 2020, month: 1, projectId: 'CH-03', projectName: 'Project Gamma' },
-    	{ year: 2020, month: 3, projectId: 'CH-04', projectName: 'Project Delta' },
-    	{ year: 2020, month: 1, projectId: 'CH-05', projectName: 'Project Epsilon' },
-    	{ year: 2020, month: 1, projectId: 'CH-06', projectName: 'Project Calgary' },
-    	{ year: 2020, month: 1, projectId: 'CH-07', projectName: 'Project Edmonton' },
-    	{ year: 2021, month: 1, projectId: 'CH-08', projectName: 'Project Saskatoon' },
-    	{ year: 2021, month: 1, projectId: 'CH-09', projectName: 'Project Vancouver' },
-    	{ year: 2021, month: 1, projectId: 'CH-10', projectName: 'Project Surrey' },
-	    { year: 2021, month: 1, projectId: 'CH-01', projectName: 'Project Langley' },
-    	{ year: 2021, month: 1, projectId: 'CH-02', projectName: 'Project Coquitlam' },
-    	{ year: 2021, month: 1, projectId: 'CH-03', projectName: 'Project Richmond' },
-    	{ year: 2021, month: 1, projectId: 'CH-04', projectName: 'Project Fort Langley' },
-    	{ year: 2021, month: 1, projectId: 'CH-05', projectName: 'Project Abbotsford' },
-    	{ year: 2021, month: 1, projectId: 'CH-06', projectName: 'Project Chilliwack' },
-    	{ year: 2022, month: 1, projectId: 'CH-07', projectName: 'Project Hope' },
-    	{ year: 2022, month: 1, projectId: 'CH-08', projectName: 'Project Aggasiz' },
-    	{ year: 2022, month: 1, projectId: 'CH-09', projectName: 'Project Mission' },
-    	{ year: 2022, month: 1, projectId: 'CH-10', projectName: 'Project Delta' },
-    	{ year: 2022, month: 1, projectId: 'CH-01', projectName: 'Project North Vancouver' },
-    	{ year: 2022, month: 1, projectId: 'CH-02', projectName: 'Project Abbotsford' },
-    	{ year: 2022, month: 1, projectId: 'CH-03', projectName: 'Project Chilliwack' },
-    	{ year: 2022, month: 1, projectId: 'CH-04', projectName: 'Project Langley' },
-    	{ year: 2022, month: 1, projectId: 'CH-05', projectName: 'Project Hope' },
-    	{ year: 2022, month: 1, projectId: 'CH-06', projectName: 'Project Kelowna' },
-    	{ year: 2022, month: 1, projectId: 'CH-07', projectName: 'Project Coquitlam' },
-    	{ year: 2022, month: 1, projectId: 'CH-08', projectName: 'Project Calgary' },
-    	{ year: 2023, month: 1, projectId: 'CH-09', projectName: 'Project Maple Ridge' },
-    	{ year: 2023, month: 1, projectId: 'CH-10', projectName: 'Project Richmond' },
-    	{ year: 2023, month: 1, projectId: 'CH-01', projectName: 'Project Vancouver' },
-    	{ year: 2023, month: 1, projectId: 'CH-02', projectName: 'Project Vicotria' },
-    	{ year: 2023, month: 1, projectId: 'CH-03', projectName: 'Project Nanaimo' },
-    	{ year: 2023, month: 1, projectId: 'CH-04', projectName: 'Project Cultus' },
-    	{ year: 2023, month: 1, projectId: 'CH-05', projectName: 'Project Richmond' },
-    	{ year: 2023, month: 1, projectId: 'CH-06', projectName: 'Project Vancouver' },
-    	{ year: 2024, month: 1, projectId: 'CH-07', projectName: 'Project Vicotria' },
-    	{ year: 2024, month: 1, projectId: 'CH-08', projectName: 'Project Nanaimo' },
-    	{ year: 2024, month: 1, projectId: 'CH-09', projectName: 'Project Vancouver' },
-    	{ year: 2024, month: 1, projectId: 'CH-10', projectName: 'Project Vancouver' },
-    	{ year: 2024, month: 1, projectId: 'CH-01', projectName: 'Project Vancouver' },
-    	{ year: 2024, month: 1, projectId: 'CH-02', projectName: 'Project Vancouver' },
-    	{ year: 2024, month: 1, projectId: 'CH-03', projectName: 'Project Maple Ridge' },
-    	{ year: 2024, month: 1, projectId: 'CH-04', projectName: 'Project Richmond' },
-    	{ year: 2024, month: 1, projectId: 'CH-05', projectName: 'Project Burnaby' },
-
-	];
-
-// Function to Update Project List Based on Year/Month
-	function updateProjectList(selectedYear, selectedMonth) {
-    	const projectListContainer = document.querySelector('.project-list tbody');
-    	projectListContainer.innerHTML = '';  // Clear existing list
-
-    	const filteredProjects = projects.filter(p => p.year == selectedYear && p.month == selectedMonth);
-
-    	if (filteredProjects.length > 0) {
-        filteredProjects.forEach(p => {
-            const row = `<tr>
-                            <td style="padding: 10px;">${p.projectId}</td>
-                            <td style="padding: 10px;">${p.projectName}</td>
-                        </tr>`;
-            projectListContainer.innerHTML += row;
-        });
-    	} else {
-        projectListContainer.innerHTML = '<tr><td colspan="2" style="text-align: center;">No Projects Found</td></tr>';
-    	}
-
-// Call to update the chart as well
-    	updateMonthlyChart(selectedYear, selectedMonth);
-	}
-
-// Event Listeners for Year and Month Selection
-	yearRange.addEventListener('input', function() {
-    	const selectedMonth = document.querySelector('.month-grid button.active')
-        ? Array.from(document.querySelectorAll('.month-grid 	button')).indexOf(document.querySelector('.month-grid button.active')) + 1
-        : 1;  // Default to January if no month is selected
-    
-    	updateProjectList(yearRange.value, selectedMonth);
-    	updateMonthlyChart(yearRange.value, selectedMonth);
-	});
-
-	function selectMonth(selected) {
-    	const buttons = document.querySelectorAll('.month-grid button');
-    	buttons.forEach(button => button.classList.remove('active'));
-    	selected.classList.add('active');
-
-    	const monthIndex = Array.from(buttons).indexOf(selected) + 1;
-    	updateProjectList(yearRange.value, monthIndex);
-    	updateMonthlyChart(yearRange.value, monthIndex);
-	}
-</script>
-
-
-<!-- Popup Confirmation Window -->
-        <div id="logoutPopup" class="popup-overlay" style="display: none;">
-            <div class="popup-content">
-                <h3>Confirm Logout</h3>
-                <p>Are you sure you want to log out?</p>
-                <button onclick="confirmLogout()">Yes, Log Out</button>
-                <button onclick="closeLogoutPopup()">Cancel</button>
-            </div>
-        </div>
-    </div>
 
     <script>
-        function showLogoutPopup() {
-            document.getElementById('logoutPopup').style.display = 'flex';
-        }
+        const yearange = document.getElementById('yearRange');
+        const yearLabel = document.getElementById('yearLabel');
+        let monthlyChart; // Declare a variable to hold the chart instance
 
-        function closeLogoutPopup() {
-            document.getElementById('logoutPopup').style.display = 'none';
-        }
+        // Update the year label when the slider changes
+        yearange.addEventListener('input', function () {
+            yearLabel.textContent = this.value;
+        });
 
-        function confirmLogout() {
-            window.location.href = 'index.html';  // Redirect to the homepage
+        // Function to handle month selection
+        function selectMonth(button) {
+            const selectedMonth = button.value; // Get the month name
+            const selectedYear = yearange.value; // Get the selected year
+            const ctx2 = document.getElementById('monthlyProjectChart').getContext('2d');
+
+            // Destroy the existing chart if it exists
+            if (monthlyChart) {
+                monthlyChart.destroy();
+            }
+
+            fetch(`/detailed_reports/chart/bid?year=${selectedYear}&month=${selectedMonth}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data, "oooooooooooooooooooooooooooooo");
+                    const projectIds = data.projectIds;
+                    let contractorPrices = data.contractorPrices;
+                    let lowestPrices = data.lowestPrices;
+                    const projectName = data.project_name;
+
+                    // Create a new chart instance
+                    monthlyChart = new Chart(ctx2, {
+                        type: 'line',  // Line chart
+                        data: {
+                            labels: projectIds,
+                            datasets: [
+                                {
+                                    label: 'Your Price',
+                                    data: contractorPrices,
+                                    borderColor: 'rgba(75, 192, 192, 1)',
+                                    borderWidth: 2,
+                                    fill: false
+                                },
+                                {
+                                    label: 'Lowest Price',
+                                    data: lowestPrices,
+                                    borderColor: 'rgba(255, 99, 132, 1)',
+                                    borderWidth: 2,
+                                    borderDash: [5, 5],  // Dashed line for lowest price
+                                    fill: false
+                                }
+                            ]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        stepSize: 10000  // Y-axis increments by 10,000
+                                    }
+                                }
+                            },
+                            plugins: {
+                                tooltip: {
+                                    callbacks: {
+                                        label: function (context) {
+                                            let label = context.dataset.label || '';
+                                            if (context.parsed.y !== null) {
+                                                label += `: $${context.parsed.y.toLocaleString()}`;
+                                            }
+                                            return label;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+                    const projectListContainer = document.getElementById('project-list-table-body'); // Select the table body element
+                    projectListContainer.innerHTML = ''; // Clear the current content
+
+                    // Create a new table row for each project
+                    projectIds.forEach((project_Id, index) => {
+                        const projectRow = document.createElement('tr');
+                        const projectTdId = document.createElement('td');
+                        const projectTdName = document.createElement('td');
+
+                        projectTdId.textContent = project_Id; // Project ID
+                        projectTdName.textContent = projectName[index]; // Project name
+
+                        projectRow.appendChild(projectTdId);
+                        projectRow.appendChild(projectTdName);
+
+
+                        const data = { projectId: project_Id }
+
+                        projectListContainer.appendChild(projectRow); // Append the new row
+                        projectRow.addEventListener('click', () => {
+                            fetch('/detailed_report/project/table', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(data)
+                            })
+                                .then(response => response.json())
+                                .then(data => {
+                                    console.log(data, "mmmmmmmmmmmmmm")
+                                    document.getElementById('project_details').innerHTML = `
+                                    <p><strong>Project Name:</strong> ${data.projectname}</p>
+                                    <p><strong>Project Closing Date: </strong>${data.closingDate}</p>
+                                    <p><strong>Project Address: </strong>${data.address}, ${data.city}, ${data.province}, ${data.postalCode}</p>
+                                    <p><strong>Bids:</strong> ${data.bids}</p>
+                                    <p><strong>Ranking:</strong> ${data.ranking}</p>
+                                `
+
+                                })
+                        })
+                    });
+
+                });
         }
     </script>
+
+
+    <!-- Popup Confirmation Window -->
+    <div id="logoutPopup" class="popup-overlay" style="display: none;">
+        <div class="popup-content">
+            <h3>Confirm Logout</h3>
+            <p>Are you sure you want to log out?</p>
+            <button onclick="confirmLogout()">Yes, Log Out</button>
+            <button onclick="closeLogoutPopup()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showLogoutPopup() {
+        document.getElementById('logoutPopup').style.display = 'flex';
+    }
+
+    function closeLogoutPopup() {
+        document.getElementById('logoutPopup').style.display = 'none';
+    }
+
+    function confirmLogout() {
+        window.location.href = 'index.html';  // Redirect to the homepage
+    }
+</script>
 
 
 </body>
+
 </html>
