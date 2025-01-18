@@ -61,7 +61,7 @@
                     <th>LastName</th>
                     <th>Email</th>
                     <th>Role</th>
-                    <th>State</th>
+                    <th>status</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -72,7 +72,7 @@
                         <td>{{ user.lastName }} </td>
                         <td>{{ user.username }}</td>      
                         <td>{{ user.role }}</td>   
-                        <td>{{ user.state }}</td>    
+                        <td>{{ "Approved" if user.state else "Declined" }}</td>
                         <td class="action-buttons">
                             <button class="edit-btn" id="editUser" onclick="editUser('{{ user.id }}')">Edit</button>   <!-- You may want to implement JavaScript for editing -->
                             <button class="remove-btn" id="removeUser" onclick="removeUser('{{ user.id }}')">Remove</button> <!-- JavaScript for removing -->
@@ -119,8 +119,8 @@
                     <label for="state">State:</label>
                     <select name="state" id="state">
                         <option value="" disabled selected>Select State</option>
-                        <option value="true">True</option>
-                        <option value="false">False</option>
+                        <option value="true">Approved</option>
+                        <option value="false">Declined</option>
                     </select>
                 </div>
                 <button id="edit_btn" onclick="updateUser()">Save</button>

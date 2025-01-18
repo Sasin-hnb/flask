@@ -36,7 +36,7 @@ function editUser(user_id) {
       return response.json();
     })
     .then(data => {
-      console.log(data.state); // Handle the user data here
+      console.log(data); // Handle the user data here
       // You can populate your modal or form with this data
       document.getElementById('userId').value = data.id;
       document.getElementById('firstName').value = data.firstName;

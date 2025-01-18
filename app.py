@@ -371,7 +371,6 @@ def user_management():
 @app.route('/user_management/<int:user_id>', methods=['GET'])
 def get_user(user_id):
     user = User.query.filter_by(id=user_id).first()
-    print("pppppp", user.state)
     if user is None:
         return jsonify({"error": "User not found."}), 404
     
@@ -384,6 +383,7 @@ def get_user(user_id):
         "state": user.state
     }
 
+    print("pppppp", user_data)
     return jsonify(user_data), 200
 
 @app.route('/user_management/<int:user_id>', methods=['PUT'])
@@ -615,5 +615,5 @@ def logout():
     return redirect(url_for('home'))
 
 if __name__ == '__main__':
-    # app.run(debug=True)
-    app.run(host="0.0.0.0")
+    app.run(debug=True)
+    # app.run(host="0.0.0.0")
