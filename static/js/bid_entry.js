@@ -62,7 +62,7 @@ function showBidConfirmation() {
         console.log(data);
         closeBidConfirmation();
         alert(data.message)
-        window.location.reload()
+        window.location.href = '/project_search'
       })
       .catch(error => {
         console.error('Error updating user:', error);

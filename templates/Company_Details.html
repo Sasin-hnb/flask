@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard | ConstructHub</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #f9f9f9;
+        }
+
+        .sidebar .logo {
+            max-width: 100%;
+            /* Limit width to 100% of sidebar */
+            height: auto;
+            /* Maintain aspect ratio */
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 200px;
+            background-color: #003366;
+            color: white;
+            height: 100vh;
+            position: fixed;
+            display: flex;
+            flex-direction: column;
+            padding-top: 20px;
+        }
+
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            padding: 15px 20px;
+            font-size: 1.2em;
+            display: block;
+            transition: background 0.3s;
+        }
+
+        .sidebar a:hover {
+            background-color: #00509e;
+        }
+
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            min-width: 200px;
+            right: 0;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 10px 20px;
+            text-decoration: none;
+            display: block;
+            transition: background 0.3s;
+            font-size: 0.9em;
+            /* Reduced font size */
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .sidebar .logo {
+            font-size: 1.8em;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            margin-left: 200px;
+            /* Sidebar width */
+            width: calc(100% - 200px);
+            text-align: center;
+            flex-grow: 1;
+            padding-bottom: 70px;
+            position: relative;
+            /* Ensure positioning context for .notifications */
+        }
+
+        .notifications {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            display: flex;
+            gap: 20px;
+            /* Space between icons */
+            z-index: 10;
+            /* Ensure it stays on top */
+        }
+
+        .notifications img {
+            width: 30px;
+            cursor: pointer;
+        }
+
+        .bidding-metrics {
+            margin: 70px auto 20px auto;
+            width: 80%;
+        }
+
+        .dashboard {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .dashboard-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+
+        }
+
+        .footer {
+            background-color: #003366;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            width: calc(100% - 200px);
+            box-sizing: border-box;
+            margin-left: 200px;
+            position: relative;
+        }
+
+        /* Popup Overlay Background */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        /* Popup Content Box */
+        .popup-content {
+            background-color: white;
+            /* Background color for the popup */
+            color: black;
+            /* Text color for readability*/
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 350px;
+        }
+
+        .popup-content h3 {
+            margin-top: 0;
+            color: #003366;
+        }
+
+        .popup-content button {
+            margin: 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .popup-content button:hover {
+            opacity: 0.9;
+        }
+
+        .popup-content button:nth-child(1) {
+            background-color: #003366;
+            color: white;
+        }
+
+        .popup-content button:nth-child(2) {
+            background-color: #d0e0f5;
+            color: #003366;
+        }
+
+        .container {
+            margin: 50px auto;
+            max-width: 800px;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #003366;
+        }
+
+        .user-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .user-table th,
+        .user-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .user-table th {
+            background-color: #003366;
+            color: white;
+        }
+
+        .action-buttons button {
+            margin-right: 5px;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .action-buttons .edit-btn {
+            background-color: #00509e;
+            color: white;
+        }
+
+        .action-buttons .remove-btn {
+            background-color: #d9534f;
+            color: white;
+        }
+
+        .add-user-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1em;
+            text-align: center;
+            margin: 10px 0;
+            cursor: pointer;
+        }
+
+        .add-user-btn:hover,
+        .action-buttons button:hover {
+            opacity: 0.9;
+        }
+
+
+        .modal {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            /* Stay in place */
+            z-index: 1;
+            /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%;
+            /* Full width */
+            height: 100%;
+            /* Full height */
+            overflow: auto;
+            /* Enable scroll if needed */
+            background-color: rgba(0, 0, 0, 0.5);
+            /* Black w/ opacity */
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto;
+            /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 400px;
+            /* Could be more or less, depending on screen size */
+            border-radius: 8px;
+            /* Rounded corners */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            transition: border 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        select:focus {
+            border: 1px solid #007BFF;
+            outline: none;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .confirm {
+            background-color: #28a745;
+            /* Green */
+            color: white;
+        }
+
+        .cancel {
+            background-color: #dc3545;
+            /* Red */
+            color: white;
+        }
+
+        .confirm:hover {
+            background-color: #218838;
+        }
+
+        .cancel:hover {
+            background-color: #c82333;
+        }
+    </style>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+
+
+
+
+
+
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="left-nav">
+            <a href="/">
+                <img src="/static/images/constructhub-logo.png" alt="ConstructHub Logo" class="logo">
+            </a>
+            <a href="/Dashboard">Dashboard</a>
+            <div class="dropdown">
+                <a href="#">User HUB</a>
+                <div class="dropdown-content">
+                    <a href="/profile">User HUB</a>
+                    <a href="/profile/edit">Edit Personal Info</a>
+                    <a href="/profile/notifications">Notification Settings</a>
+                    <a href="/Company_Details">Company Details</a>
+                    <a href="/User_Management">User Management</a>
+                    <a href="/Subscription_Details">Subscription Details</a>
+                </div>
+            </div>
+
+        </div>
+        <a href="/Project_Search">Search Projects</a>
+        <a href="/Add_Project">Add Project</a>
+        <a href="/detailed_reports">Reports</a>
+        <a href="/Bidding_History">Bidding History</a>
+        <a href="#" onclick="showLogoutPopup()">Logout</a>
+    </div>
+
+
+
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Notification Icons -->
+        <div class="notifications">
+            <img src="/static/Tabs/Globe_Icon.png" alt="Community Notifications" title="Community Notifications">
+            <img src="/static/Tabs/Bell_Icon.png" alt="Project Alerts" title="Project Alerts">
+        </div>
+
+
+
+        <!-- Main Content -->
+        <div class="container">
+            <h1>Company Details</h1>
+            <div class="section" id="company_manage_detail">
+            </div>
+        </div>
+    </div>
+
+    <div id="editUserModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Edit User</h2>
+            <input type="hidden" id="userId" name="userId">
+            <div>
+                <label for="companyName">companyName:</label>
+                <input type="text" id="companyName" name="companyName" required>
+            </div>
+            <div>
+                <label for="phoneNumber">phoneNumber:</label>
+                <input type="text" id="phoneNumber" name="phoneNumber" required>
+            </div>
+            <div>
+                <label for="address">address:</label>
+                <input type="text" id="address" name="address" required>
+            </div>
+            <div>
+                <label for="website">website:</label>
+                <input type="text" id="website" name="website" required>
+            </div>
+            <div class="form-group">
+                <label for="division">Division</label>
+                <select id="division" name="division" required>
+                    <option value="">Select your division</option>
+                    <option value="1">General Contractor</option>
+                    <option value="2">Division 2: Demolition</option>
+                    <option value="3">Division 3: Concrete</option>
+                    <option value="4">Division 4: Masonry</option>
+                    <option value="5">Division 5: Metals</option>
+                    <option value="6">Division 6: Wood and plastics</option>
+                    <option value="7">Division 7: Thermal and moisture protection</option>
+                    <option value="8">Division 8: Doors and windows</option>
+                    <option value="9">Division 9: Finishes</option>
+                    <option value="10">Division 10: Specialties</option>
+                    <option value="11">Division 11: Equipment</option>
+                    <option value="12">Division 12: Furnishings</option>
+                    <option value="13">Division 13: Special construction</option>
+                    <option value="14">Division 14: Conveying systems</option>
+                    <option value="15">Division 15: Mechanical</option>
+                    <option value="16">Division 16: Electrical</option>
+                </select>
+            </div>
+            <div>
+                <label for="firstName">firstName:</label>
+                <input type="text" id="firstName" name="firstName" required>
+            </div>
+            <div>
+                <label for="lastName">lastName:</label>
+                <input type="text" id="lastName" name="lastName" required>
+            </div>
+            <div>
+                <label for="email">email:</label>
+                <input type="text" id="email" name="email" required>
+            </div>
+            <div>
+                <label for="mobileNumber">mobileNumber:</label>
+                <input type="text" id="mobileNumber" name="mobileNumber" required>
+            </div>
+            <button id="edit_btn" onclick="updateCompany()">Save</button>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+    <!-- Footer Section -->
+    <div class="footer">
+        <p>&copy; 2024 ConstructHub. All rights reserved.</p>
+
+        <div class="footer-links">
+            <a href="/privacy-policy.html" target="_blank">Privacy Policy</a> |
+            <a href="/subscription_agreement.html" target="_blank">Subscription Agreement</a> |
+            <a href="/terms-of-use.html" target="_blank">Terms of Use</a>
+        </div>
+
+
+        <!-- Popup Confirmation Window -->
+        <div id="logoutPopup" class="popup-overlay" style="display: none;">
+            <div class="popup-content">
+                <h3>Confirm Logout</h3>
+                <p>Are you sure you want to log out?</p>
+                <button onclick="confirmLogout()">Yes, Log Out</button>
+                <button onclick="closeLogoutPopup()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showLogoutPopup() {
+            document.getElementById('logoutPopup').style.display = 'flex';
+        }
+
+        function closeLogoutPopup() {
+            document.getElementById('logoutPopup').style.display = 'none';
+        }
+
+        function confirmLogout() {
+            window.location.href = '/Index.html';  // Redirect to the homepage
+        }
+    </script>
+
+    <script>
+        let companyData
+        fetch('/manage_company/detail')
+            .then(responsive => responsive.json())
+            .then(data => {
+                console.log(data, "data")
+                companyData = data
+                document.getElementById("company_manage_detail").innerHTML = `
+                <h2>Company Profile</h2>
+                <p><strong>Company Name:</strong>${data.companyName}</p>
+                <p><strong>Business Phone Number:</strong> ${data.phoneNumber}</p>
+                <p><strong>Company Address:</strong> ${data.address}</p>
+                <p><strong>Website:</strong> <a href="#">${data.website}</a></p>
+                <p><strong>Division(s):</strong>    ${data.division == 1 ? "General Contractor" 
+                                                    : data.division == 2 ? "Demolition" 
+                                                    : data.division == 3 ? "Concrete"
+                                                    : data.division == 4 ? "Masonry"
+                                                    : data.division == 5 ? "Metals"
+                                                    : data.division == 6 ? "Wood and plastics"
+                                                    : data.division == 7 ? "Thermal and moisture protection"
+                                                    : data.division == 8 ? "Doors and windows"
+                                                    : data.division == 9 ? "Finishes"
+                                                    : data.division == 10 ? "Specialties"
+                                                    : data.division == 11 ? "Equipment"
+                                                    : data.division == 12 ? "Furnishings"
+                                                    : data.division == 13 ? "Special construction"
+                                                    : data.division == 14 ? "Conveying systems"
+                                                    : data.division == 15 ? "Mechanical"
+                                                    : "Electrical"
+                                                }</p>
+                <p><strong>Primary Contact Name:</strong> ${data.firstName} ${data.lastName}</p>
+                <p><strong>Primary Contact Email:</strong> ${data.email}</p>
+                <p><strong>Mobile Number:</strong>${data.mobileNumber}</p>
+                <button class="button" onclick="openEditModal()">Edit Details</button>
+            `
+            })
+
+
+        function openEditModal() {
+            document.getElementById('userId').value = companyData.userId;
+            document.getElementById('companyName').value = companyData.companyName;
+            document.getElementById('phoneNumber').value = companyData.phoneNumber;
+            document.getElementById('address').value = companyData.address;
+            document.getElementById('website').value = companyData.website;
+            document.getElementById('division').value = companyData.division;
+            document.getElementById('firstName').value = companyData.firstName;
+            document.getElementById('lastName').value = companyData.lastName;
+            document.getElementById('email').value = companyData.email;
+            document.getElementById('mobileNumber').value = companyData.mobileNumber;
+            document.getElementById('editUserModal').style.display = 'block';
+        }
+
+        function updateCompany() {
+            const userId = document.getElementById('userId').value;
+            const companyName = document.getElementById('companyName').value;
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            const address = document.getElementById('address').value;
+            const website = document.getElementById('website').value;
+            const division = document.getElementById('division').value;
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const email = document.getElementById('email').value;
+            const mobileNumber = document.getElementById('mobileNumber').value;
+
+            const updateData = {
+                companyName: companyName,
+                phoneNumber: phoneNumber,
+                address: address,
+                website: website,
+                division: division,
+                firstName: firstName,
+                lastName: lastName,
+                email: email,
+                mobileNumber: mobileNumber
+            }
+
+            console.log(updateData, "pkpkpkpkpkp")
+
+            fetch(`/manage_company/${userId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updateData)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data);
+                    // Handle successful response (e.g., close modal)
+                    closeModal();
+                    window.location.reload()
+                })
+                .catch(error => {
+                    console.error('Error updating user:', error);
+                });
+        }
+
+        function closeModal() {
+            document.getElementById('editUserModal').style.display = 'none';
+
+        }
+    </script>
+
+</body>
+
+</html>

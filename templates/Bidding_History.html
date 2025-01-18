@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bidding History | ConstructHub</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: row;
+            min-height: 100vh;
+            background-color: #f9f9f9;
+        }
+
+	.sidebar .logo {
+    	max-width: 100%;  /* Limit width to 100% of sidebar */
+    	height: auto;    /* Maintain aspect ratio */
+    	display: block;
+    	margin-left: auto;
+	margin-right: auto;
+	}
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 200px;
+            background-color: #003366;
+            color: white;
+            height: 100vh;
+            position: fixed;
+            display: flex;
+            flex-direction: column;
+            padding-top: 20px;
+        }
+
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            padding: 15px 20px;
+            font-size: 1.2em;
+            display: block;
+        }
+
+
+        .sidebar a:hover {
+            background-color: #00509e;
+        }
+
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            min-width: 200px;
+            right: 0;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 10px 20px;
+            text-decoration: none;
+            display: block;
+            transition: background 0.3s;
+    	    font-size: 0.9em; /* Reduced font size */
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .sidebar .logo {
+            font-size: 1.8em;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            margin-left: 200px;
+            padding: 20px;
+            width: calc(100% - 200px);
+        }
+
+        .notifications {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .notifications img {
+            width: 30px;
+            cursor: pointer;
+        }
+
+        .filter-section {
+            margin-bottom: 20px;
+        }
+
+        .filter-section input {
+            padding: 10px;
+            margin-right: 10px;
+            width: 200px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #003366;
+            color: white;
+            cursor: pointer;
+            position: relative;
+        }
+
+        th:hover {
+            background-color: #00509e;
+        }
+
+        th::after {
+            content: '\25B2'; /* Default up arrow */
+            position: absolute;
+            right: 10px;
+            font-size: 0.8em;
+            opacity: 0.6;
+        }
+
+        th.sorted-desc::after {
+            content: '\25BC'; /* Down arrow for descending */
+        }
+
+        .footer {
+            background-color: #003366;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            position: fixed;
+            width: calc(100% - 200px);
+            bottom: 0;
+            left: 200px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+
+
+
+<!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="left-nav">
+        <a href="/">
+        <img src="/static/images/constructhub-logo.png" alt="ConstructHub Logo" class="logo">
+        </a>
+        <a href="/Dashboard">Dashboard</a>
+        <div class="dropdown">
+            <a href="#">User HUB</a>
+            <div class="dropdown-content">
+                <a href="/profile">User HUB</a>
+                <a href="/profile/edit">Edit Personal Info</a>
+                <a href="/profile/notifications">Notification Settings</a>
+                <a href="/profile/manage_company">Manage Company (Admin Only)</a>
+                <a href="/User_Management">User Management (Admin Only)</a>
+                <a href="/Subscription_Details">Subscription Details</a>
+            </div>
+        </div>
+
+        </div>
+        <a href="/Project_Search">Search Projects</a>
+        <a href="/Add_Project">Add Project</a>
+        <a href="/detailed_reports">Reports</a>
+        <a href="/Bidding_History">Bidding History</a>
+	<a href="#" onclick="showLogoutPopup()">Logout</a>
+    </div>
+
+
+
+
+    <div class="main-content">
+        <h1>Bidding History</h1>
+
+        <div class="filter-section">
+            <input type="text" id="projectIDFilter" placeholder="Search by Project ID" onkeyup="filterProjects()">
+            <input type="text" id="projectNameFilter" placeholder="Search by Project Name" onkeyup="filterProjects()">
+        </div>
+
+        <table id="biddingTable">
+            <thead>
+                <tr>
+                    <th onclick="sortTable(0)">Project ID</th>
+                    <th onclick="sortTable(1)">Project Name</th>
+                    <th onclick="sortTable(2)">Closing Date</th>
+                    <th onclick="sortTable(3)">Project Value ($)</th>
+                </tr>
+            </thead>
+            <tbody id="bidding_history_tbody">
+            </tbody>
+        </table>
+    </div>
+
+
+
+
+
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+<!-- Footer Section -->
+<div class="footer">
+    <p>&copy; 2024 ConstructHub. All rights reserved.</p>
+
+<div class="footer-links">
+    <a href="/privacy-policy.html" target="_blank">Privacy Policy</a> |
+    <a href="/subscription_agreement.html" target="_blank">Subscription Agreement</a> |
+    <a href="/terms-of-use.html" target="_blank">Terms of Use</a>
+</div>
+
+
+    <script>
+        function filterProjects() {
+            const idFilter = document.getElementById('projectIDFilter').value.toLowerCase();
+            const nameFilter = document.getElementById('projectNameFilter').value.toLowerCase();
+            const projects = document.querySelectorAll('#biddingTable tbody tr');
+
+            projects.forEach(project => {
+                const id = project.cells[0].textContent.toLowerCase();
+                const name = project.cells[1].textContent.toLowerCase();
+                
+                const matchesID = id.includes(idFilter);
+                const matchesName = name.includes(nameFilter);
+
+                project.style.display = (matchesID && matchesName) ? '' : 'none';
+            });
+        }
+
+        function sortTable(columnIndex) {
+            const table = document.getElementById('biddingTable');
+            const rows = Array.from(table.rows).slice(1);
+            const ascending = table.dataset.sortOrder !== 'asc';
+
+            rows.sort((rowA, rowB) => {
+                const a = rowA.cells[columnIndex].textContent;
+                const b = rowB.cells[columnIndex].textContent;
+
+                if (columnIndex === 3) {
+                    return ascending ? a - b : b - a;
+                } else if (columnIndex === 2) {
+                    return ascending ? new Date(a) - new Date(b) : new Date(b) - new Date(a);
+                } else {
+                    return ascending ? a.localeCompare(b) : b.localeCompare(a);
+                }
+            });
+
+            rows.forEach(row => table.tBodies[0].appendChild(row));
+            table.dataset.sortOrder = ascending ? 'asc' : 'desc';
+
+            table.querySelectorAll('th').forEach(th => th.classList.remove('sorted-desc'));
+            table.querySelector(`th:nth-child(${columnIndex + 1})`).classList.toggle('sorted-desc', !ascending);
+        }
+    </script>
+    <script>
+fetch('/bidding_history/table')
+    .then(response => response.json())
+    .then(data => {
+        console.log("data", data);
+        let tableBody = document.getElementById("bidding_history_tbody");
+        
+        // Clear the existing table body
+        tableBody.innerHTML = '';
+
+        // Iterate over the data and append each row
+        data.forEach(bid => {
+            let row = document.createElement('tr');
+
+            // Create table cells
+            let projectIdCell = document.createElement('td');
+            projectIdCell.textContent = bid.project_id;
+
+            let projectNameCell = document.createElement('td');
+            projectNameCell.textContent = bid.projectName;
+
+            let amountCell = document.createElement('td');
+            amountCell.textContent = bid.amount;
+
+            let dateCell = document.createElement('td');
+            dateCell.textContent = bid.closingDate;
+
+            // Append cells to the row
+            row.appendChild(projectIdCell);
+            row.appendChild(projectNameCell);
+            row.appendChild(dateCell);
+            row.appendChild(amountCell);
+
+            // Append the row to the table body
+            tableBody.appendChild(row);
+        });
+    })
+    .catch(error => console.error('Error fetching data:', error));
+    </script>
+
+
+
+
+
+
+
+</body>
+</html>

@@ -221,13 +221,7 @@ def reports_chart_project():
     
     # Find the company associated with the current user's domain
     company = Company.query.filter_by(domain=domain).first()
-    
-    # if not company:
-    #     # If no company is found for the user, return empty counts
-    #     return jsonify({
-    #         'totalprojects': projects_count,
-    #         'userbids': bid_projects_count
-    #     })
+
 
     company_id = company.id
 
@@ -328,7 +322,6 @@ def detailed_report_project():
     project = Projects.query.filter_by(id=projectId).first()
     bids = Bids.query.filter_by(project_id=projectId).all()
     number_of_bids = len(bids)
-    print("llllllllllllllllll", number_of_bids)
     current_user_id = current_user.id  # Get the logged user's ID
     user_bid_amount = None
 
@@ -564,6 +557,7 @@ def project_entry(projectId):
         user = User.query.filter_by(username=user_name).first()
         user_division = user.division
         user_domain = user.domain
+        user_id = user.id
         company = Company.query.filter_by(domain=user_domain ).first()
         companyId = company.id
         closingDate = request.json.get('closingDate')
@@ -586,7 +580,8 @@ def project_entry(projectId):
             province=province,
             bidAmount=totalValue,
             project_id=projectId,
-            company_id=companyId
+            company_id=companyId,
+            user_id=user_id
         )   
         db.session.add(new_bid)
         db.session.commit()
@@ -600,7 +595,98 @@ def detailed_reports():
 @app.route('/bidding_history')
 @login_required
 def bidding_history():
-    return render_template('bidding_history.html')
+    return render_template('Bidding_History.html')
+
+@app.route('/bidding_history/table')
+@login_required
+def bidding_history_table():
+    username = current_user.username
+    user = User.query.filter_by(username=username).first()
+    user_id = user.id
+    bids = Bids.query.filter_by(user_id=user_id).all()
+
+    print("bidbidbidbidbi", bids)
+    serialized_bids = []
+    for bid in bids:
+        project = bid.project 
+        formatted_project_id = f"CH-{bid.project_id:02d}"  
+        serialized_bids.append({
+            'project_id': formatted_project_id,
+            'projectName': project.projectName if project else 'Unknown',  # Safeguard against None
+            'amount': bid.bidAmount,
+            'closingDate': bid.closingDate
+        })
+
+    return jsonify(serialized_bids)
+
+@app.route('/manage_company')
+@login_required
+def company_detail():
+    return render_template('Company_Details.html')
+
+@app.route('/manage_company/detail')
+@login_required
+def manage_company_detail():
+    username = current_user.username
+    user = User.query.filter_by(username=username).first()
+    domain = user.domain
+    company = Company.query.filter_by(domain=domain).first()
+    data = {
+        "userId": user.id,
+        "mobileNumber": user.mobileNumber,
+        "firstName": user.firstName,
+        "lastName": user.lastName,
+        "email": username,
+        "companyName": company.BusinessName,
+        "phoneNumber": company.BusinessPhone,
+        "address": company.BusinessAddress,
+        "website": company.BusinessWebsite,
+        "division": user.division
+    }
+    return jsonify(data)
+
+@app.route('/manage_company/<int:userId>', methods=['PUT'])
+@login_required
+def manage_company_detail_edit(userId):
+    try:
+        data = request.get_json()
+        firstName = data.get('firstName')
+        lastName = data.get('lastName')
+        username = data.get('email')
+        mobileNumber = data.get('mobileNumber')
+        companyName = data.get('companyName')
+        phoneNumber = data.get('phoneNumber')
+        address = data.get('address')
+        website = data.get('website')
+        division = data.get('division')
+
+        print(firstName, lastName, username, mobileNumber, companyName, phoneNumber, address, website, division)
+
+        users = User.query.filter_by(id=userId).first()
+        user = db.session.get(User, userId)
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+    
+        # Use db.session to retrieve the company
+        companies = Company.query.filter_by(domain=users.domain).first()
+        company_id = companies.id
+        company = db.session.get(Company, company_id)
+        
+        company.BusinessName = companyName
+        company.BusinessPhone = phoneNumber
+        company.BusinessAddress = address
+        company.BusinessWebsite = website
+        user.firstName = firstName
+        user.lastName = lastName
+        user.username = username
+        user.division = division
+        user.mobileNumber = mobileNumber
+        
+        db.session.commit()  # Commit the changes to the database
+        return jsonify({"message": "User and company updated successfully"}), 200  # Success response
+    
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500  # Return error message if something goes wrong
 
 @app.route('/networking')
 @login_required
