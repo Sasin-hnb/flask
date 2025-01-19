@@ -1,3 +1,6 @@
+let project_id;
+
+
 document.getElementById('searchForm').addEventListener('submit', function (event) {
     event.preventDefault(); // Prevent the default form submission
 
@@ -42,8 +45,8 @@ document.getElementById('searchForm').addEventListener('submit', function (event
                     projectDiv.className = 'project';
                     projectDiv.innerHTML = `
                         <div class="project-item" data-project-name="${project.projectName}" data-project-id="${project.id}">
-                          <h3>${project.projectName}</h3>
-                          <p>${project.address}, ${project.city}, ${project.province}, ${project.postalCode}</p>
+                            <h3>${project.projectName}</h3>
+                            <p>${project.address}, ${project.city}, ${project.province}, ${project.postalCode}</p>
                         </div>
                     `;
                     document.getElementById('projectList').appendChild(projectDiv);
@@ -54,6 +57,7 @@ document.getElementById('searchForm').addEventListener('submit', function (event
                 projectItems.forEach(item => {
                     item.addEventListener('click', function () {
                         const projectId = this.getAttribute('data-project-id');
+                        project_id = projectId;
                         showBidConfirmation(projectId);
                     });
                 });
@@ -65,16 +69,45 @@ document.getElementById('searchForm').addEventListener('submit', function (event
         });
 });
 
+
 // Function to show the bid confirmation modal
 function showBidConfirmation(projectId) {
-    document.getElementById('bidConfirmationModal').style.display = 'block';
 
-    document.getElementById('confirmBid').onclick = function () {
-        // Handle Yes click (e.g. submit a bid)
-        console.log(`Submitting bid for project ID: ${projectId}`);
-        window.location.href = `/Bid_Entry/${projectId}`
-        closeBidConfirmation();
-    };
+    fetch(`/project_search/bid/${projectId}`)
+    .then(response => {
+        return response.json();
+      })
+    .then(data => {
+        console.log("mmmmmmmmmmm",data)
+        // alert(data.message)
+        if (data.state == 1) {
+            document.getElementById("errorMessage").textContent = "You can edit your bid after 24 hours!"
+            document.getElementById('errorConfirmationModal').style.display = 'block';
+            // window.location.reload();
+        } if (data.state == 2) {
+            document.getElementById("errorMessage").textContent = "No revisions allowed; project is closed!"
+            document.getElementById('errorConfirmationModal').style.display = 'block';
+        } if (data.state == 3) {
+            document.getElementById("editMessage").textContent = "Do you wish to edit your bid for this project?"
+            // document.getElementById('editConfirmationModal').style.display = 'block';
+            document.getElementById('editbid').style.display = 'block';
+            
+        } 
+        else {
+            
+            document.getElementById('bidConfirmationModal').style.display = 'block';
+
+            document.getElementById('confirmBid').onclick = function () {
+                // Handle Yes click (e.g. submit a bid)
+                console.log(`Submitting bid for project ID: ${projectId}`);
+                window.location.href = `/Bid_Entry/${projectId}`
+                closeBidConfirmation();
+            };
+        }
+    })
+    .catch(error => { 
+        console.error('Error: ', error);
+    })
 
     document.getElementById('cancelBid').onclick = function () {
         closeBidConfirmation();
@@ -92,8 +125,28 @@ document.getElementById('confirmtogoproject').onclick = function () {
 // Function to close the modal
 function closeBidConfirmation() {
     document.getElementById('bidConfirmationModal').style.display = 'none';
+    document.getElementById('editConfirmationModal').style.display = 'none';
+    document.getElementById('errorConfirmationModal').style.display = 'none';
+    document.getElementById('editbid').style.display = 'none';
 }
 
 function cancelConfirm() {
     document.getElementById('ConfirmationModal').style.display = 'none';
+}
+
+function updateClosingDate(projectId) {
+    const date = document.getElementById('editClosingDate').value;
+    const data = {date}
+    fetch(`/editbid/${project_id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    }).then(response => response.json())
+    .then(data => {
+        console.log(data.message)
+        alert(data.message)
+        closeBidConfirmation()
+    })
 }

@@ -96,6 +96,36 @@
         </div>
     </div>
 
+    <div id="editConfirmationModal" class="modal" style="display: none;">
+        <span class="close" onclick="closeBidConfirmation()">X</span>
+
+        <div class="modal-content">
+            <p id="editMessage"></p>
+            <button onclick="editBidConfirm()">Yes</button>
+            <button onclick="closeBidConfirmation()">No</button>
+        </div>
+    </div>
+
+    <div id="editbid" class="modal" style="display: none;">
+        <span class="close" onclick="closeBidConfirmation()">X</span>
+
+        <div class="modal-content">
+            <p>Do you wish to update a project's closing Date ?</p>
+            <input id="editClosingDate" type="date" value="">
+            <button onclick="updateClosingDate()">Yes</button>
+            <button onclick="closeBidConfirmation()">No</button>
+        </div>
+    </div>
+
+    <div id="errorConfirmationModal" class="modal" style="display: none;">
+        <span class="close" onclick="closeBidConfirmation()">X</span>
+
+        <div class="modal-content">
+            <p id="errorMessage">You can edit your bid after 24 hours!</p>
+            <button onclick="closeBidConfirmation()">OK</button>
+        </div>
+    </div>
+
 
 <!-- Footer Section -->
 	<div class="footer">

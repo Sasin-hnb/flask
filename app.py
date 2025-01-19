@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import login_user, login_required, LoginManager, UserMixin, logout_user, current_user
 from flask_cors import CORS
-from datetime import datetime, timezone, date
+from datetime import datetime, timezone, date, timedelta
 
 app = Flask(__name__)
 
@@ -543,6 +543,36 @@ def search_projects():
 
     return jsonify(projects_list)
 
+
+from flask import jsonify
+from datetime import timedelta
+from flask_login import login_required, current_user
+
+@app.route('/project_search/bid/<int:projectId>')
+@login_required
+def project_search_bid(projectId):
+    username = current_user.username
+    user = User.query.filter_by(username=username).first()
+    user_id = user.id
+  
+    bid = Bids.query.filter_by(project_id=projectId, user_id=user_id).first() 
+    
+    if not bid:
+        return jsonify({"message": "Do you wish to submit a bid for this project?", "state": 4})
+    
+    project = bid.project  # Assuming you have a 'project' relationship in Bids
+    
+    if project.closingDate < datetime.now().date():
+        return jsonify({"message": "No revisions allowed; project is closed!", "state": 2})
+
+    created_at = bid.created_at
+    time_diff = datetime.now().date() - timedelta(hours=24)
+
+    if created_at >= time_diff:
+        return jsonify({"message": "You can edit your bid after 24 hours!", "state": 1})
+    else:
+        return jsonify({"message": "Do you wish to edit your bid for this project?", "state": 3})
+
 @app.route('/Bid_Entry/<int:projectId>', methods=['GET', 'POST'])
 @login_required
 def project_entry(projectId):
@@ -586,6 +616,23 @@ def project_entry(projectId):
         db.session.add(new_bid)
         db.session.commit()
         return jsonify({'message': 'Bid to the project successfully!'})
+
+@app.route('/editbid/<int:projectId>', methods=['PUT'])
+@login_required
+def editbid(projectId):
+    updateClosingDate = request.get_json().get('date')
+    username = current_user.username
+    user = User.query.filter_by(username=username).first()
+    user_id = user.id
+    bid = Bids.query.filter_by(user_id=user_id, project_id=projectId).first()
+    print('ppppp',updateClosingDate)
+    bid_id = bid.id
+    bids = db.session.get(Bids, bid_id)
+    parsed_date = datetime.strptime(updateClosingDate, '%Y-%m-%d').date()
+    bids.closingDate = parsed_date
+
+    db.session.commit()
+    return jsonify({"message": "update succesfully!"}), 200
 
 @app.route('/detailed_reports')
 @login_required
@@ -701,5 +748,5 @@ def logout():
     return redirect(url_for('home'))
 
 if __name__ == '__main__':
-    # app.run(debug=True)
-    app.run(host="0.0.0.0")
+    app.run(debug=True)
+    # app.run(host="0.0.0.0")
