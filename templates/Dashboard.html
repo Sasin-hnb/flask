@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,42 +9,43 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
 
 
-<!-- Sidebar Navigation -->
+    <!-- Sidebar Navigation -->
     <div class="sidebar">
         <div class="left-nav">
-        <a href="/">
-        <img src="/static/images/constructhub-logo.png" alt="ConstructHub Logo" class="logo">
-        </a>
-        <a href="/dashboard">Dashboard</a>
-        <div class="dropdown">
-            <a href="#">User HUB</a>
-            <div class="dropdown-content">
-                <a href="/profile">User HUB</a>
-                <a href="/profile/edit">Edit Personal Info</a>
-                <a href="/profile/notifications">Notification Settings</a>
-                {% if valid_role == "Admin" %}
-                <a href="/profile/manage_company">Manage Company (Admin Only)</a>
-                <a href="/user_management">User Management (Admin Only)</a>
-                {% endif %}
-                <a href="/Subscription_Details">Subscription Details</a>
+            <a href="/">
+                <img src="/static/images/constructhub-logo.png" alt="ConstructHub Logo" class="logo">
+            </a>
+            <a href="/dashboard">Dashboard</a>
+            <div class="dropdown">
+                <a href="#">User HUB</a>
+                <div class="dropdown-content">
+                    <a href="/profile">User HUB</a>
+                    <a href="/profile/edit">Edit Personal Info</a>
+                    <a href="/profile/notifications">Notification Settings</a>
+                    {% if valid_role == "Admin" %}
+                    <a href="/profile/manage_company">Manage Company (Admin Only)</a>
+                    <a href="/user_management">User Management (Admin Only)</a>
+                    {% endif %}
+                    <a href="/Subscription_Details">Subscription Details</a>
+                </div>
             </div>
-        </div>
 
         </div>
         <a href="/Project_Search">Search Projects</a>
         <a href="/add_project">Add Project</a>
         <a href="/detailed_reports">Reports</a>
         <a href="/Bidding_History">Bidding History</a>
-	<a href="#" onclick="showLogoutPopup()">Logout</a>
+        <a href="#" onclick="showLogoutPopup()">Logout</a>
     </div>
 
 
 
 
-<!-- Main Content -->
+    <!-- Main Content -->
     <div class="main-content">
         <!-- Notification Icons -->
         <div class="notifications">
@@ -51,7 +53,7 @@
             <img src="/static/Tabs/Bell_Icon.png" alt="Project Alerts" title="Project Alerts">
         </div>
 
-<!-- Bidding Metrics Section -->
+        <!-- Bidding Metrics Section -->
         <div class="dashboard-card bidding-metrics">
             <h3>Bidding Metrics (YTD)</h3>
             <p>Total Projects: <span id="totalProjects">0</span></p>
@@ -59,54 +61,60 @@
             <canvas id="biddingChart" width="600" height="300"></canvas>
         </div>
 
-<!-- Other Dashboard Sections -->
-    	<div class="dashboard">
-	    <div class="dashboard-card" id="active-users-card">
-    	    <img src="static/Tabs/UsersOnline.jpg" alt="Users Online" style="width: 150px; height: 150px; display: block; 	margin: 0 auto; border-radius: 8px;">
- 	    <h3>Active Users</h3>
-   	    <p>Currently Logged In: <span id="activeUsers">0</span></p>
-	</div>
-        
-	<a href="detailed_reports" style="text-decoration: none; color: inherit;">
-	<div class="dashboard-card">
-            <img src="static/Tabs/DetailedReport.jpg" alt="Detailed Report" style="width: 150px; height: 150px; display: block; margin: 0 auto; border-radius: 8px;">
-            <h3>View Detailed Report</h3>
-            <p>Build, View & Customize a report.</p>
-        </div>
-	</a>
+        <!-- Other Dashboard Sections -->
+        <div class="dashboard">
+            <div class="dashboard-card" id="active-users-card">
+                <img src="static/Tabs/UsersOnline.jpg" alt="Users Online"
+                    style="width: 150px; height: 150px; display: block; 	margin: 0 auto; border-radius: 8px;">
+                <h3>Active Users</h3>
+                <p>Currently Logged In: <span id="activeUsers">0</span></p>
+            </div>
 
-	<a href="Project_Search" style="text-decoration: none; color: inherit;">
-        <div class="dashboard-card">
-            <img src="static/Tabs/ProjectLookup.jpg" alt="Project Lookup" style="width: 150px; height: auto; display: block; 	margin: 0 auto; border-radius: 8px;">
-            <h3>Lookup Projects</h3>
-            <p>Easily search for ongoing or past construction projects.</p>
-        </div>
-	</a>
+            <a href="detailed_reports" style="text-decoration: none; color: inherit;">
+                <div class="dashboard-card">
+                    <img src="static/Tabs/DetailedReport.jpg" alt="Detailed Report"
+                        style="width: 150px; height: 150px; display: block; margin: 0 auto; border-radius: 8px;">
+                    <h3>View Detailed Report</h3>
+                    <p>Build, View & Customize a report.</p>
+                </div>
+            </a>
 
-	<a href="Add_Project" style="text-decoration: none; color: inherit;">
-        <div class="dashboard-card">
-            <img src="static/Tabs/ProjectEntry.jpg" alt="Project Entry" style="width: 150px; height: 150px; display: block; 	margin: 0 auto; border-radius: 8px;">
-            <h3>Add Projects</h3>
-            <p>Securely enter a new project into the ConstructHUB Database.</p>
-        </div>
-	</a>
+            <a href="Project_Search" style="text-decoration: none; color: inherit;">
+                <div class="dashboard-card">
+                    <img src="static/Tabs/ProjectLookup.jpg" alt="Project Lookup"
+                        style="width: 150px; height: auto; display: block; 	margin: 0 auto; border-radius: 8px;">
+                    <h3>Lookup Projects</h3>
+                    <p>Easily search for ongoing or past construction projects.</p>
+                </div>
+            </a>
 
-	<a href="bidding_history" style="text-decoration: none; color: inherit;">
-        <div class="dashboard-card">
-            <img src="static/Tabs/BiddingHistory.jpg" alt="Bidding History" style="width: 150px; height: auto; display: block; 	margin: 0 auto; border-radius: 8px;">
-            <h3>Bidding History</h3>
-            <p>View your bidding history, and quote values.</p>
-        </div>
-	</a>
+            <a href="Add_Project" style="text-decoration: none; color: inherit;">
+                <div class="dashboard-card">
+                    <img src="static/Tabs/ProjectEntry.jpg" alt="Project Entry"
+                        style="width: 150px; height: 150px; display: block; 	margin: 0 auto; border-radius: 8px;">
+                    <h3>Add Projects</h3>
+                    <p>Securely enter a new project into the ConstructHUB Database.</p>
+                </div>
+            </a>
+
+            <a href="bidding_history" style="text-decoration: none; color: inherit;">
+                <div class="dashboard-card">
+                    <img src="static/Tabs/BiddingHistory.jpg" alt="Bidding History"
+                        style="width: 150px; height: auto; display: block; 	margin: 0 auto; border-radius: 8px;">
+                    <h3>Bidding History</h3>
+                    <p>View your bidding history, and quote values.</p>
+                </div>
+            </a>
 
 
 
-<!-- Logout Button with Popup Confirmation -->
-	<div class="dashboard-card" id="logout-card" style="cursor: pointer;" onclick="showLogoutPopup()">
-   	<img src="static/Tabs/Logout.jpg" alt="Logout" style="width: 150px; height: auto; display: block; margin: 0 auto; border-radius: 8px;">
-  	<h3>Logout</h3>
-    	<p>Safely log out of your ConstructHub account.</p>
-	</div>
+            <!-- Logout Button with Popup Confirmation -->
+            <div class="dashboard-card" id="logout-card" style="cursor: pointer;" onclick="showLogoutPopup()">
+                <img src="static/Tabs/Logout.jpg" alt="Logout"
+                    style="width: 150px; height: auto; display: block; margin: 0 auto; border-radius: 8px;">
+                <h3>Logout</h3>
+                <p>Safely log out of your ConstructHub account.</p>
+            </div>
 
 
 
@@ -120,60 +128,71 @@
 
 
 
-<!-- Footer Section -->
-<div class="footer">
-    <p>&copy; 2024 ConstructHub. All rights reserved.</p>
+    <!-- Footer Section -->
+    <div class="footer">
+        <p>&copy; 2024 ConstructHub. All rights reserved.</p>
 
-<div class="footer-links">
-    <a href="/privacy-policy.html" target="_blank">Privacy Policy</a> |
-    <a href="/subscription_agreement.html" target="_blank">Subscription Agreement</a> |
-    <a href="/terms-of-use.html" target="_blank">Terms of Use</a>
-</div>
+        <div class="footer-links">
+            <a href="/privacy-policy.html" target="_blank">Privacy Policy</a> |
+            <a href="/subscription_agreement.html" target="_blank">Subscription Agreement</a> |
+            <a href="/terms-of-use.html" target="_blank">Terms of Use</a>
+        </div>
 
-    <script>
-        document.getElementById('activeUsers').textContent = 5;
-        document.getElementById('totalProjects').textContent = 330;
-        document.getElementById('bidsSubmitted').textContent = 168;
+        <script>
+            document.getElementById('activeUsers').textContent = 5;
 
-        const ctx = document.getElementById('biddingChart').getContext('2d');
+            const ctx = document.getElementById('biddingChart').getContext('2d');
 
-        fetch('/dashboard/chart')
-        .then(response => response.json())
-        .then(data => {
-            const biddingChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                datasets: [
-                    {
-                        label: 'Market Bids',
-                        data: data.projects,
-                        backgroundColor: 'rgba(0, 123, 255, 0.5)',
-                        borderColor: 'rgba(0, 123, 255, 1)',
-                        borderWidth: 1
-                    },
-                    {
-                        label: 'Contractor Bids',
-                        data: data.bids,
-                        backgroundColor: 'rgba(0, 51, 102, 0.7)',
-                        borderColor: 'rgba(0, 51, 102, 1)',
-                        borderWidth: 1
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: { beginAtZero: true }
-                }
-            }
-        });
-        })
+            fetch('/dashboard/chart')
+                .then(response => response.json())
+                .then(data => {
+                    // Assuming data.projects is an array of numbers
+                    const totalProjects = data.projects.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+                    const bidsSubmitted = data.bids.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 
-    </script>
+                    // Update the text content of the element with ID 'totalProjects'
+                    document.getElementById('totalProjects').textContent = totalProjects;
+                    document.getElementById('bidsSubmitted').textContent = bidsSubmitted
+
+                    const biddingChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                            datasets: [
+                                {
+                                    label: 'Market Bids',
+                                    data: data.projects,
+                                    backgroundColor: 'rgba(0, 123, 255, 0.5)',
+                                    borderColor: 'rgba(0, 123, 255, 1)',
+                                    borderWidth: 1
+                                },
+                                {
+                                    label: 'Contractor Bids',
+                                    data: data.bids,
+                                    backgroundColor: 'rgba(0, 51, 102, 0.7)',
+                                    borderColor: 'rgba(0, 51, 102, 1)',
+                                    borderWidth: 1
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        stepSize: 1 // Set step size to whole numbers
+                                    }
+                                }
+                            }
+                        }
+                    });
+                })
+
+        </script>
 
 
-<!-- Popup Confirmation Window -->
+        <!-- Popup Confirmation Window -->
         <div id="logoutPopup" class="popup-overlay" style="display: none;">
             <div class="popup-content">
                 <h3>Confirm Logout</h3>
@@ -199,4 +218,5 @@
     </script>
 
 </body>
+
 </html>
