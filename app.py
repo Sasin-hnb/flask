@@ -580,7 +580,18 @@ def project_entry(projectId):
         user_name = current_user.username
         user = User.query.filter_by(username=user_name).first()
         user_division = user.division
-        return render_template('Bid_Entry.html', division=user_division, projectId=projectId)
+        project = Projects.query.filter_by(id=projectId).first()
+        project_closingDate = project.closingDate
+        project_projectName = project.projectName
+        project_address = project.address
+        project_city = project.city
+        project_province = project.province
+        project_postalCode = project.postalCode
+
+        return render_template('Bid_Entry.html', division=user_division, projectId=projectId, 
+                                project_closingDate=project_closingDate, project_projectName=project_projectName, 
+                                project_address=project_address, project_city=project_city,
+                                project_province=project_province, project_postalCode=project_postalCode)
     
     if request.method == 'POST':
         user_name = current_user.username
@@ -596,6 +607,7 @@ def project_entry(projectId):
         city = request.json.get('city')
         province = request.json.get('province')
         totalValue = request.json.get('totalValue')
+        postalCode = request.json.get('postalCode')
 
         try:
             closingDates = datetime.strptime(closingDate, '%Y-%m-%d')
@@ -611,7 +623,8 @@ def project_entry(projectId):
             bidAmount=totalValue,
             project_id=projectId,
             company_id=companyId,
-            user_id=user_id
+            user_id=user_id,
+            postalCode=postalCode
         )   
         db.session.add(new_bid)
         db.session.commit()

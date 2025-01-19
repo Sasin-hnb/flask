@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,71 +12,81 @@
 
 <body>
 
-<!-- Sidebar Navigation -->
+    <!-- Sidebar Navigation -->
     <div class="sidebar">
         <div class="left-nav">
-        <a href="/">
-        <img src="/static/images/constructhub-logo.png" alt="ConstructHub Logo" class="logo">
-        </a>
-        <a href="/Dashboard">Dashboard</a>
-        <div class="dropdown">
-            <a href="#">User HUB</a>
-            <div class="dropdown-content">
-                <a href="/profile">User HUB</a>
-                <a href="/profile/edit">Edit Personal Info</a>
-                <a href="/profile/notifications">Notification Settings</a>
-                <a href="/profile/manage_company">Manage Company (Admin Only)</a>
-                <a href="/User_Management">User Management (Admin Only)</a>
-                <a href="/Subscription_Details">Subscription Details</a>
+            <a href="/">
+                <img src="/static/images/constructhub-logo.png" alt="ConstructHub Logo" class="logo">
+            </a>
+            <a href="/Dashboard">Dashboard</a>
+            <div class="dropdown">
+                <a href="#">User HUB</a>
+                <div class="dropdown-content">
+                    <a href="/profile">User HUB</a>
+                    <a href="/profile/edit">Edit Personal Info</a>
+                    <a href="/profile/notifications">Notification Settings</a>
+                    <a href="/profile/manage_company">Manage Company (Admin Only)</a>
+                    <a href="/User_Management">User Management (Admin Only)</a>
+                    <a href="/Subscription_Details">Subscription Details</a>
+                </div>
             </div>
-        </div>
 
         </div>
         <a href="/Project_Search">Search Projects</a>
         <a href="/Add_Project">Add Project</a>
         <a href="/detailed_reports">Reports</a>
         <a href="/Bidding_History">Bidding History</a>
-	<a href="#" onclick="showLogoutPopup()">Logout</a>
+        <a href="#" onclick="showLogoutPopup()">Logout</a>
     </div>
 
     <div class="main-content">
         <h1>Bid Entry</h1>
         <div class="dashboard-card">
-		<div style="margin-bottom: 10px;">
-    	   	    <label for="closingDate">Anticipated Closing Date</label>
-    		    <input type="date" id="closingDate" name="closingDate" class="input-field" required>
-		</div>
-                <div style="margin-bottom: 10px;">
-                    <label for="projectName">Project Name</label>
-                    <input type="text" id="projectName" name="projectName" class="input-field" required>
-                </div>
-                <div style="margin-bottom: 10px;">
-                    <label for="address">Address</label>
-                    <input type="text" id="address" name="address" class="input-field" required>
-                </div>
-                <div class="form-row">
-                    <div>
-                <div style="margin-bottom: 10px;">
-
-                        <label for="city">City</label>
-                        <input type="text" id="city" name="city" class="input-field" required>
-                    </div>
-                    <div>
-                        <label for="province">Province</label>
-                        <select id="province" name="province" class="input-field" required>
-                            <option value="">Select Province</option>
-                            <option value="BC">British Columbia</option>
-                            <option value="AB">Alberta</option>
-                            <option value="ON">Ontario</option>
-                        </select>
-                    </div>
-                </div>
+            <div style="margin-bottom: 10px;">
+                <label for="closingDate">Anticipated Closing Date</label>
+                <input type="date" id="closingDate" name="closingDate" class="input-field" value="{{project_closingDate}}" required>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <label for="projectName">Project Name</label>
+                <input type="text" id="projectName" name="projectName" class="input-field" value="{{project_projectName}}" required>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <label for="address">Address</label>
+                <input type="text" id="address" name="address" class="input-field" value="{{project_address}}" required>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <label for="city">City</label>
+                <input type="text" id="city" name="city" class="input-field" value="{{project_city}}" required>
+            </div>
+            <div>
+                <label for="province">Province</label>
+                <select id="province" name="province" class="input-field" required>
+                    <option value="">Select Province</option>
+                    <option value="Alberta" {% if project_province == 'Alberta' %} selected {% endif %}>Alberta</option>
+                    <option value="British Columbia" {% if project_province == 'British Columbia' %} selected {% endif %}>British Columbia</option>
+                    <option value="Manitoba" {% if project_province == 'Manitoba' %} selected {% endif %}>Manitoba</option>
+                    <option value="New Brunswick" {% if project_province == 'New Brunswick' %} selected {% endif %}>New Brunswick</option>
+                    <option value="Newfoundland and Labrador" {% if project_province == 'Newfoundland and Labrador' %} selected {% endif %}>Newfoundland and Labrador</option>
+                    <option value="Nova Scotia" {% if project_province == 'Nova Scotia' %} selected {% endif %}>Nova Scotia</option>
+                    <option value="Ontario" {% if project_province == 'Ontario' %} selected {% endif %}>Ontario</option>
+                    <option value="Prince Edward Island" {% if project_province == 'Prince Edward Island' %} selected {% endif %}>Prince Edward Island</option>
+                    <option value="Manitoba" {% if project_province == 'Manitoba' %} selected {% endif %}>Manitoba</option>
+                    <option value="Quebec" {% if project_province == 'Quebec' %} selected {% endif %}>Quebec</option>
+                    <option value="Saskatchewan" {% if project_province == 'Saskatchewan' %} selected {% endif %}>Saskatchewan</option>
+                </select>
+            </div>            
+            <div style="margin-bottom: 10px;">
+                <label for="postalCode">PostalCode</label>
+                <input type="text" id="postalCode" name="postalCode" class="input-field" value="{{project_postalCode}}" required>
+            </div>
+            <div class="form-row">
                 <input type="hidden" id="projectId" value="{{ projectId }}">
                 {% if division == "1" %}
                 <h2 style="text-align: left;">General Contractor Pricing Scheme</h2>
                 <div class="scope-item">
                     <label for="generalCondition">Division 1 - General Conditions</label>
-                    <input type="number" id="generalCondition" name="generalCondition" class="input-field value-field" min="0">
+                    <input type="number" id="generalCondition" name="generalCondition" class="input-field value-field"
+                        min="0">
                 </div>
                 <div class="scope-item">
                     <label for="Div2">Division 2 - Site Work & Demolition Services</label>
@@ -143,7 +154,7 @@
                 </div>
                 <hr>
                 {% endif %}
-                
+
                 {% if division == "2" %}
                 <h2 style="text-align: left;">Division 2 Scope of Work</h2>
                 <div class="scope-item">
@@ -156,12 +167,13 @@
                 </div>
                 <hr>
                 {% endif %}
-                
+
                 {% if division == "3" %}
                 <h2 style="text-align: left;">Division 3 Scope of Work</h2>
                 <div class="scope-item">
                     <label for="reinforcement">Concrete Reinforcement</label>
-                    <input type="number" id="reinforcement" name="reinforcement" class="input-field value-field" min="0">
+                    <input type="number" id="reinforcement" name="reinforcement" class="input-field value-field"
+                        min="0">
                 </div>
                 <div class="scope-item">
                     <label for="Cast">Cast in Place Concrete</label>
@@ -177,15 +189,18 @@
                 </div>
                 <div class="scope-item">
                     <label for="concreteScanning">Concrete Scanning</label>
-                    <input type="number" id="concreteScanning" name="concreteScanning" class="input-field value-field" min="0">
+                    <input type="number" id="concreteScanning" name="concreteScanning" class="input-field value-field"
+                        min="0">
                 </div>
                 <div class="scope-item">
                     <label for="concreteCutting">Concrete Cutting</label>
-                    <input type="number" id="concreteCutting" name="concreteCutting" class="input-field value-field" min="0">
+                    <input type="number" id="concreteCutting" name="concreteCutting" class="input-field value-field"
+                        min="0">
                 </div>
                 <div class="scope-item">
                     <label for="concreteGrinding">Concrete Grinding & Repairs</label>
-                    <input type="number" id="concreteGrinding" name="concreteGrinding" class="input-field value-field" min="0">
+                    <input type="number" id="concreteGrinding" name="concreteGrinding" class="input-field value-field"
+                        min="0">
                 </div>
                 <hr>
                 {% endif %}
@@ -202,7 +217,8 @@
                 </div>
                 <div class="scope-item">
                     <label for="simulatedMasonry">Simulated Masonry</label>
-                    <input type="number" id="simulatedMasonry" name="simulatedMasonry" class="input-field value-field" min="0">
+                    <input type="number" id="simulatedMasonry" name="simulatedMasonry" class="input-field value-field"
+                        min="0">
                 </div>
                 <div class="scope-item">
                     <label for="restoration">Restoration & Cleaning</label>
@@ -215,7 +231,8 @@
                 <h2 style="text-align: left;">Division 5 Scope of Work</h2>
                 <div class="scope-item">
                     <label for="structuralSteel">Structural Steel</label>
-                    <input type="number" id="structuralSteel" name="structuralSteel" class="input-field value-field" min="0">
+                    <input type="number" id="structuralSteel" name="structuralSteel" class="input-field value-field"
+                        min="0">
                 </div>
                 <div class="scope-item">
                     <label for="joists">Joists</label>
@@ -232,7 +249,7 @@
                 <div class="scope-item">
                     <label for="miscMetal">Miscellaneous Metals</label>
                     <input type="number" id="miscMetal" name="miscMetal" class="input-field value-field" min="0">
-		            </div>
+                </div>
                 <hr>
                 {% endif %}
 
@@ -240,11 +257,13 @@
                 <h2 style="text-align: left;">Division 6 Scope of Work</h2>
                 <div class="scope-item">
                     <label for="roughCarpentry">Rough Carpentry</label>
-                    <input type="number" id="roughCarpentry" name="roughCarpentry" class="input-field value-field" min="0">
+                    <input type="number" id="roughCarpentry" name="roughCarpentry" class="input-field value-field"
+                        min="0">
                 </div>
                 <div class="scope-item">
                     <label for="finishCarpentry">Finish Carpentry</label>
-                    <input type="number" id="finishCarpentry" name="finishCarpentry" class="input-field value-field" min="0">
+                    <input type="number" id="finishCarpentry" name="finishCarpentry" class="input-field value-field"
+                        min="0">
                 </div>
                 <div class="scope-item">
                     <label for="Millwork">Millwork</label>
@@ -253,7 +272,7 @@
                 <div class="scope-item">
                     <label for="FRP">Fiber Reinforced Panels (FRP)</label>
                     <input type="number" id="miscMetal" name="miscMetal" class="input-field value-field" min="0">
-		            </div>
+                </div>
                 <hr>
                 {% endif %}
 
@@ -265,7 +284,8 @@
                 </div>
                 <div class="scope-item">
                     <label for="thermalProtection">Thermal Protection</label>
-                    <input type="number" id="thermalProtection" name="thermalProtection" class="input-field value-field" min="0">
+                    <input type="number" id="thermalProtection" name="thermalProtection" class="input-field value-field"
+                        min="0">
                 </div>
                 <div class="scope-item">
                     <label for="Roofing">Roofing & Siding Panels</label>
@@ -273,12 +293,13 @@
                 </div>
                 <div class="scope-item">
                     <label for="roofingMembrane">Roofing Membrane</label>
-                    <input type="number" id="roofingMembrane" name="roofingMembrane" class="input-field value-field" min="0">
-		            </div>
+                    <input type="number" id="roofingMembrane" name="roofingMembrane" class="input-field value-field"
+                        min="0">
+                </div>
                 <div class="scope-item">
                     <label for="Flashing">Flashing & Sheetmetal</label>
                     <input type="number" id="Flashing" name="Flashing" class="input-field value-field" min="0">
-		            </div>
+                </div>
                 <hr>
                 {% endif %}
 
@@ -312,7 +333,7 @@
                     <label for="glazing">Glazing</label>
                     <input type="number" id="glazing" name="glazing" class="input-field value-field" min="0">
                 </div>
-		            <hr>
+                <hr>
                 {% endif %}
 
                 {% if division == "9" %}
@@ -327,7 +348,8 @@
                 </div>
                 <div class="scope-item">
                     <label for="acousticCeiling">Acoustic/Suspended Ceiling</label>
-                    <input type="number" id="acousticCeiling" name="acousticCeiling" class="input-field value-field" min="0">
+                    <input type="number" id="acousticCeiling" name="acousticCeiling" class="input-field value-field"
+                        min="0">
                 </div>
                 <div class="scope-item">
                     <label for="flooring">Flooring</label>
@@ -339,16 +361,18 @@
                 </div>
                 <div class="scope-item">
                     <label for="paintCoatings">Paint & Coatings</label>
-                    <input type="number" id="paintCoatings" name="paintCoatings" class="input-field value-field" min="0">
+                    <input type="number" id="paintCoatings" name="paintCoatings" class="input-field value-field"
+                        min="0">
                 </div>
-		            <hr>
+                <hr>
                 {% endif %}
 
                 {% if division == "10" %}
                 <h2 style="text-align: left;">Division 10 Scope of Work</h2>
                 <div class="scope-item">
                     <label for="toiletPartitions">Toilet Partitions</label>
-                    <input type="number" id="toiletPartitions" name="toiletPartitions" class="input-field value-field" min="0">
+                    <input type="number" id="toiletPartitions" name="toiletPartitions" class="input-field value-field"
+                        min="0">
                 </div>
                 <div class="scope-item">
                     <label for="cornerguard">Wall & Cornerguards</label>
@@ -360,20 +384,22 @@
                 </div>
                 <div class="scope-item">
                     <label for="washroomAccessories">Washroom Accessories</label>
-                    <input type="number" id="washroomAccessories" name="washroomAccessories" class="input-field value-field" min="0">
+                    <input type="number" id="washroomAccessories" name="washroomAccessories"
+                        class="input-field value-field" min="0">
                 </div>
                 <div class="scope-item">
                     <label for="FRP">Fiber-Reinforced Panels (FRP)</label>
                     <input type="number" id="FRP" name="FRP" class="input-field value-field" min="0">
                 </div>
-		            <hr>
+                <hr>
                 {% endif %}
 
                 {% if division == "11" %}
                 <h2 style="text-align: left;">Division 11 Scope of Work</h2>
                 <div class="scope-item">
                     <label for="equipmentInstall">Equipment Installation Service</label>
-                    <input type="number" id="equipmentInstall" name="equipmentInstall" class="input-field value-field" min="0">
+                    <input type="number" id="equipmentInstall" name="equipmentInstall" class="input-field value-field"
+                        min="0">
                 </div>
                 <hr>
                 {% endif %}
@@ -382,7 +408,8 @@
                 <h2 style="text-align: left;">Division 12 Scope of Work</h2>
                 <div class="scope-item">
                     <label for="furnishingAccessories">Furnishing & Accessories</label>
-                    <input type="number" id="furnishingAccessories" name="furnishingAccessories" class="input-field value-field" min="0">
+                    <input type="number" id="furnishingAccessories" name="furnishingAccessories"
+                        class="input-field value-field" min="0">
                 </div>
                 <div class="scope-item">
                     <label for="furniture">Furniture</label>
@@ -390,7 +417,8 @@
                 </div>
                 <div class="scope-item">
                     <label for="furnitureInstallation">Furniture Installation Services</label>
-                    <input type="number" id="furnitureInstallation" name="furnitureInstallation" class="input-field value-field" min="0">
+                    <input type="number" id="furnitureInstallation" name="furnitureInstallation"
+                        class="input-field value-field" min="0">
                 </div>
                 <hr>
                 {% endif %}
@@ -407,11 +435,13 @@
                 </div>
                 <div class="scope-item">
                     <label for="fireProtection">Fire Protection (Sprinklers)</label>
-                    <input type="number" id="fireProtection" name="fireProtection" class="input-field value-field" min="0">
+                    <input type="number" id="fireProtection" name="fireProtection" class="input-field value-field"
+                        min="0">
                 </div>
                 <div class="scope-item">
                     <label for="Refrigeration">Refrigeration</label>
-                    <input type="number" id="Refrigeration" name="Refrigeration" class="input-field value-field" min="0">
+                    <input type="number" id="Refrigeration" name="Refrigeration" class="input-field value-field"
+                        min="0">
                 </div>
                 <div class="scope-item">
                     <label for="HVAC">HVAC (Sheet Metal, and Labour)</label>
@@ -419,7 +449,8 @@
                 </div>
                 <div class="scope-item">
                     <label for="airDistribution">Air Distribution (Grilles, Registers, Diffusers)</label>
-                    <input type="number" id="airDistribution" name="airDistribution" class="input-field value-field" min="0">
+                    <input type="number" id="airDistribution" name="airDistribution" class="input-field value-field"
+                        min="0">
                 </div>
                 <div class="scope-item">
                     <label for="airBalancing">Air Balancing</label>
@@ -440,7 +471,8 @@
                 </div>
                 <div class="scope-item">
                     <label for="Communication">Communications & Data</label>
-                    <input type="number" id="Communication" name="Communication" class="input-field value-field" min="0">
+                    <input type="number" id="Communication" name="Communication" class="input-field value-field"
+                        min="0">
                 </div>
                 <div class="scope-item">
                     <label for="fireAlarm">Fire Alarm</label>
@@ -450,47 +482,47 @@
                 {% endif %}
 
                 <div class="scope-item">
-                  <label for="totalValue" style="font-weight: bold;">Total Value (CAD)</label>
-                  <input type="number" id="totalValue" name="totalValue" class="input-field" readonly>
+                    <label for="totalValue" style="font-weight: bold;">Total Value (CAD)</label>
+                    <input type="number" id="totalValue" name="totalValue" class="input-field" readonly>
                 </div>
 
                 <div>
                     <button type="submit" class="submit-button" onclick="bid_sum()">Submit Bid</button>
                 </div>
+            </div>
         </div>
-    </div>
 
-    <div id="bidConfirmationModal" class="modal" style="display: none;">
-      <span class="close" onclick="closeBidConfirmation()">X</span>
+        <div id="bidConfirmationModal" class="modal" style="display: none;">
+            <span class="close" onclick="closeBidConfirmation()">X</span>
 
-      <div class="modal-content">
-          <p>Confirm total matches your bid.</p>
-          <button id="confirmBid">Submit</button>
-          <button id="cancelBid">Edit</button>
-      </div>
-  </div>
-
+            <div class="modal-content">
+                <p>Confirm total matches your bid.</p>
+                <button id="confirmBid">Submit</button>
+                <button id="cancelBid">Edit</button>
+            </div>
+        </div>
 
 
 
 
 
 
-<!-- Footer Section -->
-	<div class="footer">
-	    <p>&copy; 2024 ConstructHub. All rights reserved.</p>
-    	    <div class="footer-links">
-            <a href="/privacy-policy.html" target="_blank">Privacy Policy</a> |
-            <a href="/subscription_agreement.html" target="_blank">Subscription Agreement</a> |
-            <a href="/terms-of-use.html" target="_blank">Terms of Use</a>
-    </div>
+
+        <!-- Footer Section -->
+        <div class="footer">
+            <p>&copy; 2024 ConstructHub. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="/privacy-policy.html" target="_blank">Privacy Policy</a> |
+                <a href="/subscription_agreement.html" target="_blank">Subscription Agreement</a> |
+                <a href="/terms-of-use.html" target="_blank">Terms of Use</a>
+            </div>
 
 
 
 
-</div>  <!-- Missing closing div -->
+        </div> <!-- Missing closing div -->
 
-<!-- Popup Confirmation Window -->
+        <!-- Popup Confirmation Window -->
         <div id="logoutPopup" class="popup-overlay" style="display: none;">
             <div class="popup-content">
                 <h3>Confirm Logout</h3>
@@ -517,7 +549,8 @@
 
 
 
-<script src="{{ url_for('static', filename='js/bid_entry.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bid_entry.js') }}"></script>
 
 </body>
+
 </html>

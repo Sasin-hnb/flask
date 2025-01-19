@@ -31,6 +31,7 @@ function showBidConfirmation() {
   const province = document.getElementById("province").value;
   const projectId = document.getElementById("projectId").value;
   const closingDate = document.getElementById('closingDate').value;
+  const postalCode = document.getElementById('postalCode').value;
 
 
   console.log("Total Sum: ", totalValue);
@@ -43,8 +44,8 @@ function showBidConfirmation() {
       address: address,
       city: city,
       province: province,
-      totalValue: totalValue
-      // postalCode: postalCode
+      totalValue: totalValue,
+      postalCode: postalCode
     }
     fetch(`/Bid_Entry/${projectId}`, {
       method: 'POST',
