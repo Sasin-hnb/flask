@@ -18,24 +18,24 @@
             <a href="/">
                 <img src="/static/images/constructhub-logo.png" alt="ConstructHub Logo" class="logo">
             </a>
-            <a href="/Dashboard">Dashboard</a>
+            <a href="/dashboard">Dashboard</a>
             <div class="dropdown">
                 <a href="#">User HUB</a>
                 <div class="dropdown-content">
                     <a href="/profile">User HUB</a>
                     <a href="/profile/edit">Edit Personal Info</a>
                     <a href="/profile/notifications">Notification Settings</a>
-                    <a href="/profile/manage_company">Manage Company (Admin Only)</a>
-                    <a href="/User_Management">User Management (Admin Only)</a>
+                    <a href="/manage_company">Manage Company (Admin Only)</a>
+                    <a href="/user_management">User Management (Admin Only)</a>
                     <a href="/Subscription_Details">Subscription Details</a>
                 </div>
             </div>
 
         </div>
         <a href="/Project_Search">Search Projects</a>
-        <a href="/Add_Project">Add Project</a>
+        <a href="/add_project">Add Project</a>
         <a href="/detailed_reports">Reports</a>
-        <a href="/Bidding_History">Bidding History</a>
+        <a href="/bidding_history">Bidding History</a>
         <a href="#" onclick="showLogoutPopup()">Logout</a>
     </div>
 
@@ -44,11 +44,13 @@
         <div class="dashboard-card">
             <div style="margin-bottom: 10px;">
                 <label for="closingDate">Anticipated Closing Date</label>
-                <input type="date" id="closingDate" name="closingDate" class="input-field" value="{{project_closingDate}}" required>
+                <input type="date" id="closingDate" name="closingDate" class="input-field"
+                    value="{{project_closingDate}}" required>
             </div>
             <div style="margin-bottom: 10px;">
                 <label for="projectName">Project Name</label>
-                <input type="text" id="projectName" name="projectName" class="input-field" value="{{project_projectName}}" required>
+                <input type="text" id="projectName" name="projectName" class="input-field"
+                    value="{{project_projectName}}" required>
             </div>
             <div style="margin-bottom: 10px;">
                 <label for="address">Address</label>
@@ -62,22 +64,31 @@
                 <label for="province">Province</label>
                 <select id="province" name="province" class="input-field" required>
                     <option value="">Select Province</option>
-                    <option value="Alberta" {% if project_province == 'Alberta' %} selected {% endif %}>Alberta</option>
-                    <option value="British Columbia" {% if project_province == 'British Columbia' %} selected {% endif %}>British Columbia</option>
-                    <option value="Manitoba" {% if project_province == 'Manitoba' %} selected {% endif %}>Manitoba</option>
-                    <option value="New Brunswick" {% if project_province == 'New Brunswick' %} selected {% endif %}>New Brunswick</option>
-                    <option value="Newfoundland and Labrador" {% if project_province == 'Newfoundland and Labrador' %} selected {% endif %}>Newfoundland and Labrador</option>
-                    <option value="Nova Scotia" {% if project_province == 'Nova Scotia' %} selected {% endif %}>Nova Scotia</option>
-                    <option value="Ontario" {% if project_province == 'Ontario' %} selected {% endif %}>Ontario</option>
-                    <option value="Prince Edward Island" {% if project_province == 'Prince Edward Island' %} selected {% endif %}>Prince Edward Island</option>
-                    <option value="Manitoba" {% if project_province == 'Manitoba' %} selected {% endif %}>Manitoba</option>
-                    <option value="Quebec" {% if project_province == 'Quebec' %} selected {% endif %}>Quebec</option>
-                    <option value="Saskatchewan" {% if project_province == 'Saskatchewan' %} selected {% endif %}>Saskatchewan</option>
+                    <option value="Alberta" {% if project_province=='Alberta' %} selected {% endif %}>Alberta</option>
+                    <option value="British Columbia" {% if project_province=='British Columbia' %} selected {% endif %}>
+                        British Columbia</option>
+                    <option value="Manitoba" {% if project_province=='Manitoba' %} selected {% endif %}>Manitoba
+                    </option>
+                    <option value="New Brunswick" {% if project_province=='New Brunswick' %} selected {% endif %}>New
+                        Brunswick</option>
+                    <option value="Newfoundland and Labrador" {% if project_province=='Newfoundland and Labrador' %}
+                        selected {% endif %}>Newfoundland and Labrador</option>
+                    <option value="Nova Scotia" {% if project_province=='Nova Scotia' %} selected {% endif %}>Nova
+                        Scotia</option>
+                    <option value="Ontario" {% if project_province=='Ontario' %} selected {% endif %}>Ontario</option>
+                    <option value="Prince Edward Island" {% if project_province=='Prince Edward Island' %} selected {%
+                        endif %}>Prince Edward Island</option>
+                    <option value="Manitoba" {% if project_province=='Manitoba' %} selected {% endif %}>Manitoba
+                    </option>
+                    <option value="Quebec" {% if project_province=='Quebec' %} selected {% endif %}>Quebec</option>
+                    <option value="Saskatchewan" {% if project_province=='Saskatchewan' %} selected {% endif %}>
+                        Saskatchewan</option>
                 </select>
-            </div>            
+            </div>
             <div style="margin-bottom: 10px;">
                 <label for="postalCode">PostalCode</label>
-                <input type="text" id="postalCode" name="postalCode" class="input-field" value="{{project_postalCode}}" required>
+                <input type="text" id="postalCode" name="postalCode" class="input-field" value="{{project_postalCode}}"
+                    required>
             </div>
             <div class="form-row">
                 <input type="hidden" id="projectId" value="{{ projectId }}">
@@ -543,13 +554,101 @@
         }
 
         function confirmLogout() {
-            window.location.href = '/Index.html';  // Redirect to the homepage
+            window.location.href = '/';  // Redirect to the homepage
         }
     </script>
 
 
 
-    <script src="{{ url_for('static', filename='js/bid_entry.js') }}"></script>
+    <!-- <script src="{{ url_for('static', filename='js/bid_entry.js') }}"></script> -->
+    <script>
+        const valueFields = document.querySelectorAll('.value-field');
+        const totalValueField = document.getElementById('totalValue');
+
+        function calculateTotal() {
+            let total = 0;
+            valueFields.forEach(field => {
+                total += parseFloat(field.value) || 0;
+            });
+            totalValueField.value = total.toFixed(2);
+        }
+
+        valueFields.forEach(field => {
+            field.addEventListener('input', calculateTotal);
+        });
+
+        function bid_sum() {
+
+
+            showBidConfirmation()
+
+            // Optionally display the result to the user
+
+
+        }
+
+        function showBidConfirmation() {
+            const totalValue = document.getElementById("totalValue").value;
+            const projectName = document.getElementById("projectName").value;
+            const address = document.getElementById("address").value;
+            const city = document.getElementById("city").value;
+            const province = document.getElementById("province").value;
+            const projectId = document.getElementById("projectId").value;
+            const closingDate = document.getElementById('closingDate').value;
+            const postalCode = document.getElementById('postalCode').value;
+
+
+            console.log("Total Sum: ", totalValue);
+            document.getElementById('bidConfirmationModal').style.display = 'block';
+
+            document.getElementById('confirmBid').onclick = function () {
+                const data = {
+                    closingDate: closingDate,
+                    projectName: projectName,
+                    address: address,
+                    city: city,
+                    province: province,
+                    totalValue: totalValue,
+                    postalCode: postalCode
+                }
+                fetch(`/Bid_Entry/${projectId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                }).then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                    .then(data => {
+                        console.log(data);
+                        closeBidConfirmation();
+                        alert(data.message)
+                        window.location.href = '/project_search'
+                    })
+                    .catch(error => {
+                        console.error('Error updating user:', error);
+                    });
+            }
+            document.getElementById('cancelBid').onclick = function () {
+                closeBidConfirmation();
+            };
+
+            // document.getElementById('modalClose').onclick = function () {
+            //   closeBidConfirmation();
+            // };
+        }
+
+        // Function to close the modal
+        function closeBidConfirmation() {
+            document.getElementById('bidConfirmationModal').style.display = 'none';
+        }
+
+
+    </script>
 
 </body>
 

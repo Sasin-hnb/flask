@@ -188,12 +188,20 @@ def dashboard():
 @app.route('/dashboard/chart', methods=['GET'])
 @login_required
 def dashboard_chart():
+    username = current_user.username
+    user = User.query.filter_by(username=username).first()
+    domain = user.domain
+    company = Company.query.filter_by(domain=domain).first()
+    company_id = company.id
     current_year = datetime.now().year
     projects_count = [0] * 12
     bid_projects_count = [0] * 12
     projects = Projects.query.filter(Projects.created_at >= f'{current_year}-01-01').all()
-    bids = Bids.query.filter(Bids.created_at >= f'{current_year}-01-01').all()
-
+    # bids = Bids.query.filter(Bids.created_at >= f'{current_year}-01-01', company_id=company_id).all()
+    bids = Bids.query.filter(
+        Bids.created_at >= f'{current_year}-01-01',
+        Bids.company_id == company_id  # Use the attribute from the model here
+    ).all()
     for project in projects:
         month_index = project.created_at.month - 1  # Months are 1-12
         projects_count[month_index] += 1
@@ -542,11 +550,6 @@ def search_projects():
     } for project in results]
 
     return jsonify(projects_list)
-
-
-from flask import jsonify
-from datetime import timedelta
-from flask_login import login_required, current_user
 
 @app.route('/project_search/bid/<int:projectId>')
 @login_required

@@ -27,7 +27,7 @@
                     <a href="/profile/edit">Edit Personal Info</a>
                     <a href="/profile/notifications">Notification Settings</a>
                     {% if valid_role == "Admin" %}
-                    <a href="/profile/manage_company">Manage Company (Admin Only)</a>
+                    <a href="/manage_company">Manage Company (Admin Only)</a>
                     <a href="/user_management">User Management (Admin Only)</a>
                     {% endif %}
                     <a href="/Subscription_Details">Subscription Details</a>
@@ -38,7 +38,7 @@
         <a href="/Project_Search">Search Projects</a>
         <a href="/add_project">Add Project</a>
         <a href="/detailed_reports">Reports</a>
-        <a href="/Bidding_History">Bidding History</a>
+        <a href="/bidding_history">Bidding History</a>
         <a href="#" onclick="showLogoutPopup()">Logout</a>
     </div>
 
@@ -88,7 +88,7 @@
                 </div>
             </a>
 
-            <a href="Add_Project" style="text-decoration: none; color: inherit;">
+            <a href="add_project" style="text-decoration: none; color: inherit;">
                 <div class="dashboard-card">
                     <img src="static/Tabs/ProjectEntry.jpg" alt="Project Entry"
                         style="width: 150px; height: 150px; display: block; 	margin: 0 auto; border-radius: 8px;">
@@ -213,7 +213,7 @@
         }
 
         function confirmLogout() {
-            window.location.href = '/Index.html';  // Redirect to the homepage
+            window.location.href = '/';  // Redirect to the homepage
         }
     </script>
 
