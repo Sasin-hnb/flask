@@ -665,8 +665,10 @@ def bidding_history():
 def bidding_history_table():
     username = current_user.username
     user = User.query.filter_by(username=username).first()
-    user_id = user.id
-    bids = Bids.query.filter_by(user_id=user_id).all()
+    user_domain = user.domain
+    company = Company.query.filter_by(domain=user_domain).first()
+    company_id = company.id
+    bids = Bids.query.filter_by(company_id=company_id).all()
 
     print("bidbidbidbidbi", bids)
     serialized_bids = []
@@ -674,13 +676,54 @@ def bidding_history_table():
         project = bid.project 
         formatted_project_id = f"CH-{bid.project_id:02d}"  
         serialized_bids.append({
-            'project_id': formatted_project_id,
+            'project_id': bid.project_id,
+            'formatted_project_id': formatted_project_id,
             'projectName': project.projectName if project else 'Unknown',  # Safeguard against None
             'amount': bid.bidAmount,
             'closingDate': bid.closingDate
         })
 
     return jsonify(serialized_bids)
+
+@app.route('/bidding_history/modal/getData/<int:projectId>')
+@login_required
+def bidding_history_modal(projectId):
+    username = current_user.username
+    user = User.query.filter_by(username=username).first()
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    project = Projects.query.filter_by(id=projectId).first()
+    if not project:
+        return jsonify({"error": "Project not found"}), 404
+
+    user_bid = Bids.query.filter_by(project_id=projectId, user_id=user.id).first()
+    other_bids = Bids.query.filter_by(project_id=projectId).filter(Bids.user_id != user.id).all()
+
+    # Helper function to serialize Bids objects
+    def serialize_bid(bid):
+        return {
+            "id": bid.id,
+            "amount": bid.bidAmount,
+            "user_id": bid.user_id,
+            "project_id": bid.project_id,
+            # Add other fields you want to include
+        }
+
+    user_bid_serialized = serialize_bid(user_bid) if user_bid else None
+    other_bids_serialized = [serialize_bid(bid) for bid in other_bids]
+
+    data = {
+        "project_address": project.address,
+        "division": user.division,
+        "projectName": project.projectName,
+        "formatted_project_id": f"CH-{projectId:02d}",
+        "user_bid": user_bid_serialized,
+        "other_bid": other_bids_serialized
+    }
+
+    return jsonify(data)
+
 
 @app.route('/manage_company')
 @login_required

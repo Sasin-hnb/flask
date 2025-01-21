@@ -160,16 +160,59 @@
             bottom: 0;
             left: 200px;
         }
+
+        .modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+}
+
+#projectModal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border: 2px solid #ccc;
+    padding: 20px;
+    z-index: 1000;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+}
+
+.blurred {
+    filter: blur(3px);
+    color: transparent; /* Optional: make the text color transparent */
+    text-shadow: 0 0 0 rgba(0, 0, 0, 0.8); /* Optional: make text appear darker */
+}
     </style>
 </head>
 <body>
-
-
-
-
-
-
-
 
 <!-- Sidebar Navigation -->
     <div class="sidebar">
@@ -180,7 +223,7 @@
         <a href="/dashboard">Dashboard</a>
         <div class="dropdown">
             <a href="#">User HUB</a>
-            <div class="dropdown-content">
+            <div class="dropdown-content" >
                 <a href="/profile">User HUB</a>
                 <a href="/profile/edit">Edit Personal Info</a>
                 <a href="/profile/notifications">Notification Settings</a>
@@ -236,6 +279,16 @@
             <p>Are you sure you want to log out?</p>
             <button onclick="confirmLogout()">Yes, Log Out</button>
             <button onclick="closeLogoutPopup()">Cancel</button>
+        </div>
+    </div>
+
+    <div id="projectModal" class="modal" style="display:none;">
+        <span class="close" >&times;</span>
+        <div class="modal-content" >
+            <div id="modal_content">
+
+            </div>
+            <button id="modalClose">close</button>
         </div>
     </div>
 
@@ -309,29 +362,14 @@ fetch('/bidding_history/table')
 
         // Iterate over the data and append each row
         data.forEach(bid => {
-            let row = document.createElement('tr');
-
-            // Create table cells
-            let projectIdCell = document.createElement('td');
-            projectIdCell.textContent = bid.project_id;
-
-            let projectNameCell = document.createElement('td');
-            projectNameCell.textContent = bid.projectName;
-
-            let amountCell = document.createElement('td');
-            amountCell.textContent = bid.amount;
-
-            let dateCell = document.createElement('td');
-            dateCell.textContent = bid.closingDate;
-
-            // Append cells to the row
-            row.appendChild(projectIdCell);
-            row.appendChild(projectNameCell);
-            row.appendChild(dateCell);
-            row.appendChild(amountCell);
-
-            // Append the row to the table body
-            tableBody.appendChild(row);
+            tableBody.innerHTML += `
+        <tr>
+            <td>${bid.formatted_project_id}</td>
+            <td onclick="getBidModalData(${bid.project_id})" style="cursor: pointer;">${bid.projectName}</td>
+            <td>${bid.closingDate}</td>
+            <td>${bid.amount}</td>
+        </tr>
+    `;
         });
     })
     .catch(error => console.error('Error fetching data:', error));
@@ -344,11 +382,62 @@ fetch('/bidding_history/table')
 
     function closeLogoutPopup() {
         document.getElementById('logoutPopup').style.display = 'none';
+        document.getElementById('projectModal').style.display = 'none';
+    }
+    document.getElementById('modalClose').onclick = function() {
+        document.getElementById('projectModal').style.display = 'none';
     }
 
     function confirmLogout() {
         window.location.href = '/';  // Redirect to the homepage
     }
+
+    function getBidModalData(project_id) {
+    fetch(`/bidding_history/modal/getData/${project_id}`)
+    .then(response => response.json())
+    .then(data => {
+        const userBidRow = data.user_bid ? `
+            <tr>
+                <td>${data.user_bid.project_id}</td>
+                <td>$${data.user_bid.amount}</td>
+                <td>Your Bid</td>
+            </tr>
+        ` : '';
+
+        const otherBidsRows = data.other_bid.map(bid => `
+            <tr>
+                <td>${bid.project_id}</td>
+                <td>***,***,***</td>
+                <td class="blurred">Contractor</td>
+            </tr>
+        `).join('');
+
+        document.getElementById('modal_content').innerHTML = `
+            <h1 id="modalProjectName">Project Name: ${data.projectName}</h1>
+            <p id="modaladdress">Project Address: ${data.project_address}</p>
+            <p id="modaldivision">Division: ${data.division}</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Bid Value ($)</th>
+                        <th>Bidder</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    ${otherBidsRows}
+                </tbody>
+            </table>
+        `;
+        document.getElementById('projectModal').style.display = "block";
+        console.log(data);
+    });
+}
+
+function closeModal() {
+    document.getElementById('projectModal').style.display = "none";
+}
 </script>
 
 </body>
