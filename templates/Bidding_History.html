@@ -274,11 +274,19 @@
             align-items: center;
         }
 
-        .modalBtn{
+        .modalBtn {
             display: flex;
             justify-content: space-around;
         }
 
+        .prevent-select {
+            -webkit-user-select: none;
+            /* Safari */
+            -ms-user-select: none;
+            /* IE 10 and IE 11 */
+            user-select: none;
+            /* Standard syntax */
+        }
     </style>
 </head>
 
@@ -471,39 +479,39 @@
             </tr>
         ` : '';
 
-        const currentCompany = data.company_Id;
-        const otherBidsRows = data.all_bids
-    .sort((a, b) => a.amount - b.amount) // Sort by amount in ascending order
-    .map(bid => `
+                    const currentCompany = data.company_Id;
+                    const otherBidsRows = data.all_bids
+                        .sort((a, b) => a.amount - b.amount) // Sort by amount in ascending order
+                        .map(bid => `
         <tr>
             <td>CH-${bid.project_id.toString().padStart(2, '0')}</td>
             <td>${bid.company_id === currentCompany ? bid.amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '***,***,***'}</td>
-            <td class="${bid.company_id === currentCompany ? '' : 'blurred'}">${bid.company}</td>
+            <td class="${bid.company_id === currentCompany ? '' : 'blurred prevent-select'}">${bid.company}</td>
         </tr>
     `)
-    .join('');
+                        .join('');
 
                     document.getElementById('modal_content').innerHTML = `
             <h1 id="modalProjectName">Project Name: ${data.projectName}</h1>
             <p id="modaladdress">Project Address: ${data.project_address}</p>
             <p id="modalClosingDate">Closing Date: ${formattedDate}</p>
-            <p id="modaldivision">Division: ${data.division == 1 ? "General Contractor" 
-                                                    : data.division == 2 ? "Demolition" 
-                                                    : data.division == 3 ? "Concrete"
-                                                    : data.division == 4 ? "Masonry"
-                                                    : data.division == 5 ? "Metals"
-                                                    : data.division == 6 ? "Wood and plastics"
-                                                    : data.division == 7 ? "Thermal and moisture protection"
-                                                    : data.division == 8 ? "Doors and windows"
-                                                    : data.division == 9 ? "Finishes"
-                                                    : data.division == 10 ? "Specialties"
-                                                    : data.division == 11 ? "Equipment"
-                                                    : data.division == 12 ? "Furnishings"
-                                                    : data.division == 13 ? "Special construction"
-                                                    : data.division == 14 ? "Conveying systems"
-                                                    : data.division == 15 ? "Mechanical"
-                                                    : "Electrical"
-                                                }</p>
+            <p id="modaldivision">Division: ${data.division == 1 ? "General Contractor"
+                            : data.division == 2 ? "Demolition"
+                            : data.division == 3 ? "Concrete"
+                            : data.division == 4 ? "Masonry"
+                            : data.division == 5 ? "Metals"
+                            : data.division == 6 ? "Wood and plastics"
+                            : data.division == 7 ? "Thermal and moisture protection"
+                            : data.division == 8 ? "Doors and windows"
+                            : data.division == 9 ? "Finishes"
+                            : data.division == 10 ? "Specialties"
+                            : data.division == 11 ? "Equipment"
+                            : data.division == 12 ? "Furnishings"
+                            : data.division == 13 ? "Special construction"
+                            : data.division == 14 ? "Conveying systems"
+                            : data.division == 15 ? "Mechanical"
+                            : "Electrical"
+                        }</p>
             <table>
                 <thead>
                     <tr>
