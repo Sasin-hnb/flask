@@ -1,27 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bidding History | ConstructHub</title>
     <style>
+        /* Global Styles */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             display: flex;
-            flex-direction: row;
+            flex-direction: column;
             min-height: 100vh;
             background-color: #f9f9f9;
         }
 
-	.sidebar .logo {
-    	max-width: 100%;  /* Limit width to 100% of sidebar */
-    	height: auto;    /* Maintain aspect ratio */
-    	display: block;
-    	margin-left: auto;
-	margin-right: auto;
-	}
+        .sidebar .logo {
+            max-width: 100%;
+            /* Limit width to 100% of sidebar */
+            height: auto;
+            /* Maintain aspect ratio */
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
 
         /* Sidebar Navigation */
         .sidebar {
@@ -41,8 +45,8 @@
             padding: 15px 20px;
             font-size: 1.2em;
             display: block;
+            transition: background 0.3s;
         }
-
 
         .sidebar a:hover {
             background-color: #00509e;
@@ -68,7 +72,8 @@
             text-decoration: none;
             display: block;
             transition: background 0.3s;
-    	    font-size: 0.9em; /* Reduced font size */
+            font-size: 0.9em;
+            /* Reduced font size */
         }
 
         .dropdown-content a:hover {
@@ -88,8 +93,13 @@
         /* Main Content Area */
         .main-content {
             margin-left: 200px;
-            padding: 20px;
+            /* Sidebar width */
             width: calc(100% - 200px);
+            text-align: center;
+            flex-grow: 1;
+            padding-bottom: 70px;
+            position: relative;
+            /* Ensure positioning context for .notifications */
         }
 
         .notifications {
@@ -98,6 +108,9 @@
             right: 30px;
             display: flex;
             gap: 20px;
+            /* Space between icons */
+            z-index: 10;
+            /* Ensure it stays on top */
         }
 
         .notifications img {
@@ -105,8 +118,101 @@
             cursor: pointer;
         }
 
-        .filter-section {
-            margin-bottom: 20px;
+        .bidding-metrics {
+            margin: 70px auto 20px auto;
+            width: 80%;
+        }
+
+        .dashboard {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .dashboard-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+
+        }
+
+        .footer {
+            background-color: #003366;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            width: calc(100% - 200px);
+            box-sizing: border-box;
+            margin-left: 200px;
+            position: relative;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* Popup Overlay Background */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        /* Popup Content Box */
+        .popup-content {
+            background-color: white;
+            /* Background color for the popup */
+            color: black;
+            /* Text color for readability*/
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: left;
+            width: 800px;
+        }
+
+        .popup-content h3 {
+            margin-top: 0;
+            color: #003366;
+        }
+
+        .popup-content button {
+            margin: 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .popup-content button:hover {
+            opacity: 0.9;
+        }
+
+        .popup-content button:nth-child(1) {
+            background-color: #003366;
+            color: white;
+        }
+
+        .popup-content button:nth-child(2) {
+            background-color: #d0e0f5;
+            color: #003366;
         }
 
         .filter-section input {
@@ -121,7 +227,8 @@
             margin-top: 20px;
         }
 
-        th, td {
+        th,
+        td {
             padding: 15px;
             text-align: left;
             border-bottom: 1px solid #ddd;
@@ -139,7 +246,8 @@
         }
 
         th::after {
-            content: '\25B2'; /* Default up arrow */
+            content: '\25B2';
+            /* Default up arrow */
             position: absolute;
             right: 10px;
             font-size: 0.8em;
@@ -147,98 +255,57 @@
         }
 
         th.sorted-desc::after {
-            content: '\25BC'; /* Down arrow for descending */
+            content: '\25BC';
+            /* Down arrow for descending */
         }
 
-        .footer {
-            background-color: #003366;
-            color: white;
-            text-align: center;
-            padding: 15px;
-            position: fixed;
-            width: calc(100% - 200px);
-            bottom: 0;
-            left: 200px;
+        .blurred {
+            filter: blur(5px);
+            color: transparent;
+            /* Optional: make the text color transparent */
+            text-shadow: 0 0 0 rgba(0, 0, 0, 0.8);
+            /* Optional: make text appear darker */
         }
 
-        .modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-}
+        .modalClose {
+            align-items: center;
+        }
 
-.modal-content {
-    background-color: #fefefe;
-    margin: 15% auto; /* 15% from the top and centered */
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%; /* Could be more or less, depending on screen size */
-}
+        .modalBtn{
+            display: flex;
+            justify-content: space-around;
+        }
 
-#projectModal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    border: 2px solid #ccc;
-    padding: 20px;
-    z-index: 1000;
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-th, td {
-    border: 1px solid #ccc;
-    padding: 10px;
-    text-align: left;
-}
-
-.blurred {
-    filter: blur(3px);
-    color: transparent; /* Optional: make the text color transparent */
-    text-shadow: 0 0 0 rgba(0, 0, 0, 0.8); /* Optional: make text appear darker */
-}
     </style>
 </head>
+
 <body>
 
-<!-- Sidebar Navigation -->
+    <!-- Sidebar Navigation -->
     <div class="sidebar">
         <div class="left-nav">
-        <a href="/">
-        <img src="/static/images/constructhub-logo.png" alt="ConstructHub Logo" class="logo">
-        </a>
-        <a href="/dashboard">Dashboard</a>
-        <div class="dropdown">
-            <a href="#">User HUB</a>
-            <div class="dropdown-content" >
-                <a href="/profile">User HUB</a>
-                <a href="/profile/edit">Edit Personal Info</a>
-                <a href="/profile/notifications">Notification Settings</a>
-                <a href="/manage_company">Manage Company (Admin Only)</a>
-                <a href="/user_management">User Management (Admin Only)</a>
-                <a href="/Subscription_Details">Subscription Details</a>
+            <a href="/">
+                <img src="/static/images/constructhub-logo.png" alt="ConstructHub Logo" class="logo">
+            </a>
+            <a href="/dashboard">Dashboard</a>
+            <div class="dropdown">
+                <a href="#">User HUB</a>
+                <div class="dropdown-content">
+                    <a href="/profile">User HUB</a>
+                    <a href="/profile/edit">Edit Personal Info</a>
+                    <a href="/profile/notifications">Notification Settings</a>
+                    <a href="/manage_company">Manage Company (Admin Only)</a>
+                    <a href="/user_management">User Management (Admin Only)</a>
+                    <a href="/Subscription_Details">Subscription Details</a>
+                </div>
             </div>
-        </div>
 
         </div>
         <a href="/Project_Search">Search Projects</a>
         <a href="/add_project">Add Project</a>
         <a href="/detailed_reports">Reports</a>
         <a href="/bidding_history">Bidding History</a>
-	<a href="#" onclick="showLogoutPopup()">Logout</a>
+        <a href="#" onclick="showLogoutPopup()">Logout</a>
     </div>
 
 
@@ -266,47 +333,35 @@ th, td {
         </table>
     </div>
 
+    <!-- Footer Section -->
+    <div class="footer">
+        <p>&copy; 2024 ConstructHub. All rights reserved.</p>
 
-
-
-
+        <div class="footer-links">
+            <a href="/privacy-policy.html" target="_blank">Privacy Policy</a> |
+            <a href="/subscription_agreement.html" target="_blank">Subscription Agreement</a> |
+            <a href="/terms-of-use.html" target="_blank">Terms of Use</a>
         </div>
-    </div>
 
-    <div id="logoutPopup" class="popup-overlay" style="display: none;">
-        <div class="popup-content">
-            <h3>Confirm Logout</h3>
-            <p>Are you sure you want to log out?</p>
-            <button onclick="confirmLogout()">Yes, Log Out</button>
-            <button onclick="closeLogoutPopup()">Cancel</button>
-        </div>
-    </div>
-
-    <div id="projectModal" class="modal" style="display:none;">
-        <span class="close" >&times;</span>
-        <div class="modal-content" >
-            <div id="modal_content">
-
+        <div id="logoutPopup" class="popup-overlay" style="display: none;">
+            <div class="popup-content">
+                <h3>Confirm Logout</h3>
+                <p>Are you sure you want to log out?</p>
+                <button onclick="confirmLogout()">Yes, Log Out</button>
+                <button onclick="closeLogoutPopup()">Cancel</button>
             </div>
-            <button id="modalClose">close</button>
+        </div>
+
+        <div id="projectModal" class="popup-overlay" style="display:none;">
+            <div class="popup-content">
+                <div id="modal_content">
+                </div>
+                <div class="modalBtn">
+                    <button id="modalClose">close</button>
+                </div>
+            </div>
         </div>
     </div>
-
-
-
-
-
-
-<!-- Footer Section -->
-<div class="footer">
-    <p>&copy; 2024 ConstructHub. All rights reserved.</p>
-
-<div class="footer-links">
-    <a href="/privacy-policy.html" target="_blank">Privacy Policy</a> |
-    <a href="/subscription_agreement.html" target="_blank">Subscription Agreement</a> |
-    <a href="/terms-of-use.html" target="_blank">Terms of Use</a>
-</div>
-
 
     <script>
         function filterProjects() {
@@ -317,7 +372,7 @@ th, td {
             projects.forEach(project => {
                 const id = project.cells[0].textContent.toLowerCase();
                 const name = project.cells[1].textContent.toLowerCase();
-                
+
                 const matchesID = id.includes(idFilter);
                 const matchesName = name.includes(nameFilter);
 
@@ -351,52 +406,61 @@ th, td {
         }
     </script>
     <script>
-fetch('/bidding_history/table')
-    .then(response => response.json())
-    .then(data => {
-        console.log("data", data);
-        let tableBody = document.getElementById("bidding_history_tbody");
-        
-        // Clear the existing table body
-        tableBody.innerHTML = '';
+        fetch('/bidding_history/table')
+            .then(response => response.json())
+            .then(data => {
+                console.log("data", data);
+                let tableBody = document.getElementById("bidding_history_tbody");
 
-        // Iterate over the data and append each row
-        data.forEach(bid => {
-            tableBody.innerHTML += `
+
+
+                // Clear the existing table body
+                tableBody.innerHTML = '';
+
+                // Iterate over the data and append each row
+                data.forEach(bid => {
+                    const date = new Date(bid.closingDate);
+                    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                    const formattedDate = date.toLocaleDateString('en-US', options);
+                    tableBody.innerHTML += `
         <tr>
             <td>${bid.formatted_project_id}</td>
             <td onclick="getBidModalData(${bid.project_id})" style="cursor: pointer;">${bid.projectName}</td>
-            <td>${bid.closingDate}</td>
+            <td>${formattedDate}</td>
             <td>${bid.amount}</td>
         </tr>
     `;
-        });
-    })
-    .catch(error => console.error('Error fetching data:', error));
+                });
+            })
+            .catch(error => console.error('Error fetching data:', error));
     </script>
 
-<script>
-    function showLogoutPopup() {
-        document.getElementById('logoutPopup').style.display = 'flex';
-    }
+    <script>
+        function showLogoutPopup() {
+            document.getElementById('logoutPopup').style.display = 'flex';
+        }
 
-    function closeLogoutPopup() {
-        document.getElementById('logoutPopup').style.display = 'none';
-        document.getElementById('projectModal').style.display = 'none';
-    }
-    document.getElementById('modalClose').onclick = function() {
-        document.getElementById('projectModal').style.display = 'none';
-    }
+        function closeLogoutPopup() {
+            document.getElementById('logoutPopup').style.display = 'none';
+            document.getElementById('projectModal').style.display = 'none';
+        }
+        document.getElementById('modalClose').onclick = function () {
+            document.getElementById('projectModal').style.display = 'none';
+        }
 
-    function confirmLogout() {
-        window.location.href = '/';  // Redirect to the homepage
-    }
+        function confirmLogout() {
+            window.location.href = '/';  // Redirect to the homepage
+        }
 
-    function getBidModalData(project_id) {
-    fetch(`/bidding_history/modal/getData/${project_id}`)
-    .then(response => response.json())
-    .then(data => {
-        const userBidRow = data.user_bid ? `
+        function getBidModalData(project_id) {
+
+            fetch(`/bidding_history/modal/getData/${project_id}`)
+                .then(response => response.json())
+                .then(data => {
+                    const date = new Date(data.closingDate);
+                    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                    const formattedDate = date.toLocaleDateString('en-US', options);
+                    const userBidRow = data.user_bid ? `
             <tr>
                 <td>${data.user_bid.project_id}</td>
                 <td>$${data.user_bid.amount}</td>
@@ -404,22 +468,43 @@ fetch('/bidding_history/table')
             </tr>
         ` : '';
 
-        const otherBidsRows = data.other_bid.map(bid => `
-            <tr>
-                <td>${bid.project_id}</td>
-                <td>***,***,***</td>
-                <td class="blurred">Contractor</td>
-            </tr>
-        `).join('');
+        const currentCompany = data.company_Id;
+        const otherBidsRows = data.all_bids
+    .sort((a, b) => a.amount - b.amount) // Sort by amount in ascending order
+    .map(bid => `
+        <tr>
+            <td>CH-${bid.project_id.toString().padStart(2, '0')}</td>
+            <td>${bid.company_id === currentCompany ? bid.amount : '***,***,***'}</td>
+            <td class="${bid.company_id === currentCompany ? '' : 'blurred'}">${bid.company}</td> <!-- Include company if needed -->
+        </tr>
+    `)
+    .join('');
 
-        document.getElementById('modal_content').innerHTML = `
+                    document.getElementById('modal_content').innerHTML = `
             <h1 id="modalProjectName">Project Name: ${data.projectName}</h1>
             <p id="modaladdress">Project Address: ${data.project_address}</p>
-            <p id="modaldivision">Division: ${data.division}</p>
+            <p id="modalClosingDate">Closing Date: ${formattedDate}</p>
+            <p id="modaldivision">Division: ${data.division == 1 ? "General Contractor" 
+                                                    : data.division == 2 ? "Demolition" 
+                                                    : data.division == 3 ? "Concrete"
+                                                    : data.division == 4 ? "Masonry"
+                                                    : data.division == 5 ? "Metals"
+                                                    : data.division == 6 ? "Wood and plastics"
+                                                    : data.division == 7 ? "Thermal and moisture protection"
+                                                    : data.division == 8 ? "Doors and windows"
+                                                    : data.division == 9 ? "Finishes"
+                                                    : data.division == 10 ? "Specialties"
+                                                    : data.division == 11 ? "Equipment"
+                                                    : data.division == 12 ? "Furnishings"
+                                                    : data.division == 13 ? "Special construction"
+                                                    : data.division == 14 ? "Conveying systems"
+                                                    : data.division == 15 ? "Mechanical"
+                                                    : "Electrical"
+                                                }</p>
             <table>
                 <thead>
                     <tr>
-                        <th>Item</th>
+                        <th>Project Number</th>
                         <th>Bid Value ($)</th>
                         <th>Bidder</th>
                     </tr>
@@ -430,15 +515,16 @@ fetch('/bidding_history/table')
                 </tbody>
             </table>
         `;
-        document.getElementById('projectModal').style.display = "block";
-        console.log(data);
-    });
-}
+                    document.getElementById('projectModal').style.display = "flex";
+                    console.log(data);
+                });
+        }
 
-function closeModal() {
-    document.getElementById('projectModal').style.display = "none";
-}
-</script>
+        function closeModal() {
+            document.getElementById('projectModal').style.display = "none";
+        }
+    </script>
 
 </body>
+
 </html>

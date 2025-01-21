@@ -690,6 +690,7 @@ def bidding_history_table():
 def bidding_history_modal(projectId):
     username = current_user.username
     user = User.query.filter_by(username=username).first()
+    company__ = Company.query.filter_by(domain=user.domain).first()
     if not user:
         return jsonify({"error": "User not found"}), 404
 
@@ -697,29 +698,30 @@ def bidding_history_modal(projectId):
     if not project:
         return jsonify({"error": "Project not found"}), 404
 
-    user_bid = Bids.query.filter_by(project_id=projectId, user_id=user.id).first()
-    other_bids = Bids.query.filter_by(project_id=projectId).filter(Bids.user_id != user.id).all()
+    # Get all bids for the project
+    all_bids = Bids.query.filter_by(project_id=projectId).all()
 
     # Helper function to serialize Bids objects
     def serialize_bid(bid):
+        company = Company.query.get(bid.company_id)  # Fetch the user based on user_id in the bid
         return {
             "id": bid.id,
             "amount": bid.bidAmount,
-            "user_id": bid.user_id,
             "project_id": bid.project_id,
-            # Add other fields you want to include
+            "company_id": bid.company_id,
+            "company": company.BusinessName if company else None  # Retrieve username if user exists
         }
 
-    user_bid_serialized = serialize_bid(user_bid) if user_bid else None
-    other_bids_serialized = [serialize_bid(bid) for bid in other_bids]
+    all_bids_serialized = [serialize_bid(bid) for bid in all_bids]
 
     data = {
         "project_address": project.address,
         "division": user.division,
         "projectName": project.projectName,
+        "closingDate": project.closingDate,
         "formatted_project_id": f"CH-{projectId:02d}",
-        "user_bid": user_bid_serialized,
-        "other_bid": other_bids_serialized
+        "company_Id": company__.id,
+        "all_bids": all_bids_serialized  # Changed from other_bid to all_bids
     }
 
     return jsonify(data)
