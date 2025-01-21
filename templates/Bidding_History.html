@@ -172,6 +172,7 @@
             justify-content: center;
             align-items: center;
             z-index: 1000;
+
         }
 
         /* Popup Content Box */
@@ -185,6 +186,8 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             text-align: left;
             width: 800px;
+            overflow-y: auto;
+            max-height: 80vh;
         }
 
         .popup-content h3 {
@@ -474,8 +477,8 @@
     .map(bid => `
         <tr>
             <td>CH-${bid.project_id.toString().padStart(2, '0')}</td>
-            <td>${bid.company_id === currentCompany ? bid.amount : '***,***,***'}</td>
-            <td class="${bid.company_id === currentCompany ? '' : 'blurred'}">${bid.company}</td> <!-- Include company if needed -->
+            <td>${bid.company_id === currentCompany ? bid.amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '***,***,***'}</td>
+            <td class="${bid.company_id === currentCompany ? '' : 'blurred'}">${bid.company}</td>
         </tr>
     `)
     .join('');
