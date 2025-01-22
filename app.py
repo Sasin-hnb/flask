@@ -296,7 +296,7 @@ def reports_chart_bid():
     all_bids = Bids.query.filter(Bids.project_id.in_(project_ids_with_bids)).all()
     for bid in all_bids:
         if bid.project_id in project_bids:
-            project_bids[bid.project_id].append(bid.bidAmount)
+            project_bids[bid.project_id].append(bid.totalAmount)
 
     project_ids = []
     contractor_prices = []
@@ -309,7 +309,7 @@ def reports_chart_bid():
         project_name.append(project.projectName)
         
         # Get the user's bid for the project, if any
-        user_bid = next((bid.bidAmount for bid in bids if bid.project_id == project.id), 0)
+        user_bid = next((bid.totalAmount for bid in bids if bid.project_id == project.id), 0)
 
         # Aggregate prices and find the lowest price
         amounts = project_bids[project.id]
@@ -337,13 +337,13 @@ def detailed_report_project():
 
     for bid in bids:
         if bid.user_id == current_user_id:
-            user_bid_amount = bid.bidAmount
+            user_bid_amount = bid.totalAmount
             break
 
     # Calculate the user's rank based on the bid amounts
     if user_bid_amount is not None:
         # Get all bid amounts and sort them
-        ranked_bids = sorted(bid.bidAmount for bid in bids)
+        ranked_bids = sorted(bid.totalAmount for bid in bids)
         # Ranking: highest bid gets rank 1
         user_rank = 1 + sum(amount > user_bid_amount for amount in ranked_bids)
     else:

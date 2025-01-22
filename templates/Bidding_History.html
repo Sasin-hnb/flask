@@ -528,11 +528,49 @@
                     //             `)
                     //                 .join('');
 
-                    const categories = ['Drywall', 'Flooring', 'Paint'];
+                    const categories_9 = ['Drywall', 'Flooring', 'Paint'];
+                    const categories_15 = ['Plumbing & Refrigeration', 'Sprinklers', 'HVAC'];
 
-                    const generateTables = (bids) => {
-                        return categories.map((category, index) => {
-                            const rows = bids.map(bid => {
+                    const generateTables_9 = (bids) => {
+                        return categories_9.map((category, index) => {
+                            const sortedBids = bids.slice().sort((a, b) => {
+                return Number(a.amount[`amount${index + 1}`]) - Number(b.amount[`amount${index + 1}`]);
+            });
+                            const rows = sortedBids.map(bid => {
+                                const amount = bid.amount[`amount${index + 1}`];
+                                return `
+                                    <tr>
+                                        <td>$ ${bid.company_id === currentCompany ? amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '***,***,***'}</td>
+                                        <td class="${bid.company_id === currentCompany ? '' : 'blurred'}">${bid.company}</td>
+                                    </tr>
+                                `;
+                            }).join('');
+
+                            return `
+                                <div class="table-container" style=" margin-bottom: 20px;">
+                                    <h3>${category}</h3>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Bid Value ($)</th>
+                                                <th>Bidder</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            ${rows}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            `;
+                        }).join('');
+                    };
+
+                    const generateTables_15 = (bids) => {
+                        return categories_15.map((category, index) => {
+                            const sortedBids = bids.slice().sort((a, b) => {
+                return Number(a.amount[`amount${index + 1}`]) - Number(b.amount[`amount${index + 1}`]);
+            });
+                            const rows = sortedBids.map(bid => {
                                 const amount = bid.amount[`amount${index + 1}`];
                                 return `
                                     <tr>
@@ -587,7 +625,7 @@
 
                 <tbody>
 
-                    ${data.division == "9" ? generateTables(data.all_bids) : otherBidsRows}
+                    ${data.division == "9" ? generateTables_9(data.all_bids) : data.division == "15" ? generateTables_15(data.all_bids) : otherBidsRows}
                 </tbody>
             </table>
         `;

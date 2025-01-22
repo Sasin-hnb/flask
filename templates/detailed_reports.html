@@ -156,19 +156,22 @@
                 const userBids = data.userbids;
                 console.log("ddddd", totalProjects, userBids)
                 const yearChart = new Chart(ctx1, {
-                    type: 'bar',
+                    type: 'line',
                     data: {
                         labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
                         datasets: [
                             {
                                 label: 'Total Projects',
                                 data: totalProjects,
-                                backgroundColor: 'rgba(54, 162, 235, 0.5)'
+                                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                                borderWidth: 2,
+                                type: 'line'
                             },
                             {
                                 label: 'Your Bids',
                                 data: userBids,
                                 borderColor: 'rgba(255, 99, 132, 1)',
+                                borderWidth: 2,
                                 type: 'line'
                             }
                         ]
