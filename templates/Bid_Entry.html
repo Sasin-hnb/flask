@@ -350,30 +350,17 @@
                 {% if division == "9" %}
                 <h2 style="text-align: left;">Division 9 Scope of Work</h2>
                 <div class="scope-item">
-                    <label for="gypsumBoard">Gypsum Board</label>
-                    <input type="number" id="gypsumBoard" name="gypsumBoard" class="input-field value-field" min="0">
-                </div>
-                <div class="scope-item">
-                    <label for="Tile">Tile</label>
-                    <input type="number" id="tile" name="tile" class="input-field value-field" min="0">
-                </div>
-                <div class="scope-item">
-                    <label for="acousticCeiling">Acoustic/Suspended Ceiling</label>
+                    <label for="acousticCeiling">Drywall & Ceiling</label>
                     <input type="number" id="acousticCeiling" name="acousticCeiling" class="input-field value-field"
                         min="0">
                 </div>
                 <div class="scope-item">
-                    <label for="flooring">Flooring</label>
+                    <label for="flooring">Flooring & Tile</label>
                     <input type="number" id="flooring" name="flooring" class="input-field value-field" min="0">
                 </div>
                 <div class="scope-item">
-                    <label for="wallFinishes">Wall Finishes</label>
+                    <label for="wallFinishes">Paint & Wall Finishes</label>
                     <input type="number" id="wallFinishes" name="wallFinishes" class="input-field value-field" min="0">
-                </div>
-                <div class="scope-item">
-                    <label for="paintCoatings">Paint & Coatings</label>
-                    <input type="number" id="paintCoatings" name="paintCoatings" class="input-field value-field"
-                        min="0">
                 </div>
                 <hr>
                 {% endif %}
@@ -500,6 +487,7 @@
                 <div>
                     <button type="submit" class="submit-button" onclick="bid_sum()">Submit Bid</button>
                 </div>
+
             </div>
         </div>
 
@@ -558,9 +546,6 @@
         }
     </script>
 
-
-
-    <!-- <script src="{{ url_for('static', filename='js/bid_entry.js') }}"></script> -->
     <script>
         const valueFields = document.querySelectorAll('.value-field');
         const totalValueField = document.getElementById('totalValue');
@@ -578,17 +563,10 @@
         });
 
         function bid_sum() {
-
-
             showBidConfirmation()
-
-            // Optionally display the result to the user
-
-
         }
 
         function showBidConfirmation() {
-            const totalValue = document.getElementById("totalValue").value;
             const projectName = document.getElementById("projectName").value;
             const address = document.getElementById("address").value;
             const city = document.getElementById("city").value;
@@ -596,9 +574,22 @@
             const projectId = document.getElementById("projectId").value;
             const closingDate = document.getElementById('closingDate').value;
             const postalCode = document.getElementById('postalCode').value;
+            const totalAmount = document.getElementById('totalValue').value
+
+            const inputs_amount = document.querySelectorAll('.value-field');
+            const amounts = {};
+            let counter = 1; // Initialize a counter
+            inputs_amount.forEach(input => {
+                // Use the counter to create dynamic keys
+                amounts[`amount${counter}`] = input.value;
+                counter++; // Increment the counter
+                    });
+            
+                    // const bidamount = JSON.stringify(amounts);
+        
+            console.log(amounts);
 
 
-            console.log("Total Sum: ", totalValue);
             document.getElementById('bidConfirmationModal').style.display = 'block';
 
             document.getElementById('confirmBid').onclick = function () {
@@ -608,9 +599,11 @@
                     address: address,
                     city: city,
                     province: province,
-                    totalValue: totalValue,
-                    postalCode: postalCode
+                    postalCode: postalCode,
+                    amounts: amounts,
+                    totalAmount: totalAmount
                 }
+                console.log(data, "mmmmmmmm")
                 fetch(`/Bid_Entry/${projectId}`, {
                     method: 'POST',
                     headers: {
@@ -622,8 +615,7 @@
                         throw new Error('Network response was not ok');
                     }
                     return response.json();
-                })
-                    .then(data => {
+                }).then(data => {
                         console.log(data);
                         closeBidConfirmation();
                         alert(data.message)
@@ -641,6 +633,7 @@
             //   closeBidConfirmation();
             // };
         }
+
 
         // Function to close the modal
         function closeBidConfirmation() {

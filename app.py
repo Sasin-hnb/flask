@@ -4,6 +4,7 @@ from flask_bcrypt import Bcrypt
 from flask_login import login_user, login_required, LoginManager, UserMixin, logout_user, current_user
 from flask_cors import CORS
 from datetime import datetime, timezone, date, timedelta
+from sqlalchemy import JSON 
 
 app = Flask(__name__)
 
@@ -71,7 +72,8 @@ class Bids(db.Model):
     city = db.Column(db.String(100))
     province = db.Column(db.String(100))
     postalCode = db.Column(db.String(100))
-    bidAmount = db.Column(db.Float)  
+    bidAmount = db.Column(db.JSON)  
+    totalAmount = db.Column(db.Float)
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)  
     company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=False)  
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -609,8 +611,11 @@ def project_entry(projectId):
         address = request.json.get('address')
         city = request.json.get('city')
         province = request.json.get('province')
-        totalValue = request.json.get('totalValue')
+        bidamount = request.json.get('amounts')
         postalCode = request.json.get('postalCode')
+        totalAmount = request.json.get('totalAmount')
+
+        print(bidamount, "jjjjjjjj")
 
         try:
             closingDates = datetime.strptime(closingDate, '%Y-%m-%d')
@@ -623,11 +628,12 @@ def project_entry(projectId):
             address=address,
             city=city,
             province=province,
-            bidAmount=totalValue,
+            bidAmount=bidamount,
             project_id=projectId,
             company_id=companyId,
             user_id=user_id,
-            postalCode=postalCode
+            postalCode=postalCode,
+            totalAmount=totalAmount
         )   
         db.session.add(new_bid)
         db.session.commit()
@@ -707,6 +713,7 @@ def bidding_history_modal(projectId):
         return {
             "id": bid.id,
             "amount": bid.bidAmount,
+            "totalAmount": bid.totalAmount,
             "project_id": bid.project_id,
             "company_id": bid.company_id,
             "company": company.BusinessName if company else None  # Retrieve username if user exists
@@ -809,5 +816,5 @@ def logout():
     return redirect(url_for('home'))
 
 if __name__ == '__main__':
-    # app.run(debug=True)
-    app.run(host="0.0.0.0")
+    app.run(debug=True)
+    # app.run(host="0.0.0.0")

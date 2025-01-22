@@ -433,12 +433,17 @@
                     const date = new Date(bid.closingDate);
                     const options = { year: 'numeric', month: 'long', day: 'numeric' };
                     const formattedDate = date.toLocaleDateString('en-US', options);
+                    const calculateSum = (data) => {
+                        return Object.values(data).reduce((total, amount) => total + Number(amount), 0);
+                    };
+                    const totalAmount = calculateSum(bid.amount)
+                    console.log(totalAmount)
                     tableBody.innerHTML += `
         <tr>
             <td>${bid.formatted_project_id}</td>
             <td onclick="getBidModalData(${bid.project_id})" style="cursor: pointer;">${bid.projectName}</td>
             <td>${formattedDate}</td>
-            <td>${bid.amount}</td>
+            <td>${totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
         </tr>
     `;
                 });
@@ -481,15 +486,81 @@
 
                     const currentCompany = data.company_Id;
                     const otherBidsRows = data.all_bids
-                        .sort((a, b) => a.amount - b.amount) // Sort by amount in ascending order
+                        .sort((a, b) => a.totalAmount - b.totalAmount) // Sort by amount in ascending order
                         .map(bid => `
-        <tr>
-            <td>CH-${bid.project_id.toString().padStart(2, '0')}</td>
-            <td>${bid.company_id === currentCompany ? bid.amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '***,***,***'}</td>
-            <td class="${bid.company_id === currentCompany ? '' : 'blurred prevent-select'}">${bid.company}</td>
-        </tr>
-    `)
-                        .join('');
+                                    <thead>
+                                        <tr>
+                                            <th>Project Number</th>
+                                            <th>Bid Value ($)</th>
+                                            <th>Bidder</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>CH-${bid.project_id.toString().padStart(2, '0')}</td>
+                                            <td>${bid.company_id === currentCompany ? bid.totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '***,***,***'}</td>
+                                            <td class="${bid.company_id === currentCompany ? '' : 'blurred prevent-select'}">${bid.company}</td>
+                                        </tr>
+                                    </tbody>
+                                `)
+                                    .join('');
+                    
+                    
+
+                    // const otherBidsRows_9 = data.all_bids
+                    //     .sort((a, b) => a.totalAmount - b.totalAmount) // Sort by amount in ascending order
+                    //     .map(bid => `
+                    //                 <tr>
+                    //                     <td>Drywall & Ceiling</td>
+                    //                     <td>${bid.company_id === currentCompany ? bid.totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '***,***,***'}</td>
+                    //                     <td class="${bid.company_id === currentCompany ? '' : 'blurred prevent-select'}">${bid.company}</td>
+                    //                 </tr>
+                    //                 <tr>
+                    //                     <td>Flooring & Tile</td>
+                    //                     <td>${bid.company_id === currentCompany ? bid.totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '***,***,***'}</td>
+                    //                     <td class="${bid.company_id === currentCompany ? '' : 'blurred prevent-select'}">${bid.company}</td>
+                    //                 </tr>
+                    //                 <tr>
+                    //                     <td>Paint & Wall Finishes</td>
+                    //                     <td>${bid.company_id === currentCompany ? bid.totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '***,***,***'}</td>
+                    //                     <td class="${bid.company_id === currentCompany ? '' : 'blurred prevent-select'}">${bid.company}</td>
+                    //                 </tr>
+                    //             `)
+                    //                 .join('');
+
+                    const categories = ['Drywall', 'Flooring', 'Paint'];
+
+                    const generateTables = (bids) => {
+                        return categories.map((category, index) => {
+                            const rows = bids.map(bid => {
+                                const amount = bid.amount[`amount${index + 1}`];
+                                return `
+                                    <tr>
+                                        <td>$ ${bid.company_id === currentCompany ? amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '***,***,***'}</td>
+                                        <td class="${bid.company_id === currentCompany ? '' : 'blurred'}">${bid.company}</td>
+                                    </tr>
+                                `;
+                            }).join('');
+
+                            return `
+                                <div class="table-container" style=" margin-bottom: 20px;">
+                                    <h3>${category}</h3>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Bid Value ($)</th>
+                                                <th>Bidder</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            ${rows}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            `;
+                        }).join('');
+                    };
+
 
                     document.getElementById('modal_content').innerHTML = `
             <h1 id="modalProjectName">Project Name: ${data.projectName}</h1>
@@ -513,16 +584,10 @@
                             : "Electrical"
                         }</p>
             <table>
-                <thead>
-                    <tr>
-                        <th>Project Number</th>
-                        <th>Bid Value ($)</th>
-                        <th>Bidder</th>
-                    </tr>
-                </thead>
+
                 <tbody>
 
-                    ${otherBidsRows}
+                    ${data.division == "9" ? generateTables(data.all_bids) : otherBidsRows}
                 </tbody>
             </table>
         `;
