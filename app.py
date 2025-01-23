@@ -74,6 +74,7 @@ class Bids(db.Model):
     postalCode = db.Column(db.String(100))
     bidAmount = db.Column(db.JSON)  
     totalAmount = db.Column(db.Float)
+    division = db.Column(db.String(100))
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)  
     company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=False)  
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -633,7 +634,8 @@ def project_entry(projectId):
             company_id=companyId,
             user_id=user_id,
             postalCode=postalCode,
-            totalAmount=totalAmount
+            totalAmount=totalAmount,
+            division=user_division
         )   
         db.session.add(new_bid)
         db.session.commit()
@@ -696,6 +698,7 @@ def bidding_history_table():
 def bidding_history_modal(projectId):
     username = current_user.username
     user = User.query.filter_by(username=username).first()
+    user_division = user.division
     company__ = Company.query.filter_by(domain=user.domain).first()
     if not user:
         return jsonify({"error": "User not found"}), 404
@@ -705,7 +708,7 @@ def bidding_history_modal(projectId):
         return jsonify({"error": "Project not found"}), 404
 
     # Get all bids for the project
-    all_bids = Bids.query.filter_by(project_id=projectId).all()
+    all_bids = Bids.query.filter_by(project_id=projectId, division=user_division).all()
 
     # Helper function to serialize Bids objects
     def serialize_bid(bid):
