@@ -437,7 +437,7 @@
                         return Object.values(data).reduce((total, amount) => total + Number(amount), 0);
                     };
                     const totalAmount = calculateSum(bid.amount)
-                    console.log(totalAmount)
+                    console.log("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk",typeof(totalAmount))
                     tableBody.innerHTML += `
         <tr>
             <td>${bid.formatted_project_id}</td>
@@ -485,6 +485,7 @@
         ` : '';
 
                     const currentCompany = data.company_Id;
+
                     const otherBidsRows = data.all_bids
                         .sort((a, b) => a.totalAmount - b.totalAmount) // Sort by amount in ascending order
                         .map(bid => `
@@ -538,10 +539,13 @@
             });
                             const rows = sortedBids.map(bid => {
                                 const amount = bid.amount[`amount${index + 1}`];
+                                console.log("amoumoaumoau", amount)
                                 return `
                                     <tr>
-                                        <td>$ ${bid.company_id === currentCompany ? amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '***,***,***'}</td>
-                                        <td class="${bid.company_id === currentCompany ? '' : 'blurred'}">${bid.company}</td>
+                                        <td>$ ${bid.company_id === currentCompany 
+    ? Number(amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) 
+    : '***,***,***'}</td>
+                                        <td class="${bid.company_id === currentCompany ? '' : 'blurred prevent-select'}">${bid.company}</td>
                                     </tr>
                                 `;
                             }).join('');
@@ -572,10 +576,14 @@
             });
                             const rows = sortedBids.map(bid => {
                                 const amount = bid.amount[`amount${index + 1}`];
+                                console.log("amoumoaumoau", typeof(amount))
+
                                 return `
                                     <tr>
-                                        <td>$ ${bid.company_id === currentCompany ? amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '***,***,***'}</td>
-                                        <td class="${bid.company_id === currentCompany ? '' : 'blurred'}">${bid.company}</td>
+                                        <td>$ ${bid.company_id === currentCompany 
+    ? Number(amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) 
+    : '***,***,***'}</td>
+                                        <td class="${bid.company_id === currentCompany ? '' : 'blurred prevent-select'}">${bid.company}</td>
                                     </tr>
                                 `;
                             }).join('');
