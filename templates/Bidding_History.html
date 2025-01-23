@@ -433,17 +433,13 @@
                     const date = new Date(bid.closingDate);
                     const options = { year: 'numeric', month: 'long', day: 'numeric' };
                     const formattedDate = date.toLocaleDateString('en-US', options);
-                    const calculateSum = (data) => {
-                        return Object.values(data).reduce((total, amount) => total + Number(amount), 0);
-                    };
-                    const totalAmount = calculateSum(bid.amount)
-                    console.log("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk",typeof(totalAmount))
+                    console.log(typeof(bid.totalAmount))
                     tableBody.innerHTML += `
         <tr>
             <td>${bid.formatted_project_id}</td>
             <td onclick="getBidModalData(${bid.project_id})" style="cursor: pointer;">${bid.projectName}</td>
             <td>${formattedDate}</td>
-            <td>${totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+            <td>${bid.totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
         </tr>
     `;
                 });
@@ -489,48 +485,19 @@
                     const otherBidsRows = data.all_bids
                         .sort((a, b) => a.totalAmount - b.totalAmount) // Sort by amount in ascending order
                         .map(bid => `
-                                    <thead>
-                                        <tr>
-                                            <th>Project Number</th>
-                                            <th>Bid Value ($)</th>
-                                            <th>Bidder</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>CH-${bid.project_id.toString().padStart(2, '0')}</td>
-                                            <td>${bid.company_id === currentCompany ? bid.totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '***,***,***'}</td>
-                                            <td class="${bid.company_id === currentCompany ? '' : 'blurred prevent-select'}">${bid.company}</td>
-                                        </tr>
-                                    </tbody>
+                                            <tr>
+                                                <td>CH-${bid.project_id.toString().padStart(2, '0')}</td>
+                                                <td>${bid.company_id === currentCompany ? bid.totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '***,***,***'}</td>
+                                                <td class="${bid.company_id === currentCompany ? '' : 'blurred prevent-select'}">${bid.company}</td>
+                                            </tr>
+                            
                                 `)
                                     .join('');
-                    
-                    
-
-                    // const otherBidsRows_9 = data.all_bids
-                    //     .sort((a, b) => a.totalAmount - b.totalAmount) // Sort by amount in ascending order
-                    //     .map(bid => `
-                    //                 <tr>
-                    //                     <td>Drywall & Ceiling</td>
-                    //                     <td>${bid.company_id === currentCompany ? bid.totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '***,***,***'}</td>
-                    //                     <td class="${bid.company_id === currentCompany ? '' : 'blurred prevent-select'}">${bid.company}</td>
-                    //                 </tr>
-                    //                 <tr>
-                    //                     <td>Flooring & Tile</td>
-                    //                     <td>${bid.company_id === currentCompany ? bid.totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '***,***,***'}</td>
-                    //                     <td class="${bid.company_id === currentCompany ? '' : 'blurred prevent-select'}">${bid.company}</td>
-                    //                 </tr>
-                    //                 <tr>
-                    //                     <td>Paint & Wall Finishes</td>
-                    //                     <td>${bid.company_id === currentCompany ? bid.totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '***,***,***'}</td>
-                    //                     <td class="${bid.company_id === currentCompany ? '' : 'blurred prevent-select'}">${bid.company}</td>
-                    //                 </tr>
-                    //             `)
-                    //                 .join('');
 
                     const categories_9 = ['Drywall', 'Flooring', 'Paint'];
                     const categories_15 = ['Plumbing & Refrigeration', 'Sprinklers', 'HVAC'];
+
+                    console.log(data.division, "ooooooooo")
 
                     const generateTables_9 = (bids) => {
                         return categories_9.map((category, index) => {
@@ -609,33 +576,42 @@
 
 
                     document.getElementById('modal_content').innerHTML = `
-            <h1 id="modalProjectName">Project Name: ${data.projectName}</h1>
-            <p id="modaladdress">Project Address: ${data.project_address}</p>
-            <p id="modalClosingDate">Closing Date: ${formattedDate}</p>
-            <p id="modaldivision">Division: ${data.division == 1 ? "General Contractor"
-                            : data.division == 2 ? "Demolition"
-                            : data.division == 3 ? "Concrete"
-                            : data.division == 4 ? "Masonry"
-                            : data.division == 5 ? "Metals"
-                            : data.division == 6 ? "Wood and plastics"
-                            : data.division == 7 ? "Thermal and moisture protection"
-                            : data.division == 8 ? "Doors and windows"
-                            : data.division == 9 ? "Finishes"
-                            : data.division == 10 ? "Specialties"
-                            : data.division == 11 ? "Equipment"
-                            : data.division == 12 ? "Furnishings"
-                            : data.division == 13 ? "Special construction"
-                            : data.division == 14 ? "Conveying systems"
-                            : data.division == 15 ? "Mechanical"
-                            : "Electrical"
-                        }</p>
-            <table>
-
-                <tbody>
-
-                    ${data.division == "9" ? generateTables_9(data.all_bids) : data.division == "15" ? generateTables_15(data.all_bids) : otherBidsRows}
-                </tbody>
-            </table>
+                        <h1 id="modalProjectName">Project Name: ${data.projectName}</h1>
+                        <p id="modaladdress">Project Address: ${data.project_address}</p>
+                        <p id="modalClosingDate">Closing Date: ${formattedDate}</p>
+                        <p id="modaldivision">Division: ${data.division == 1 ? "General Contractor"
+                                        : data.division == 2 ? "Demolition"
+                                        : data.division == 3 ? "Concrete"
+                                        : data.division == 4 ? "Masonry"
+                                        : data.division == 5 ? "Metals"
+                                        : data.division == 6 ? "Wood and plastics"
+                                        : data.division == 7 ? "Thermal and moisture protection"
+                                        : data.division == 8 ? "Doors and windows"
+                                        : data.division == 9 ? "Finishes"
+                                        : data.division == 10 ? "Specialties"
+                                        : data.division == 11 ? "Equipment"
+                                        : data.division == 12 ? "Furnishings"
+                                        : data.division == 13 ? "Special construction"
+                                        : data.division == 14 ? "Conveying systems"
+                                        : data.division == 15 ? "Mechanical"
+                                        : "Electrical"
+                                    }</p>
+${data.division == 9 
+    ? generateTables_9(data.all_bids) 
+    : data.division == 15 
+        ? generateTables_15(data.all_bids) 
+        : `<table>
+            <thead>
+                <tr>
+                    <th>Project Number</th>
+                    <th>Bid Value ($)</th>
+                    <th>Bidder</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${otherBidsRows} <!-- Ensure that otherBidsRows is defined and contains valid HTML -->
+            </tbody>
+        </table>`}
         `;
                     document.getElementById('projectModal').style.display = "flex";
                     console.log(data);

@@ -685,7 +685,7 @@ def bidding_history_table():
             'project_id': bid.project_id,
             'formatted_project_id': formatted_project_id,
             'projectName': project.projectName if project else 'Unknown',  # Safeguard against None
-            'amount': bid.bidAmount,
+            'totalAmount': bid.totalAmount,
             'closingDate': bid.closingDate
         })
 
