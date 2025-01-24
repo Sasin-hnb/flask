@@ -218,12 +218,12 @@ def dashboard_chart():
         'bids': bid_projects_count
     })
 
-@app.route('/detailed_reports/chart/project', methods=['GET'])
+@app.route('/detailed_reports/chart/project', methods=['POST'])
 @login_required
 def reports_chart_project():
-    year = int(request.args.get('year'))
+    year = request.json.get('selectedYear')
+    year = int(year)
     print(year, 'iiiiiiiiiiiiiiiiiiiiiii')
-    # year = datetime.now().year
     projects_count = [0] * 12
     bid_projects_count = [0] * 12
 
@@ -265,11 +265,11 @@ def reports_chart_project():
         'userbids': bid_projects_count
     })
 
-@app.route('/detailed_reports/chart/months', methods=['GET'])
+@app.route('/detailed_reports/chart/months', methods=['POST'])
 @login_required
 def reports_chart_months():
-    year = int(request.args.get('year'))
-    month = int(request.args.get('month'))
+    month = request.json.get('selectedMonth')
+    year = request.json.get('selectedYear')
 
     username = current_user.username
     valid_user = User.query.filter_by(username=username).first()

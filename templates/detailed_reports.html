@@ -183,7 +183,13 @@
                 yearChart.destroy(); // Destroy the existing chart
             }
 
-            fetch(`/detailed_reports/chart/project?year=${selectedYear}`)
+            fetch('/detailed_reports/chart/project', {
+                method: 'POST',
+                headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({selectedYear })
+            })
             .then(response => {
         if (!response.ok) {
             throw new Error('Network response was not ok ' + response.statusText);
@@ -243,9 +249,10 @@
                             }
                         }
                     });
-                })    .catch(error => {
-        console.error('There was a problem with the fetch operation:', error);
-    });
+                })    
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                });
         }
 
 
@@ -267,7 +274,13 @@
                 monthlyChart.destroy();
             }
 
-            fetch(`/detailed_reports/chart/months?year=${selectedYear}&month=${selectedMonth}`)
+            fetch('/detailed_reports/chart/months', {
+                method: 'POST',
+                headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ selectedMonth, selectedYear})
+            })
             .then(response => {
         if (!response.ok) {
             throw new Error('Network response was not ok ' + response.statusText);
