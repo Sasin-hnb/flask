@@ -315,63 +315,92 @@
         const contractorPrices = data.contractorPrices || [];
         const lowestPrices = data.lowestPrices || [];
         const maxPrices = data.maxPrices || [];
+        
         const projectNames = data.project_name || [];
 
         // Create a new chart instance
-        monthlyChart = new Chart(ctx2, {
-            type: 'line',  // Line chart
-            data: {
-                labels: projectIds,
-                datasets: [
-                    {
-                        label: 'Your Price',
-                        data: contractorPrices,
-                        borderColor: 'rgba(0, 0, 255, 1)',
-                        borderWidth: 2,
-                        fill: false
-                    },
-                    {
-                        label: 'Lowest Price',
-                        data: lowestPrices,
-                        borderColor: 'rgba(169, 169, 169, 1)',
-                        borderWidth: 2,
-                        borderDash: [5, 5],  // Dashed line for lowest price
-                        fill: false
-                    },
-                    {
-                        label: 'Max Price',
-                        data: maxPrices,
-                        borderColor: 'rgba(211, 211, 211, 1)',
-                        borderWidth: 2,
-                        fill: false
-                    }
-                ]
+ // Calculate the percentages for lowest and max prices relative to contractorPrices
+const percent_lowestPrices = lowestPrices.map(price => 
+    (price / contractorPrices[0]) * 100 || 0
+); // Here I'm assuming contractorPrices[0] is used as a divisor, adjust as necessary
+
+const percent_maxPrices = maxPrices.map(price => 
+    (price / contractorPrices[0]) * 100 || 0
+); // Similar assumption for maxPrices
+
+// Create a new chart instance
+monthlyChart = new Chart(ctx2, {
+    type: 'line',  // Line chart
+    data: {
+        labels: projectIds,
+        datasets: [
+            {
+                label: 'Your Price',
+                data: contractorPrices,
+                borderColor: 'rgba(0, 0, 255, 1)',
+                borderWidth: 2,
+                fill: false
             },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            stepSize: 10000  // Y-axis increments by 10,000
-                        }
-                    }
-                },
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (context.parsed.y !== null) {
-                                    label += `: $${context.parsed.y.toLocaleString()}`;
-                                }
-                                return label;
+            {
+                label: 'Lowest Price',
+                data: lowestPrices,
+                borderColor: 'rgba(169, 169, 169, 1)',
+                borderWidth: 2,
+                borderDash: [5, 5],  // Dashed line for lowest price
+                fill: false,
+                percentData: percent_lowestPrices // Store the percentage data
+            },
+            {
+                label: 'Max Price',
+                data: maxPrices,
+                borderColor: 'rgba(211, 211, 211, 1)',
+                borderWidth: 2,
+                fill: false,
+                percentData: percent_maxPrices // Store the percentage data
+            }
+        ]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    stepSize: 10000  // Y-axis increments by 10,000
+                }
+            }
+        },
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        let label = context.dataset.label || '';
+
+                        if (context.parsed.y !== null) {
+                            // For Lowest Price tooltip
+                            if (context.dataset.label === 'Lowest Price') {
+                                const index = context.dataIndex;
+                                const percentValue = context.dataset.percentData[index];
+                                label += `: ${percentValue.toFixed(2)}%`;  // Show only percentage
+                            } 
+                            // For Max Price tooltip
+                            else if (context.dataset.label === 'Max Price') {
+                                const index = context.dataIndex;
+                                const percentValue = context.dataset.percentData[index];
+                                label += `: ${percentValue.toFixed(2)}%`;  // Show only percentage
+                            }
+                            else {
+                                // Default behavior for other datasets
+                                label += `: $${context.parsed.y.toLocaleString()}`;
                             }
                         }
+                        
+                        return label;
                     }
                 }
             }
-        });
-
+        }
+    }
+});
         // Populate project list
         const projectListContainer = document.getElementById('project-list-table-body');
         projectListContainer.innerHTML = '';
