@@ -68,7 +68,7 @@
             <div class="date-slider-container">
                 <label for="yearRange">Select Year:</label>
                 <input type="range" min="2020" max="2027" value="2025" id="yearRange" class="slider"
-                    onchange="selectYear(this)">
+                    onclick="selectYear(this)">
                 <span id="yearLabel">2025</span>
 
                 <div class="month-grid">
@@ -337,9 +337,6 @@
                             }
                         }
                     })    
-    }).catch(error => {
-        console.error('There was a problem with the fetch operation:', error);
-
                     const projectListContainer = document.getElementById('project-list-table-body'); // Select the table body element
                     projectListContainer.innerHTML = ''; // Clear the current content
 
@@ -381,6 +378,10 @@
                                 })
                         })
                     });
+
+    }).catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+
 
                 });
         }
