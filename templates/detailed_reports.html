@@ -66,25 +66,21 @@
 
             <!-- Sliding Date Selector -->
             <div class="date-slider-container">
-                <label for="yearRange">Select Year:</label>
-                <input type="range" min="2020" max="2027" value="2025" id="yearRange" class="slider"
-                    onclick="selectYear(this)">
-                <span id="yearLabel">2025</span>
-
-                <div class="month-grid">
-                    <button value="1" onclick="selectMonth(this)">Jan</button>
-                    <button value="2" onclick="selectMonth(this)">Feb</button>
-                    <button value="3" onclick="selectMonth(this)">Mar</button>
-                    <button value="4" onclick="selectMonth(this)">Apr</button>
-                    <button value="5" onclick="selectMonth(this)">May</button>
-                    <button value="6" onclick="selectMonth(this)">Jun</button>
-                    <button value="7" onclick="selectMonth(this)">Jul</button>
-                    <button value="8" onclick="selectMonth(this)">Aug</button>
-                    <button value="9" onclick="selectMonth(this)">Sep</button>
-                    <button value="10" onclick="selectMonth(this)">Oct</button>
-                    <button value="11" onclick="selectMonth(this)">Nov</button>
-                    <button value="12" onclick="selectMonth(this)">Dec</button>
+                <label class="button_label" for="yearRange">Select Year:</label>
+                <!-- <input type="range" min="2020" max="2027" value="2025" id="yearRange" class="slider"
+                    onclick="selectYear(this)"> -->
+                <div class="year-grid">
+                    <button id="year_2021" value="2021" onclick="selectYear(this)">2021</button>
+                    <button id="year_2022" value="2022" onclick="selectYear(this)">2022</button>
+                    <button id="year_2023" value="2023" onclick="selectYear(this)">2023</button>
+                    <button id="year_2024" value="2024" onclick="selectYear(this)">2024</button>
+                    <button id="year_2025" value="2025" onclick="selectYear(this)">2025</button>
+                    <button id="year_2026" value="2026" onclick="selectYear(this)">2026</button>
+                    <button id="year_2027" value="2027" onclick="selectYear(this)">2027</button>
+                    <button id="year_2028" value="2028" onclick="selectYear(this)">2028</button>
                 </div>
+
+
             </div>
 
             <!-- Year to Date Graph Section -->
@@ -93,7 +89,20 @@
                 <canvas id="yearChart"></canvas>
             </section>
 
-
+            <div class="month-grid">
+                <button id="month_1" value="1" onclick="selectMonth(this)">Jan</button>
+                <button id="month_2" value="2" onclick="selectMonth(this)">Feb</button>
+                <button id="month_3" value="3" onclick="selectMonth(this)">Mar</button>
+                <button id="month_4" value="4" onclick="selectMonth(this)">Apr</button>
+                <button id="month_5" value="5" onclick="selectMonth(this)">May</button>
+                <button id="month_6" value="6" onclick="selectMonth(this)">Jun</button>
+                <button id="month_7" value="7" onclick="selectMonth(this)">Jul</button>
+                <button id="month_8" value="8" onclick="selectMonth(this)">Aug</button>
+                <button id="month_9" value="9" onclick="selectMonth(this)">Sep</button>
+                <button id="month_10" value="10" onclick="selectMonth(this)">Oct</button>
+                <button id="month_11" value="11" onclick="selectMonth(this)">Nov</button>
+                <button id="month_12" value="12" onclick="selectMonth(this)">Dec</button>
+            </div>
 
 
 
@@ -164,18 +173,20 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         let yearChart; // Variable to hold the chart instance
-        // Update the year label when the slider changes
-
-            const yearRange = document.getElementById("yearRange");
-            const yearLabel = document.getElementById('yearLabel');
-
-            yearRange.addEventListener('input', function () {
-                yearLabel.textContent = this.value;
-            });
+        let selectedYears = null;
 
 
-        function selectYear(slider) {
-            const selectedYear = slider.value; // Get the selected year
+        function selectYear(button) {
+
+            const buttons = document.querySelectorAll('.year-grid button');
+            buttons.forEach(b => b.classList.remove('active'));
+
+            // Add the active class to the selected button
+            button.classList.add('active');
+
+            selectedYears = button.value;
+
+            const selectedYear = button.value; // Get the selected year
             console.log(selectedYear, "ooooooooooooo")
             const ctx1 = document.getElementById('yearChart').getContext('2d');
 
@@ -262,10 +273,14 @@
 
         // Function to handle month selection
         function selectMonth(button) {
-            const yearange = document.getElementById('yearRange');
+            const buttons = document.querySelectorAll('.month-grid button');
+            buttons.forEach(b => b.classList.remove('active'));
+
+            // Add the active class to the selected button
+            button.classList.add('active');
+            const monthange = document.getElementById('monthRange');
 
             const selectedMonth = button.value; // Get the month name
-            const selectedYear = yearange.value; // Get the selected year
 
             const ctx2 = document.getElementById('monthlyProjectChart').getContext('2d');
 
@@ -279,7 +294,7 @@
                 headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ selectedMonth, selectedYear})
+        body: JSON.stringify({ selectedMonth, selectedYears})
             })
             .then(response => {
         if (!response.ok) {

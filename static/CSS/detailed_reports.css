@@ -24,13 +24,35 @@
 
 .month-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(12, 1fr);
   gap: 10px;
-  max-width: 400px;
+  max-width: 1500px;
   margin: 0 auto;
 }
 
+.button_label {
+  margin-bottom: 10px;
+}
+
+.year-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 10px;
+  max-width: 1000px;
+  margin: 10px auto 0 auto;
+}
+
 .month-grid button {
+  padding: 10px;
+  border: none;
+  background-color: #ddd;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.year-grid button {
   padding: 10px;
   border: none;
   background-color: #ddd;
@@ -45,6 +67,10 @@
   color: white;
 }
 
+.year-grid button:hover, .year-grid button.active {
+  background-color: #007BFF;
+  color: white;
+}
 
 
 /* Report Content Section */
