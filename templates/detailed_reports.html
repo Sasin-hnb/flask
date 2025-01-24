@@ -67,7 +67,8 @@
             <!-- Sliding Date Selector -->
             <div class="date-slider-container">
                 <label for="yearRange">Select Year:</label>
-                <input type="range" min="2020" max="2027" value="2025" id="yearRange" class="slider" onchange="selectYear(this)">
+                <input type="range" min="2020" max="2027" value="2025" id="yearRange" class="slider"
+                    onchange="selectYear(this)">
                 <span id="yearLabel">2025</span>
 
                 <div class="month-grid">
@@ -95,7 +96,7 @@
 
 
 
-            
+
             <div class="chart-section">
                 <h2 style="text-align: center;">Projects for Selected Month</h2>
                 <canvas id="monthlyProjectChart"></canvas>
@@ -152,95 +153,93 @@
         let yearChart; // Variable to hold the chart instance
         // Update the year label when the slider changes
 
-document.addEventListener("DOMContentLoaded", function() {
-    const yearRange = document.getElementById("yearRange");
-    const yearLabel = document.getElementById('yearLabel');
+        document.addEventListener("DOMContentLoaded", function () {
+            const yearRange = document.getElementById("yearRange");
+            const yearLabel = document.getElementById('yearLabel');
 
-    yearRange.value = 2025; // Set initial value
-    yearRange.addEventListener('input', function () {
-        yearLabel.textContent = this.value;
-    });
+            yearRange.value = 2025; // Set initial value
+            yearRange.addEventListener('input', function () {
+                yearLabel.textContent = this.value;
+            });
 
-    selectYear(yearRange); // Call selectYear function if needed
-});
+            selectYear(yearRange); // Call selectYear function if needed
+        });
 
-function selectYear(slider) {
-    const selectedYear = slider.value; // Get the selected year
-    console.log(selectedYear,"ooooooooooooo")
-    const ctx1 = document.getElementById('yearChart').getContext('2d');
+        function selectYear(slider) {
+            const selectedYear = slider.value; // Get the selected year
+            console.log(selectedYear, "ooooooooooooo")
+            const ctx1 = document.getElementById('yearChart').getContext('2d');
 
-    if (yearChart) {
-        yearChart.destroy(); // Destroy the existing chart
-    }
+            if (yearChart) {
+                yearChart.destroy(); // Destroy the existing chart
+            }
 
-    fetch(`/detailed_reports/chart/project?year=${selectedYear}`)
-    .then(response => response.json())
-    .then(data => {
-        const totalProjects = data.totalprojects;
-        const userBids = data.userbids;
-        console.log("ddddd", totalProjects, userBids)
+            fetch(`/detailed_reports/chart/project?year=${selectedYear}`)
+                .then(response => response.json())
+                .then(data => {
+                    const totalProjects = data.totalprojects;
+                    const userBids = data.userbids;
+                    console.log("ddddd", totalProjects, userBids)
 
-        // Create the chart without 'const'
-        yearChart = new Chart(ctx1, {
-            type: 'line',
-            data: {
-                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-                datasets: [
-                    {
-                        label: 'Total Projects',
-                        data: totalProjects,
-                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                        borderWidth: 2,
-                        type: 'line'
-                    },
-                    {
-                        label: 'Your Bids',
-                        data: userBids,
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        borderWidth: 2,
-                        type: 'line'
-                    }
-                ]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            stepSize: 1000  // Y-axis increments by 10,000
-                        }
-                    }
-                },
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            label: function (context) {
-                                let label = context.dataset.label || '';
-                                if (context.parsed.y !== null) {
-                                    label += `: ${context.parsed.y}`;
+                    // Create the chart without 'const'
+                    yearChart = new Chart(ctx1, {
+                        type: 'line',
+                        data: {
+                            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                            datasets: [
+                                {
+                                    label: 'Total Projects',
+                                    data: totalProjects,
+                                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                                    borderWidth: 2,
+                                    type: 'line'
+                                },
+                                {
+                                    label: 'Your Bids',
+                                    data: userBids,
+                                    borderColor: 'rgba(255, 99, 132, 1)',
+                                    borderWidth: 2,
+                                    type: 'line'
                                 }
-                                const index = context.dataIndex;
-                                label += ` (Your Bids: ${userBids[index]})`;
-                                return label;
+                            ]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        stepSize: 1000  // Y-axis increments by 10,000
+                                    }
+                                }
+                            },
+                            plugins: {
+                                tooltip: {
+                                    callbacks: {
+                                        label: function (context) {
+                                            let label = context.dataset.label || '';
+                                            if (context.parsed.y !== null) {
+                                                label += `: ${context.parsed.y}`;
+                                            }
+                                            const index = context.dataIndex;
+                                            label += ` (Your Bids: ${userBids[index]})`;
+                                            return label;
+                                        }
+                                    }
+                                }
                             }
                         }
-                    }
-                }
-            }
-        });
-    });
-}
-    </script>
+                    });
+                });
+        }
 
-    <script>
 
-let monthlyChart; // Declare a variable to hold the chart instance
+        let monthlyChart; // Declare a variable to hold the chart instance
 
 
 
         // Function to handle month selection
         function selectMonth(button) {
-        const yearange = document.getElementById('yearRange');
+            const yearange = document.getElementById('yearRange');
 
             const selectedMonth = button.value; // Get the month name
             const selectedYear = yearange.value; // Get the selected year
@@ -288,7 +287,7 @@ let monthlyChart; // Declare a variable to hold the chart instance
                                     data: maxPrices,
                                     borderColor: 'rgba(211, 211, 211, 1)',
                                     borderWidth: 2,
-                                    
+
                                     fill: false
                                 }
                             ]
