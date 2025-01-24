@@ -218,7 +218,7 @@ def dashboard_chart():
         'bids': bid_projects_count
     })
 
-@app.route('/detailed_reports/chart/project/', methods=['GET'])
+@app.route('/detailed_reports/chart/project', methods=['GET'])
 @login_required
 def reports_chart_project():
     year = int(request.args.get('year'))
@@ -265,7 +265,7 @@ def reports_chart_project():
         'userbids': bid_projects_count
     })
 
-@app.route('/detailed_reports/chart/months/', methods=['GET'])
+@app.route('/detailed_reports/chart/months', methods=['GET'])
 @login_required
 def reports_chart_months():
     year = int(request.args.get('year'))
