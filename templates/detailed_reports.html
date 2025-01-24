@@ -170,7 +170,7 @@
             const yearRange = document.getElementById("yearRange");
             const yearLabel = document.getElementById('yearLabel');
 
-            yearRange.value = 2025; // Set initial value
+            yearRange.value = "2025"; // Set initial value
             yearRange.addEventListener('input', function () {
                 yearLabel.textContent = this.value;
             });
@@ -340,9 +340,9 @@
                                 }
                             }
                         }
-                    })    .catch(error => {
+                    })    
+    }).catch(error => {
         console.error('There was a problem with the fetch operation:', error);
-    });
 
                     const projectListContainer = document.getElementById('project-list-table-body'); // Select the table body element
                     projectListContainer.innerHTML = ''; // Clear the current content
