@@ -166,17 +166,13 @@
         let yearChart; // Variable to hold the chart instance
         // Update the year label when the slider changes
 
-        document.addEventListener("DOMContentLoaded", function () {
             const yearRange = document.getElementById("yearRange");
             const yearLabel = document.getElementById('yearLabel');
 
-            yearRange.value = "2025"; // Set initial value
             yearRange.addEventListener('input', function () {
                 yearLabel.textContent = this.value;
             });
 
-            selectYear(yearRange); // Call selectYear function if needed
-        });
 
         function selectYear(slider) {
             const selectedYear = slider.value; // Get the selected year
