@@ -218,10 +218,12 @@ def dashboard_chart():
         'bids': bid_projects_count
     })
 
-@app.route('/detailed_reports/chart/project', methods=['GET'])
+@app.route('/detailed_reports/chart/project/', methods=['GET'])
 @login_required
 def reports_chart_project():
-    current_year = datetime.now().year
+    year = int(request.args.get('year'))
+    print(year, 'iiiiiiiiiiiiiiiiiiiiiii')
+    # year = datetime.now().year
     projects_count = [0] * 12
     bid_projects_count = [0] * 12
 
@@ -237,7 +239,9 @@ def reports_chart_project():
     company_id = company.id
 
     # Query projects created in the current year
-    projects = Projects.query.filter(Projects.created_at >= f'{current_year}-01-01').all()
+    projects = Projects.query.filter(Projects.created_at >= f'{year}-01-01',Projects.created_at < f'{year + 1}-01-01').all()
+
+    print(projects, "projects")
 
     # Count projects by month
     for project in projects:
@@ -246,7 +250,8 @@ def reports_chart_project():
 
     # Query bids for the current year belonging to the current user company
     bids = Bids.query.filter(
-        Bids.created_at >= f'{current_year}-01-01',
+        Bids.created_at >= f'{year}-01-01',
+        Bids.created_at < f'{year + 1}-01-01',
         Bids.company_id == company_id  # Assuming Bids table has a company_id field
     ).all()
 
@@ -260,13 +265,12 @@ def reports_chart_project():
         'userbids': bid_projects_count
     })
 
-@app.route('/detailed_reports/chart/bid/', methods=['GET'])
+@app.route('/detailed_reports/chart/months/', methods=['GET'])
 @login_required
-def reports_chart_bid():
+def reports_chart_months():
     year = int(request.args.get('year'))
     month = int(request.args.get('month'))
 
-    # Get current user's company details
     username = current_user.username
     valid_user = User.query.filter_by(username=username).first()
     domain = valid_user.domain
@@ -302,6 +306,7 @@ def reports_chart_bid():
     project_ids = []
     contractor_prices = []
     lowest_prices = []
+    max_prices = []
     project_name = []
 
     # Now gather data for each project
@@ -316,11 +321,13 @@ def reports_chart_bid():
         amounts = project_bids[project.id]
         contractor_prices.append(user_bid)  # User's bid for the project
         lowest_prices.append(min(amounts) if amounts else 0)  # Lowest bid among all bids
+        max_prices.append(max(amounts) if amounts else 0)  # Lowest bid among all bids
 
     return jsonify({
         "projectIds": project_ids,
         "contractorPrices": contractor_prices,
         "lowestPrices": lowest_prices,
+        "maxPrices": max_prices,
         "project_name": project_name
     })
 

@@ -64,19 +64,10 @@
         <div class="container">
             <h1 style="text-align: center;">Detailed Report</h1>
 
-            <!-- Year to Date Graph Section -->
-            <section class="chart-section">
-                <h2 style="text-align: center;">Year-to-Date Project Bids</h2>
-                <canvas id="yearChart"></canvas>
-            </section>
-
-
-
-
             <!-- Sliding Date Selector -->
             <div class="date-slider-container">
                 <label for="yearRange">Select Year:</label>
-                <input type="range" min="2020" max="2027" value="2025" id="yearRange" class="slider">
+                <input type="range" min="2020" max="2027" value="2025" id="yearRange" class="slider" onchange="selectYear(this)">
                 <span id="yearLabel">2025</span>
 
                 <div class="month-grid">
@@ -94,6 +85,17 @@
                     <button value="12" onclick="selectMonth(this)">Dec</button>
                 </div>
             </div>
+
+            <!-- Year to Date Graph Section -->
+            <section class="chart-section">
+                <h2 style="text-align: center;">Year-to-Date Project Bids</h2>
+                <canvas id="yearChart"></canvas>
+            </section>
+
+
+
+
+            
             <div class="chart-section">
                 <h2 style="text-align: center;">Projects for Selected Month</h2>
                 <canvas id="monthlyProjectChart"></canvas>
@@ -147,73 +149,102 @@
     <!-- Chart.js Script for Graph -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        const ctx1 = document.getElementById('yearChart').getContext('2d');
+        let yearChart; // Variable to hold the chart instance
+        // Update the year label when the slider changes
 
-        fetch('/detailed_reports/chart/project')
-            .then(response => response.json())
-            .then(data => {
-                const totalProjects = data.totalprojects;
-                const userBids = data.userbids;
-                console.log("ddddd", totalProjects, userBids)
-                const yearChart = new Chart(ctx1, {
-                    type: 'line',
-                    data: {
-                        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-                        datasets: [
-                            {
-                                label: 'Total Projects',
-                                data: totalProjects,
-                                backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                                borderWidth: 2,
-                                type: 'line'
-                            },
-                            {
-                                label: 'Your Bids',
-                                data: userBids,
-                                borderColor: 'rgba(255, 99, 132, 1)',
-                                borderWidth: 2,
-                                type: 'line'
-                            }
-                        ]
+document.addEventListener("DOMContentLoaded", function() {
+    const yearRange = document.getElementById("yearRange");
+    const yearLabel = document.getElementById('yearLabel');
+
+    yearRange.value = 2025; // Set initial value
+    yearRange.addEventListener('input', function () {
+        yearLabel.textContent = this.value;
+    });
+
+    selectYear(yearRange); // Call selectYear function if needed
+});
+
+function selectYear(slider) {
+    const selectedYear = slider.value; // Get the selected year
+    console.log(selectedYear,"ooooooooooooo")
+    const ctx1 = document.getElementById('yearChart').getContext('2d');
+
+    if (yearChart) {
+        yearChart.destroy(); // Destroy the existing chart
+    }
+
+    fetch(`/detailed_reports/chart/project?year=${selectedYear}`)
+    .then(response => response.json())
+    .then(data => {
+        const totalProjects = data.totalprojects;
+        const userBids = data.userbids;
+        console.log("ddddd", totalProjects, userBids)
+
+        // Create the chart without 'const'
+        yearChart = new Chart(ctx1, {
+            type: 'line',
+            data: {
+                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                datasets: [
+                    {
+                        label: 'Total Projects',
+                        data: totalProjects,
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderWidth: 2,
+                        type: 'line'
                     },
-                    options: {
-                        plugins: {
-                            tooltip: {
-                                callbacks: {
-                                    label: function (context) {
-                                        let label = context.dataset.label || '';
-                                        if (context.parsed.y !== null) {
-                                            label += `: ${context.parsed.y}`;
-                                        }
-                                        const index = context.dataIndex;
-                                        label += ` (Your Bids: ${userBids[index]})`;
-                                        return label;
-                                    }
+                    {
+                        label: 'Your Bids',
+                        data: userBids,
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 2,
+                        type: 'line'
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1000  // Y-axis increments by 10,000
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                let label = context.dataset.label || '';
+                                if (context.parsed.y !== null) {
+                                    label += `: ${context.parsed.y}`;
                                 }
+                                const index = context.dataIndex;
+                                label += ` (Your Bids: ${userBids[index]})`;
+                                return label;
                             }
                         }
                     }
-                });
-
-
-            })
-
+                }
+            }
+        });
+    });
+}
     </script>
 
     <script>
-        const yearange = document.getElementById('yearRange');
-        const yearLabel = document.getElementById('yearLabel');
-        let monthlyChart; // Declare a variable to hold the chart instance
 
-        // Update the year label when the slider changes
-        yearange.addEventListener('input', function () {
-            yearLabel.textContent = this.value;
-        });
+let monthlyChart; // Declare a variable to hold the chart instance
+
+
 
         // Function to handle month selection
         function selectMonth(button) {
+        const yearange = document.getElementById('yearRange');
+
             const selectedMonth = button.value; // Get the month name
             const selectedYear = yearange.value; // Get the selected year
+
             const ctx2 = document.getElementById('monthlyProjectChart').getContext('2d');
 
             // Destroy the existing chart if it exists
@@ -221,13 +252,14 @@
                 monthlyChart.destroy();
             }
 
-            fetch(`/detailed_reports/chart/bid?year=${selectedYear}&month=${selectedMonth}`)
+            fetch(`/detailed_reports/chart/months?year=${selectedYear}&month=${selectedMonth}`)
                 .then(response => response.json())
                 .then(data => {
                     console.log(data, "oooooooooooooooooooooooooooooo");
                     const projectIds = data.projectIds;
                     let contractorPrices = data.contractorPrices;
                     let lowestPrices = data.lowestPrices;
+                    let maxPrices = data.maxPrices;
                     const projectName = data.project_name;
 
                     // Create a new chart instance
@@ -239,16 +271,24 @@
                                 {
                                     label: 'Your Price',
                                     data: contractorPrices,
-                                    borderColor: 'rgba(75, 192, 192, 1)',
+                                    borderColor: 'rgba(0, 0, 255, 1)',
                                     borderWidth: 2,
                                     fill: false
                                 },
                                 {
                                     label: 'Lowest Price',
                                     data: lowestPrices,
-                                    borderColor: 'rgba(255, 99, 132, 1)',
+                                    borderColor: 'rgba(169, 169, 169, 1)',
                                     borderWidth: 2,
                                     borderDash: [5, 5],  // Dashed line for lowest price
+                                    fill: false
+                                },
+                                {
+                                    label: 'max Price',
+                                    data: maxPrices,
+                                    borderColor: 'rgba(211, 211, 211, 1)',
+                                    borderWidth: 2,
+                                    
                                     fill: false
                                 }
                             ]
