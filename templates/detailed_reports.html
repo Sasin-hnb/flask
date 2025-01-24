@@ -185,6 +185,7 @@
             button.classList.add('active');
 
             selectedYears = button.value;
+            console.log(selectedYears,"jjjjjjjjjjjjjj")
 
             const selectedYear = button.value; // Get the selected year
             console.log(selectedYear, "ooooooooooooo")
@@ -270,150 +271,148 @@
         let monthlyChart; // Declare a variable to hold the chart instance
 
 
+        function selectMonth(month) {
+    const selectedMonth = month.value; // Get the month number (1-12)
+    
+    // Clear active class from all buttons
+    const buttons = document.querySelectorAll('.month-grid button');
+    buttons.forEach(b => b.classList.remove('active'));
 
-        // Function to handle month selection
-        function selectMonth(button) {
-            const buttons = document.querySelectorAll('.month-grid button');
-            buttons.forEach(b => b.classList.remove('active'));
+    // Add the active class to the selected button
+    month.classList.add('active'); // Correct reference: `month` instead of `button`
 
-            // Add the active class to the selected button
-            button.classList.add('active');
-            const monthange = document.getElementById('monthRange');
+    const ctx2 = document.getElementById('monthlyProjectChart').getContext('2d');
 
-            const selectedMonth = button.value; // Get the month name
+    // Check if a year has been selected
+    if (!selectedYears) {
+        alert('Please select a year first.'); // Alert if no year is selected
+        return;
+    }
 
-            const ctx2 = document.getElementById('monthlyProjectChart').getContext('2d');
+    // Destroy the existing chart if it exists
+    if (monthlyChart) {
+        monthlyChart.destroy();
+    }
 
-            // Destroy the existing chart if it exists
-            if (monthlyChart) {
-                monthlyChart.destroy();
-            }
-
-            fetch('/detailed_reports/chart/months', {
-                method: 'POST',
-                headers: {
+    // Fetch the data
+    fetch('/detailed_reports/chart/months', {
+        method: 'POST',
+        headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ selectedMonth, selectedYears})
-            })
-            .then(response => {
+        body: JSON.stringify({ selectedMonth, selectedYears }) // Send selected month and year
+    })
+    .then(response => {
         if (!response.ok) {
             throw new Error('Network response was not ok ' + response.statusText);
         }
         return response.json();
     })
-                .then(data => {
-                    console.log(data, "oooooooooooooooooooooooooooooo");
-                    const projectIds = data.projectIds;
-                    let contractorPrices = data.contractorPrices;
-                    let lowestPrices = data.lowestPrices;
-                    let maxPrices = data.maxPrices;
-                    const projectName = data.project_name;
+    .then(data => {
+        if (!data) throw new Error('No data received');
 
-                    // Create a new chart instance
-                    monthlyChart = new Chart(ctx2, {
-                        type: 'line',  // Line chart
-                        data: {
-                            labels: projectIds,
-                            datasets: [
-                                {
-                                    label: 'Your Price',
-                                    data: contractorPrices,
-                                    borderColor: 'rgba(0, 0, 255, 1)',
-                                    borderWidth: 2,
-                                    fill: false
-                                },
-                                {
-                                    label: 'Lowest Price',
-                                    data: lowestPrices,
-                                    borderColor: 'rgba(169, 169, 169, 1)',
-                                    borderWidth: 2,
-                                    borderDash: [5, 5],  // Dashed line for lowest price
-                                    fill: false
-                                },
-                                {
-                                    label: 'max Price',
-                                    data: maxPrices,
-                                    borderColor: 'rgba(211, 211, 211, 1)',
-                                    borderWidth: 2,
+        const projectIds = data.projectIds || [];
+        const contractorPrices = data.contractorPrices || [];
+        const lowestPrices = data.lowestPrices || [];
+        const maxPrices = data.maxPrices || [];
+        const projectNames = data.project_name || [];
 
-                                    fill: false
+        // Create a new chart instance
+        monthlyChart = new Chart(ctx2, {
+            type: 'line',  // Line chart
+            data: {
+                labels: projectIds,
+                datasets: [
+                    {
+                        label: 'Your Price',
+                        data: contractorPrices,
+                        borderColor: 'rgba(0, 0, 255, 1)',
+                        borderWidth: 2,
+                        fill: false
+                    },
+                    {
+                        label: 'Lowest Price',
+                        data: lowestPrices,
+                        borderColor: 'rgba(169, 169, 169, 1)',
+                        borderWidth: 2,
+                        borderDash: [5, 5],  // Dashed line for lowest price
+                        fill: false
+                    },
+                    {
+                        label: 'Max Price',
+                        data: maxPrices,
+                        borderColor: 'rgba(211, 211, 211, 1)',
+                        borderWidth: 2,
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 10000  // Y-axis increments by 10,000
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (context.parsed.y !== null) {
+                                    label += `: $${context.parsed.y.toLocaleString()}`;
                                 }
-                            ]
-                        },
-                        options: {
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    ticks: {
-                                        stepSize: 10000  // Y-axis increments by 10,000
-                                    }
-                                }
-                            },
-                            plugins: {
-                                tooltip: {
-                                    callbacks: {
-                                        label: function (context) {
-                                            let label = context.dataset.label || '';
-                                            if (context.parsed.y !== null) {
-                                                label += `: $${context.parsed.y.toLocaleString()}`;
-                                            }
-                                            return label;
-                                        }
-                                    }
-                                }
+                                return label;
                             }
                         }
-                    })    
-                    const projectListContainer = document.getElementById('project-list-table-body'); // Select the table body element
-                    projectListContainer.innerHTML = ''; // Clear the current content
+                    }
+                }
+            }
+        });
 
-                    // Create a new table row for each project
-                    projectIds.forEach((project_Id, index) => {
-                        const projectRow = document.createElement('tr');
-                        const projectTdId = document.createElement('td');
-                        const projectTdName = document.createElement('td');
+        // Populate project list
+        const projectListContainer = document.getElementById('project-list-table-body');
+        projectListContainer.innerHTML = '';
 
-                        projectTdId.textContent = project_Id; // Project ID
-                        projectTdName.textContent = projectName[index]; // Project name
+        projectIds.forEach((project_Id, index) => {
+            const projectRow = document.createElement('tr');
+            const projectTdId = document.createElement('td');
+            const projectTdName = document.createElement('td');
 
-                        projectRow.appendChild(projectTdId);
-                        projectRow.appendChild(projectTdName);
+            projectTdId.textContent = project_Id; // Project ID
+            projectTdName.textContent = projectNames[index]; // Project name
 
-
-                        const data = { projectId: project_Id }
-
-                        projectListContainer.appendChild(projectRow); // Append the new row
-                        projectRow.addEventListener('click', () => {
-                            fetch('/detailed_report/project/table', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify(data)
-                            })
-                                .then(response => response.json())
-                                .then(data => {
-                                    console.log(data, "mmmmmmmmmmmmmm")
-                                    document.getElementById('project_details').innerHTML = `
-                                    <p><strong>Project Name:</strong> ${data.projectname}</p>
-                                    <p><strong>Project Closing Date: </strong>${data.closingDate}</p>
-                                    <p><strong>Project Address: </strong>${data.address}, ${data.city}, ${data.province}, ${data.postalCode}</p>
-                                    <p><strong>Bids:</strong> ${data.bids}</p>
-                                    <p><strong>Ranking:</strong> ${data.ranking}</p>
-                                `
-
-                                })
-                        })
-                    });
-
-    }).catch(error => {
-        console.error('There was a problem with the fetch operation:', error);
-
-
+            projectRow.appendChild(projectTdId);
+            projectRow.appendChild(projectTdName);
+            projectListContainer.appendChild(projectRow);
+            
+            projectRow.addEventListener('click', () => {
+                fetch('/detailed_report/project/table', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ projectId: project_Id })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('project_details').innerHTML = `
+                        <p><strong>Project Name:</strong> ${data.projectname}</p>
+                        <p><strong>Project Closing Date: </strong>${data.closingDate}</p>
+                        <p><strong>Project Address: </strong>${data.address}, ${data.city}, ${data.province}, ${data.postalCode}</p>
+                        <p><strong>Bids:</strong> ${data.bids}</p>
+                        <p><strong>Ranking:</strong> ${data.ranking}</p>
+                    `;
                 });
-        }
-
+            });
+        });
+    })
+    .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+    });
+}
     function showLogoutPopup() {
         document.getElementById('logoutPopup').style.display = 'flex';
     }

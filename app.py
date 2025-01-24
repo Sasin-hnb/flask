@@ -269,8 +269,9 @@ def reports_chart_project():
 @login_required
 def reports_chart_months():
     month = request.json.get('selectedMonth')
-    year = request.json.get('selectedYear')
+    year = request.json.get('selectedYears')
 
+    print(month, year, "month, years")
     username = current_user.username
     valid_user = User.query.filter_by(username=username).first()
     domain = valid_user.domain
@@ -826,5 +827,5 @@ def logout():
     return redirect(url_for('home'))
 
 if __name__ == '__main__':
-    # app.run(debug=True)
-    app.run(host="0.0.0.0")
+    app.run(debug=True)
+    # app.run(host="0.0.0.0")
