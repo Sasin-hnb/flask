@@ -565,7 +565,8 @@ const percent_lowestPrices = contractorPrices.map((price, index) =>
 );
 
 const percent_maxPrices = contractorPrices.map((price, index) => 
-    (maxPrices[index] / price) * 100 || 0  // % difference to max price
+    ((maxPrices[index] - price) / price) * 100 || 0  // % difference to max price
+
 );
 
 // Result
@@ -742,7 +743,7 @@ const percent_lowestPrices = contractorPrices.map((price, index) =>
 );
 
 const percent_maxPrices = contractorPrices.map((price, index) => 
-    (maxPrices[index] / price) * 100 || 0  // % difference to max price
+    ((maxPrices[index] - price) / price) * 100 || 0  // % difference to max price
 );
 
 // Result
