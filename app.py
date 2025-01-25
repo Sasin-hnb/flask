@@ -370,6 +370,97 @@ def detailed_report_project():
 
     return jsonify(data)
 
+@app.route('/detailed_reports/chart/division', methods=['POST'])
+@login_required
+def reports_chart_division():
+    month = request.json.get('selectedMonths')
+    year = request.json.get('selectedYears')
+    selectedDivision = request.json.get('selectedDivision')  # Get division from the request, convert to int
+    division = int(request.json.get('division__'))
+
+    print(month, year, selectedDivision, "month, year, division")
+    
+    # Validate inputs
+    if month is None or year is None or selectedDivision is None:
+        return jsonify({"error": "Missing required parameters."}), 400
+
+    username = current_user.username
+    valid_user = User.query.filter_by(username=username).first()
+    domain = valid_user.domain
+    company = Company.query.filter_by(domain=domain).first()
+    
+    if not company:
+        return jsonify({"error": "Company not found for the user."}), 404
+
+    company_id = company.id
+
+    # Fetch bids by the company's user for the specified year and month
+    bids = Bids.query.filter(
+        Bids.company_id == company_id,
+        db.extract('year', Bids.created_at) == year,
+        db.extract('month', Bids.created_at) == month
+    ).all()
+
+    print("Bids found:", bids)
+
+    # Retrieve project_ids from bids made by the user
+    project_ids_with_bids = {bid.project_id for bid in bids}
+    print("project_ids_with_bids: ", project_ids_with_bids)
+    # Get all projects that have bids
+    projects = Projects.query.filter(Projects.id.in_(project_ids_with_bids)).all()
+
+    # Create a mapping from project id to all bids for that project
+    project_bids = {project.id: [] for project in projects}
+    print("project_bids: ", project_bids)
+    # Populate project_bids with all relevant bids
+    all_bids = Bids.query.filter(
+        Bids.project_id.in_(project_ids_with_bids), 
+        Bids.division == division  # Use equality instead of 'in_' method
+    ).all()
+    print("all_bids: ", all_bids)
+    for bid in all_bids:
+        print("jljljljljlj", bid)
+        if bid.project_id in project_bids:
+            if isinstance(bid.bidAmount, (list, dict)):
+                project_bids[bid.project_id].append(bid.bidAmount)
+            else:
+                project_bids[bid.project_id].append([bid.bidAmount])  # Convert to a list
+
+    print("project_bids: ", project_bids)
+    # Initialize the response lists
+    project_ids = []
+    contractor_prices = []
+    lowest_prices = []
+    max_prices = []
+    project_names = []
+
+    # Now gather data for each project
+    for project in projects:
+        project_ids.append(f"CH-{str(project.id).zfill(2)}")
+        project_names.append(project.projectName)
+
+        # Get the user's bid for the project, if any
+        user_bid_data = next((b.bidAmount[selectedDivision] for b in bids if b.project_id == project.id), 0)
+        contractor_prices.append(user_bid_data)
+
+        # Aggregate prices and find the lowest price
+        amounts = []
+        for bid in project_bids[project.id]:
+            print("ooooooooooooooooooooooooooooooooooo", bid[selectedDivision])
+            amounts.append(bid[selectedDivision])
+
+        lowest_prices.append(min(amounts) if amounts else 0)  # Lowest bid among all bids
+        max_prices.append(max(amounts) if amounts else 0)  # Max bid among all bids
+
+    return jsonify({
+        "projectIds": project_ids,
+        "contractorPrices": contractor_prices,
+        "lowestPrices": lowest_prices,
+        "maxPrices": max_prices,
+        "project_name": project_names
+    })
+
+
 
 @app.route('/user_management')
 @login_required
@@ -669,7 +760,10 @@ def editbid(projectId):
 @app.route('/detailed_reports')
 @login_required
 def detailed_reports():
-    return render_template('detailed_reports.html')
+    username = current_user.username
+    user = User.query.filter_by(username=username).first()
+    division = user.division
+    return render_template('detailed_reports.html', division=division)
 
 @app.route('/bidding_history')
 @login_required
