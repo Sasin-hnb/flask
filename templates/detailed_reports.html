@@ -185,12 +185,6 @@
         </div>
     </div>
 
-    <!-- Project Details Section -->
-    <div class="project-details" style="flex: 1; margin-left: 20px;">
-        <h3 style="text-align: center;">Project Details</h3>
-        <div style="padding: 20px;" id="project_details">
-        </div>
-    </div>
 </div>
 
 <!-- Footer Section -->
@@ -218,6 +212,16 @@
     </div>
 </div>
 
+
+<div id="projectModal" class="popup-overlay" style="display:none;">
+    <div class="popup-content">
+        <div id="modal_content">
+        </div>
+        <div class="modalBtn">
+            <button id="modalClose" onclick="closeLogoutPopup()">close</button>
+        </div>
+    </div>
+</div>
 
     <!-- Chart.js Script for Graph -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -484,13 +488,14 @@ monthlyChart = new Chart(ctx2, {
                 })
                 .then(response => response.json())
                 .then(data => {
-                    document.getElementById('project_details').innerHTML = `
+                    document.getElementById('modal_content').innerHTML = `
                         <p><strong>Project Name:</strong> ${data.projectname}</p>
                         <p><strong>Project Closing Date: </strong>${data.closingDate}</p>
                         <p><strong>Project Address: </strong>${data.address}, ${data.city}, ${data.province}, ${data.postalCode}</p>
                         <p><strong>Bids:</strong> ${data.bids}</p>
                         <p><strong>Ranking:</strong> ${data.ranking}</p>
                     `;
+                    document.getElementById('projectModal').style.display = "flex"
                 });
             });
         });
@@ -673,13 +678,14 @@ monthlyChart = new Chart(ctx2, {
                 })
                 .then(response => response.json())
                 .then(data => {
-                    document.getElementById('project_details').innerHTML = `
+                    document.getElementById('modal_content').innerHTML = `
                         <p><strong>Project Name:</strong> ${data.projectname}</p>
                         <p><strong>Project Closing Date: </strong>${data.closingDate}</p>
                         <p><strong>Project Address: </strong>${data.address}, ${data.city}, ${data.province}, ${data.postalCode}</p>
                         <p><strong>Bids:</strong> ${data.bids}</p>
                         <p><strong>Ranking:</strong> ${data.ranking}</p>
                     `;
+                    document.getElementById('projectModal').style.display = "flex"
                 });
             });
         });
@@ -850,13 +856,14 @@ monthlyChart = new Chart(ctx2, {
                 })
                 .then(response => response.json())
                 .then(data => {
-                    document.getElementById('project_details').innerHTML = `
+                    document.getElementById('modal_content').innerHTML = `
                         <p><strong>Project Name:</strong> ${data.projectname}</p>
                         <p><strong>Project Closing Date: </strong>${data.closingDate}</p>
                         <p><strong>Project Address: </strong>${data.address}, ${data.city}, ${data.province}, ${data.postalCode}</p>
                         <p><strong>Bids:</strong> ${data.bids}</p>
                         <p><strong>Ranking:</strong> ${data.ranking}</p>
                     `;
+                    document.getElementById('projectModal').style.display = "flex"
                 });
             });
         });
@@ -874,6 +881,7 @@ function showLogoutPopup() {
 
     function closeLogoutPopup() {
         document.getElementById('logoutPopup').style.display = 'none';
+        document.getElementById('projectModal').style.display = 'none';
     }
 
     function confirmLogout() {

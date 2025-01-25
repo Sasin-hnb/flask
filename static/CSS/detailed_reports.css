@@ -145,3 +145,36 @@ background-color: white;
 .project-details p {
   margin: 10px 0;
 }
+
+
+th,
+td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #003366;
+    color: white;
+    cursor: pointer;
+    position: relative;
+}
+
+th:hover {
+    background-color: #00509e;
+}
+
+th::after {
+    content: '\25B2';
+    /* Default up arrow */
+    position: absolute;
+    right: 10px;
+    font-size: 0.8em;
+    opacity: 0.6;
+}
+
+th.sorted-desc::after {
+    content: '\25BC';
+    /* Down arrow for descending */
+}
