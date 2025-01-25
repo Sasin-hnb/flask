@@ -36,10 +36,6 @@
     <a href="#" onclick="showLogoutPopup()">Logout</a>
 </div>
 
-
-
-
-
 <!-- Main Content -->
 <div class="main-content">
     <!-- Notification Icons -->
@@ -48,17 +44,7 @@
         <img src="/static/Tabs/Bell_Icon.png" alt="Project Alerts" title="Project Alerts">
     </div>
 
-
-
-
-
     <body>
-
-
-
-
-
-
 
         <!-- Body Section -->
         <div class="container">
@@ -488,12 +474,38 @@ monthlyChart = new Chart(ctx2, {
                 })
                 .then(response => response.json())
                 .then(data => {
+console.log("data::::::::", data)
+                    const date = new Date(data.closingDate);
+                    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                    const formattedDate = date.toLocaleDateString('en-US', options);
+
                     document.getElementById('modal_content').innerHTML = `
-                        <p><strong>Project Name:</strong> ${data.projectname}</p>
-                        <p><strong>Project Closing Date: </strong>${data.closingDate}</p>
+                        <p>${data.projectname}</p>
+                        <p><strong>Project Closing Date: </strong>${formattedDate}</p>
                         <p><strong>Project Address: </strong>${data.address}, ${data.city}, ${data.province}, ${data.postalCode}</p>
-                        <p><strong>Bids:</strong> ${data.bids}</p>
-                        <p><strong>Ranking:</strong> ${data.ranking}</p>
+                        <p><strong>Bids:</strong> ${data.number_bid}</p>
+                        <p><strong>Highest:</strong> $${data.maxBidPrice}</p>
+                        <p><strong>Middle:</strong> $${data.medianBidPrice}</p>
+                        <p><strong>Lowest:</strong> $${data.minBidPrice}</p>
+                        
+                        <h3>List of Bids and Bidders</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Bidder Name</th>
+                                    <th>Bid Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${data.bids.map(bid => `
+                                    <tr>
+                                        <td class="${data.user_id == bid.user_id ? '' : 'blurred prevent-select' }">${bid.bidder_name}</td>
+                                        <td>$ ${data.user_id == bid.user_id ? bid.bid_price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '***,***,***'}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                        <p><em>Disclaimer: The information provided is for reference and availability only. All data is subject to verification and may not reflect the final project outcomes.</em></p>
                     `;
                     document.getElementById('projectModal').style.display = "flex"
                 });
@@ -678,14 +690,40 @@ monthlyChart = new Chart(ctx2, {
                 })
                 .then(response => response.json())
                 .then(data => {
+                    console.log("data::::::::", data)
+                    const date = new Date(data.closingDate);
+                    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                    const formattedDate = date.toLocaleDateString('en-US', options);
+
                     document.getElementById('modal_content').innerHTML = `
-                        <p><strong>Project Name:</strong> ${data.projectname}</p>
-                        <p><strong>Project Closing Date: </strong>${data.closingDate}</p>
+                        <p>${data.projectname}</p>
+                        <p><strong>Project Closing Date: </strong>${formattedDate}</p>
                         <p><strong>Project Address: </strong>${data.address}, ${data.city}, ${data.province}, ${data.postalCode}</p>
-                        <p><strong>Bids:</strong> ${data.bids}</p>
-                        <p><strong>Ranking:</strong> ${data.ranking}</p>
+                        <p><strong>Bids:</strong> ${data.number_bid}</p>
+                        <p><strong>Highest:</strong> $${data.maxBidPrice}</p>
+                        <p><strong>Middle:</strong> $${data.medianBidPrice}</p>
+                        <p><strong>Lowest:</strong> $${data.minBidPrice}</p>
+                        
+                        <h3>List of Bids and Bidders</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Bidder Name</th>
+                                    <th>Bid Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${data.bids.map(bid => `
+                                    <tr>
+                                        <td class="${data.user_id == bid.user_id ? '' : 'blurred prevent-select' }">${bid.bidder_name}</td>
+                                        <td>$ ${data.user_id == bid.user_id ? bid.bid_price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '***,***,***'}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                        <p><em>Disclaimer: The information provided is for reference and availability only. All data is subject to verification and may not reflect the final project outcomes.</em></p>
                     `;
-                    document.getElementById('projectModal').style.display = "flex"
+                    document.getElementById('projectModal').style.display = "flex";
                 });
             });
         });
@@ -856,21 +894,47 @@ monthlyChart = new Chart(ctx2, {
                 })
                 .then(response => response.json())
                 .then(data => {
+                    console.log("data::::::::", data)
+                    const date = new Date(data.closingDate);
+                    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                    const formattedDate = date.toLocaleDateString('en-US', options);
+
                     document.getElementById('modal_content').innerHTML = `
-                        <p><strong>Project Name:</strong> ${data.projectname}</p>
-                        <p><strong>Project Closing Date: </strong>${data.closingDate}</p>
+                        <p>${data.projectname}</p>
+                        <p><strong>Project Closing Date: </strong>${formattedDate}</p>
                         <p><strong>Project Address: </strong>${data.address}, ${data.city}, ${data.province}, ${data.postalCode}</p>
-                        <p><strong>Bids:</strong> ${data.bids}</p>
-                        <p><strong>Ranking:</strong> ${data.ranking}</p>
+                        <p><strong>Bids:</strong> ${data.number_bid}</p>
+                        <p><strong>Highest:</strong> $${data.maxBidPrice}</p>
+                        <p><strong>Middle:</strong> $${data.medianBidPrice}</p>
+                        <p><strong>Lowest:</strong> $${data.minBidPrice}</p>
+                        
+                        <h3>List of Bids and Bidders</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Bidder Name</th>
+                                    <th>Bid Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${data.bids.map(bid => `
+                                    <tr>
+                                        <td class="${data.user_id == bid.user_id ? '' : 'blurred prevent-select' }">${bid.bidder_name}</td>
+                                        <td>$ ${data.user_id == bid.user_id ? bid.bid_price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '***,***,***'}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                        <p><em>Disclaimer: The information provided is for reference and availability only. All data is subject to verification and may not reflect the final project outcomes.</em></p>
                     `;
-                    document.getElementById('projectModal').style.display = "flex"
-                });
+                    document.getElementById('projectModal').style.display = "flex";
             });
         });
     })
     .catch(error => {
         console.error('There was a problem with the fetch operation:', error);
     });
+})
 }
     
 

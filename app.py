@@ -340,32 +340,62 @@ def detailed_report_project():
     projectId = int(projectId)  # Convert '01' to an integer, resulting in 1
     project = Projects.query.filter_by(id=projectId).first()
     bids = Bids.query.filter_by(project_id=projectId).all()
-    number_of_bids = len(bids)
+    username = current_user.username
+    user = User.query.filter_by(username=username).first()
+    user_ID = user.id
+
+    print("bids: ", bids)
+    
     current_user_id = current_user.id  # Get the logged user's ID
-    user_bid_amount = None
-
+    totalAmount = []
+    bid_list = []
     for bid in bids:
-        if bid.user_id == current_user_id:
-            user_bid_amount = bid.totalAmount
-            break
+        totalAmount.append(bid.totalAmount)
+        user = User.query.filter_by(id=bid.user_id).first()
+        bidder_name = user.firstName + " " + user.lastName
+        bid_details = {
+            'user_id': bid.user_id,
+            'bid_price': bid.totalAmount,  # Assuming totalAmount is the bid price
+            'bidder_name': bidder_name   # Replace with the actual attribute for the bidder name
+        }
+        bid_list.append(bid_details)
 
-    # Calculate the user's rank based on the bid amounts
-    if user_bid_amount is not None:
-        # Get all bid amounts and sort them
-        ranked_bids = sorted(bid.totalAmount for bid in bids)
-        # Ranking: highest bid gets rank 1
-        user_rank = 1 + sum(amount > user_bid_amount for amount in ranked_bids)
-    else:
-        user_rank = None  # No bid from this user
+
+    max_value = max(totalAmount)
+    min_value = min(totalAmount)
+    number_bid = len(bids)
+
+    print("number_bid: ", number_bid)
+
+    def calculate_average(data):
+        if not data:
+            return 0  # Return 0 or any other default value you prefer
+        return sum(data) / len(data)
+
+    # Assuming 'bids' is your list of Bid objects
+    bid_prices = [bid.totalAmount for bid in bids]
+    average_bid_price = calculate_average(bid_prices)
+
+    # You can print or return the average bid price as needed
+    print("Average Bid Price:", average_bid_price)
+
+    print("max_value, min_value, median_value: ",max_value, min_value, average_bid_price)
+
+    print("totalAmount: ", totalAmount)
+
     data = {
+        'user_id':user_ID,
         'projectname':project.projectName,
         'closingDate':project.closingDate,
         'address':project.address,
         'city':project.city,
         'province':project.province,
         'postalCode':project.postalCode,
-        'bids':number_of_bids,
-        'ranking':user_rank
+        'bids': bid_list,  # Add the list of bids
+        'maxBidPrice': max_value,
+        'minBidPrice': min_value,
+        'medianBidPrice': average_bid_price,
+        'number_bid': number_bid
     }
 
     return jsonify(data)
@@ -921,5 +951,5 @@ def logout():
     return redirect(url_for('home'))
 
 if __name__ == '__main__':
-    # app.run(debug=True)
-    app.run(host="0.0.0.0")
+    app.run(debug=True)
+    # app.run(host="0.0.0.0")

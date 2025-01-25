@@ -168,7 +168,10 @@ padding: 20px;
 border-radius: 8px;
 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 text-align: center;
-width: 350px;
+width: 800px;
+overflow-y: auto;
+max-height: 80vh;
+
 }
 
 .popup-content h3 {
