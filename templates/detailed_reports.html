@@ -373,11 +373,11 @@
 // Assuming contractorPrices contains a single value for the user's bid
 // Calculate the percentage differences
 const percent_lowestPrices = contractorPrices.map((price, index) => 
-    (lowestPrices[index] / price) * 100 || 0  // % difference from lowest price
+    ((price - lowestPrices[index]) / price) * 100 || 0  // % difference from lowest price
 );
 
 const percent_maxPrices = contractorPrices.map((price, index) => 
-    (maxPrices[index] / price) * 100 || 0  // % difference to max price
+((maxPrices[index] - price) / price) * 100 || 0  // % difference to max price
 );
 
 // Result
@@ -561,7 +561,7 @@ function selectDivision_9(division) {
 // Assuming contractorPrices contains a single value for the user's bid
 // Calculate the percentage differences
 const percent_lowestPrices = contractorPrices.map((price, index) => 
-    (lowestPrices[index] / price) * 100 || 0  // % difference from lowest price
+    ((price - lowestPrices[index]) / price) * 100 || 0  // % difference from lowest price
 );
 
 const percent_maxPrices = contractorPrices.map((price, index) => 
@@ -739,7 +739,7 @@ function selectDivision_15(division) {
 // Assuming contractorPrices contains a single value for the user's bid
 // Calculate the percentage differences
 const percent_lowestPrices = contractorPrices.map((price, index) => 
-    (lowestPrices[index] / price) * 100 || 0  // % difference from lowest price
+    ((price - lowestPrices[index]) / price) * 100 || 0  // % difference from lowest price
 );
 
 const percent_maxPrices = contractorPrices.map((price, index) => 
