@@ -492,8 +492,8 @@ monthlyChart = new Chart(ctx2, {
                         <table style="width:100%;">
                             <thead>
                                 <tr>
-                                    <th>Bidder Name</th>
                                     <th>Bid Price</th>
+                                    <th>Company Name</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -501,8 +501,8 @@ monthlyChart = new Chart(ctx2, {
                                     .sort((a, b) => a.bid_price - b.bid_price) // Sort bids from low to high based on bid_price
                                     .map(bid => `
                                         <tr>
-                                            <td class="${data.user_id == bid.user_id ? '' : 'blurred prevent-select' }">${bid.bidder_name}</td>
                                             <td>$ ${data.user_id == bid.user_id ? bid.bid_price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '***,***,***'}</td>
+                                            <td class="${data.user_id == bid.user_id ? '' : 'blurred prevent-select' }">${bid.bidder_name}</td>
                                         </tr>
                                     `)
                                     .join('')}
@@ -711,8 +711,8 @@ monthlyChart = new Chart(ctx2, {
                         <table style="width:100%;">
                             <thead>
                                 <tr>
-                                    <th>Bidder Name</th>
                                     <th>Bid Price</th>
+                                    <th>Company Name</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -720,8 +720,8 @@ monthlyChart = new Chart(ctx2, {
                                     .sort((a, b) => a.bid_price - b.bid_price) // Sort bids from low to high based on bid_price
                                     .map(bid => `
                                         <tr>
-                                            <td class="${data.user_id == bid.user_id ? '' : 'blurred prevent-select' }">${bid.bidder_name}</td>
                                             <td>$ ${data.user_id == bid.user_id ? bid.bid_price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '***,***,***'}</td>
+                                            <td class="${data.user_id == bid.user_id ? '' : 'blurred prevent-select' }">${bid.bidder_name}</td>
                                         </tr>
                                     `)
                                     .join('')}
@@ -918,8 +918,8 @@ monthlyChart = new Chart(ctx2, {
                         <table style="width:100%;">
                             <thead>
                                 <tr>
-                                    <th>Bidder Name</th>
                                     <th>Bid Price</th>
+                                    <th>Company Name</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -927,8 +927,8 @@ monthlyChart = new Chart(ctx2, {
                                     .sort((a, b) => a.bid_price - b.bid_price) // Sort bids from low to high based on bid_price
                                     .map(bid => `
                                         <tr>
-                                            <td class="${data.user_id == bid.user_id ? '' : 'blurred prevent-select' }">${bid.bidder_name}</td>
                                             <td>$ ${data.user_id == bid.user_id ? bid.bid_price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '***,***,***'}</td>
+                                            <td class="${data.user_id == bid.user_id ? '' : 'blurred prevent-select' }">${bid.bidder_name}</td>
                                         </tr>
                                     `)
                                     .join('')}
