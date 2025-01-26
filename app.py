@@ -351,8 +351,9 @@ def detailed_report_project():
     bid_list = []
     for bid in bids:
         totalAmount.append(bid.totalAmount)
-        user = User.query.filter_by(id=bid.user_id).first()
-        bidder_name = user.firstName + " " + user.lastName
+        # user = User.query.filter_by(id=bid.user_id).first()
+        company = Company.query.filter_by(id=bid.company_id).first()
+        bidder_name = company.BusinessName
         bid_details = {
             'user_id': bid.user_id,
             'bid_price': bid.totalAmount,  # Assuming totalAmount is the bid price
@@ -376,8 +377,11 @@ def detailed_report_project():
     bid_prices = [bid.totalAmount for bid in bids]
     average_bid_price = calculate_average(bid_prices)
 
+    formatted_average_bid_price = f"${average_bid_price:,.2f}"
+
     # You can print or return the average bid price as needed
     print("Average Bid Price:", average_bid_price)
+    print("Average Bid Price:", formatted_average_bid_price)
 
     print("max_value, min_value, median_value: ",max_value, min_value, average_bid_price)
 
@@ -394,7 +398,7 @@ def detailed_report_project():
         'bids': bid_list,  # Add the list of bids
         'maxBidPrice': max_value,
         'minBidPrice': min_value,
-        'medianBidPrice': average_bid_price,
+        'medianBidPrice': formatted_average_bid_price,
         'number_bid': number_bid
     }
 
@@ -951,5 +955,5 @@ def logout():
     return redirect(url_for('home'))
 
 if __name__ == '__main__':
-    # app.run(debug=True)
-    app.run(host="0.0.0.0")
+    app.run(debug=True)
+    # app.run(host="0.0.0.0")
