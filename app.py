@@ -275,6 +275,8 @@ def reports_chart_months():
     username = current_user.username
     valid_user = User.query.filter_by(username=username).first()
     domain = valid_user.domain
+    bid_user_id = valid_user.id
+    user_division = valid_user.division
     company = Company.query.filter_by(domain=domain).first()
     
     if not company:
@@ -284,7 +286,7 @@ def reports_chart_months():
 
     # Fetch bids by the company's user for the specified year and month
     bids = Bids.query.filter(
-        Bids.company_id == company_id,
+        Bids.user_id == bid_user_id,
         db.extract('year', Bids.created_at) == year,
         db.extract('month', Bids.created_at) == month
     ).all()
@@ -292,17 +294,25 @@ def reports_chart_months():
     # Retrieve project_ids from bids made by the user
     project_ids_with_bids = set(bid.project_id for bid in bids)
 
+    print("project_ids_with_bids", project_ids_with_bids)
+
     # Get all projects that have bids
     projects = Projects.query.filter(Projects.id.in_(project_ids_with_bids)).all()
+
+    print("All projects", projects)
 
     # Create a mapping from project id to all bids for that project to find the lowest
     project_bids = {project.id: [] for project in projects}
 
     # Populate project_bids with all relevant bids
-    all_bids = Bids.query.filter(Bids.project_id.in_(project_ids_with_bids)).all()
+    all_bids = Bids.query.filter(Bids.project_id.in_(project_ids_with_bids),
+                                 Bids.division == user_division).all()
     for bid in all_bids:
+        print("bid", bid)
         if bid.project_id in project_bids:
             project_bids[bid.project_id].append(bid.totalAmount)
+
+    print("all_bids_bidssdf", all_bids)
 
     project_ids = []
     contractor_prices = []
@@ -339,10 +349,11 @@ def detailed_report_project():
     projectId = project_id.split('-')[1]  # This will get '01'
     projectId = int(projectId)  # Convert '01' to an integer, resulting in 1
     project = Projects.query.filter_by(id=projectId).first()
-    bids = Bids.query.filter_by(project_id=projectId).all()
     username = current_user.username
     user = User.query.filter_by(username=username).first()
+    user_division = user.division
     user_ID = user.id
+    bids = Bids.query.filter_by(project_id=projectId, division = user_division).all()
 
     print("bids: ", bids)
     
@@ -403,6 +414,76 @@ def detailed_report_project():
     }
 
     return jsonify(data)
+
+@app.route('/detailed_report/project/table_915', methods=['POST'])
+@login_required
+def detailed_report_project_915():
+    project_id = request.json.get('projectId')
+    selectedDivision = request.json.get('selectedDivision')
+    # print("selectedDivision", selectedDivision)
+    projectId = project_id.split('-')[1]  # This will get '01'
+    projectId = int(projectId)  # Convert '01' to an integer, resulting in 1
+    project = Projects.query.filter_by(id=projectId).first()
+    username = current_user.username
+    user = User.query.filter_by(username=username).first()
+    user_division = user.division
+    user_ID = user.id
+    bids = Bids.query.filter_by(project_id=projectId, division = user_division).all()
+
+    print("bids: ", bids)
+    
+    current_user_id = current_user.id  # Get the logged user's ID
+    totalAmount = []
+    bid_list = []
+    for bid in bids:
+        totalAmount.append(float(bid.bidAmount[selectedDivision]))
+        # user = User.query.filter_by(id=bid.user_id).first()
+        company = Company.query.filter_by(id=bid.company_id).first()
+        bidder_name = company.BusinessName
+        bid_details = {
+            'user_id': bid.user_id,
+            'bid_price': bid.bidAmount[selectedDivision],  # Assuming totalAmount is the bid price
+            'bidder_name': bidder_name   # Replace with the actual attribute for the bidder name
+        }
+        bid_list.append(bid_details)
+
+    max_value = max(totalAmount)
+    min_value = min(totalAmount)
+    number_bid = len(bids)
+
+    print("number_bid: ", number_bid)
+
+    average_bid_price = sum(totalAmount) / number_bid
+
+    formatted_average_bid_price = f"${average_bid_price:,.2f}"
+
+    # You can print or return the average bid price as needed
+    print("Average Bid Price:", average_bid_price)
+    print("Average Bid Price:", formatted_average_bid_price)
+
+    print("max_value, min_value, median_value: ",max_value, min_value, average_bid_price)
+
+    print("totalAmount: ", totalAmount)
+
+    data = {
+        'user_id':user_ID,
+        'projectname':project.projectName,
+        'closingDate':project.closingDate,
+        'address':project.address,
+        'city':project.city,
+        'province':project.province,
+        'postalCode':project.postalCode,
+        'bids': bid_list,  # Add the list of bids
+        'maxBidPrice': max_value,
+        'minBidPrice': min_value,
+        'medianBidPrice': formatted_average_bid_price,
+        'number_bid': number_bid
+    }
+
+    return jsonify(data)
+
+
+
 
 @app.route('/detailed_reports/chart/division', methods=['POST'])
 @login_required
@@ -493,6 +574,8 @@ def reports_chart_division():
         "maxPrices": max_prices,
         "project_name": project_names
     })
+
+
 
 
 

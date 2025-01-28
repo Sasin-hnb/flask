@@ -675,6 +675,8 @@ monthlyChart = new Chart(ctx2, {
             const projectRow = document.createElement('tr');
             const projectTdId = document.createElement('td');
             const projectTdName = document.createElement('td');
+            const selectedDivision = division.value;
+
 
             projectTdId.textContent = project_Id; // Project ID
             projectTdName.textContent = projectNames[index]; // Project name
@@ -684,12 +686,12 @@ monthlyChart = new Chart(ctx2, {
             projectListContainer.appendChild(projectRow);
             
             projectRow.addEventListener('click', () => {
-                fetch('/detailed_report/project/table', {
+                fetch('/detailed_report/project/table_915', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ projectId: project_Id })
+                    body: JSON.stringify({ projectId: project_Id, selectedDivision:selectedDivision })
                 })
                 .then(response => response.json())
                 .then(data => {
@@ -891,7 +893,7 @@ monthlyChart = new Chart(ctx2, {
             projectListContainer.appendChild(projectRow);
             
             projectRow.addEventListener('click', () => {
-                fetch('/detailed_report/project/table', {
+                fetch('/detailed_report/project/table_915', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
