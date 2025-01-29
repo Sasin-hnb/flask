@@ -877,13 +877,15 @@ monthlyChart = new Chart(ctx2, {
 });
         
 // Populate project list
-        const projectListContainer = document.getElementById('project-list-table-body');
+const projectListContainer = document.getElementById('project-list-table-body');
         projectListContainer.innerHTML = '';
 
         projectIds.forEach((project_Id, index) => {
             const projectRow = document.createElement('tr');
             const projectTdId = document.createElement('td');
             const projectTdName = document.createElement('td');
+            const selectedDivision = division.value;
+
 
             projectTdId.textContent = project_Id; // Project ID
             projectTdName.textContent = projectNames[index]; // Project name
@@ -898,7 +900,7 @@ monthlyChart = new Chart(ctx2, {
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ projectId: project_Id })
+                    body: JSON.stringify({ projectId: project_Id, selectedDivision:selectedDivision })
                 })
                 .then(response => response.json())
                 .then(data => {
@@ -939,13 +941,13 @@ monthlyChart = new Chart(ctx2, {
                         <p><em>Disclaimer: The information provided is for reference and availability only. All data is subject to verification and may not reflect the final project outcomes.</em></p>
                     `;
                     document.getElementById('projectModal').style.display = "flex";
+                });
             });
         });
     })
     .catch(error => {
         console.error('There was a problem with the fetch operation:', error);
     });
-})
 }
     
 
