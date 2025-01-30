@@ -104,7 +104,6 @@ def contact():
     return render_template('Contact.html')
 
 @app.route('/networking')
-@login_required
 def networking():
     return render_template('Networking_Contacts.html')
 
@@ -184,6 +183,7 @@ def login():
             return jsonify({'message': "The username or password is incorrect."}), 401
 
 @app.route('/subscription_details', methods=['GET'])
+@login_required
 def subscription():
     return render_template('subscription_details.html')
 
@@ -720,6 +720,7 @@ def Project_Search():
     return render_template('Project_Search.html')
 
 @app.route('/project_search/search', methods=['GET'])
+@login_required
 def search_projects():
     # Extract query parameters
     project_name = request.args.get('projectName', '').strip()

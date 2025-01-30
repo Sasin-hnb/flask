@@ -26,7 +26,7 @@
             <h3>Bidding Metrics (YTD)</h3>
             <p>Total Projects: <span id="totalProjects">0</span></p>
             <p>Bids Submitted: <span id="bidsSubmitted">0</span></p>
-            <canvas id="biddingChart" width="600" height="300"></canvas>
+            <canvas id="biddingChart" width="600" height="150"></canvas>
         </div>
 
         <!-- Other Dashboard Sections -->
@@ -92,6 +92,60 @@
     {% include 'footer.html' %}
 
     <script>
+        document.getElementById('activeUsers').textContent = 5;
+
+        const ctx = document.getElementById('biddingChart').getContext('2d');
+
+        fetch('/dashboard/chart')
+            .then(response => response.json())
+            .then(data => {
+                // Assuming data.projects is an array of numbers
+                const totalProjects = data.projects.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+                const bidsSubmitted = data.bids.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+
+                // Update the text content of the element with ID 'totalProjects'
+                document.getElementById('totalProjects').textContent = totalProjects;
+                document.getElementById('bidsSubmitted').textContent = bidsSubmitted
+
+                const biddingChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                        datasets: [
+                            {
+                                label: 'Market Bids',
+                                data: data.projects,
+                                backgroundColor: 'rgba(0, 123, 255, 0.5)',
+                                borderColor: 'rgba(0, 123, 255, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Contractor Bids',
+                                data: data.bids,
+                                backgroundColor: 'rgba(0, 51, 102, 0.7)',
+                                borderColor: 'rgba(0, 51, 102, 1)',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1 // Set step size to whole numbers
+                                }
+                            }
+                        }
+                    }
+                });
+            })
+
+    </script>
+
+    <script>
+        
         function showLogoutPopup() {
             document.getElementById('logoutPopup').style.display = 'flex';
         }
@@ -101,7 +155,7 @@
         }
 
         function confirmLogout() {
-            window.location.href = '/';  // Redirect to the homepage
+            window.location.href = '/logout';  // Redirect to the homepage
         }
     </script>
 

@@ -14,7 +14,7 @@ function showConfirmModal() {
 }
 
 function confirmLogout() {
-  window.location.href = '/';  // Redirect to the homepage
+  window.location.href = '/logout';  // Redirect to the homepage
 }
 
 // Function to close the modal
