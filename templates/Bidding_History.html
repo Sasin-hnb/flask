@@ -14,25 +14,27 @@
     {% include 'sidebar.html' %}
 
     <div class="main-content">
-        <h1>Bidding History</h1>
+        <div class="container">
+            <h1>Bidding History</h1>
 
-        <div class="filter-section">
-            <input type="text" id="projectIDFilter" placeholder="Search by Project ID" onkeyup="filterProjects()">
-            <input type="text" id="projectNameFilter" placeholder="Search by Project Name" onkeyup="filterProjects()">
+            <div class="filter-section">
+                <input type="text" id="projectIDFilter" placeholder="Search by Project ID" onkeyup="filterProjects()">
+                <input type="text" id="projectNameFilter" placeholder="Search by Project Name" onkeyup="filterProjects()">
+            </div>
+    
+            <table id="biddingTable">
+                <thead>
+                    <tr>
+                        <th onclick="sortTable(0)">Project ID</th>
+                        <th onclick="sortTable(1)">Project Name</th>
+                        <th onclick="sortTable(2)">Closing Date</th>
+                        <th onclick="sortTable(3)">Project Value ($)</th>
+                    </tr>
+                </thead>
+                <tbody id="bidding_history_tbody">
+                </tbody>
+            </table>
         </div>
-
-        <table id="biddingTable">
-            <thead>
-                <tr>
-                    <th onclick="sortTable(0)">Project ID</th>
-                    <th onclick="sortTable(1)">Project Name</th>
-                    <th onclick="sortTable(2)">Closing Date</th>
-                    <th onclick="sortTable(3)">Project Value ($)</th>
-                </tr>
-            </thead>
-            <tbody id="bidding_history_tbody">
-            </tbody>
-        </table>
     </div>
 
     {% include 'footer.html' %}
