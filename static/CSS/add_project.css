@@ -7,6 +7,12 @@
   border-radius: 8px;
 }
 
+.layout {
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
 .input-field {
   width: 50%;
   padding: 10px;
@@ -24,8 +30,9 @@
 }
 
 .scope-item label {
-width: 300px;  /* Adjust width to match input fields */
-min-width: 200px;
+  width: 300px;
+  /* Adjust width to match input fields */
+  min-width: 200px;
   flex: 1.5;
   text-align: left;
 }
