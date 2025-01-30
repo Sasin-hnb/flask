@@ -61,8 +61,6 @@ class Projects(db.Model):
     updated_at = db.Column(db.Date, default=date.today, onupdate=date.today)
     bids = db.relationship('Bids', backref='project', lazy=True)
 
-
-
 class Bids(db.Model):
     __tablename__ = 'bids'  # Optional: Explicitly setting the table name
     id = db.Column(db.Integer, primary_key=True)
@@ -104,6 +102,11 @@ def About():
 @app.route('/contact')
 def contact():
     return render_template('Contact.html')
+
+@app.route('/networking')
+@login_required
+def networking():
+    return render_template('Networking_Contacts.html')
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():
@@ -180,6 +183,14 @@ def login():
         else:
             return jsonify({'message': "The username or password is incorrect."}), 401
 
+@app.route('/subscription_details', methods=['GET'])
+def subscription():
+    return render_template('subscription_details.html')
+
+
+
+# -------------- Start Dashboard Page ----------------
+
 @app.route('/dashboard', methods=['GET'])
 @login_required
 def dashboard():
@@ -218,12 +229,23 @@ def dashboard_chart():
         'bids': bid_projects_count
     })
 
+# -------------- End Dashboard Page ------------------
+
+# -------------- Start Report Page -------------------
+
+@app.route('/detailed_reports')
+@login_required
+def detailed_reports():
+    username = current_user.username
+    user = User.query.filter_by(username=username).first()
+    division = user.division
+    return render_template('detailed_reports.html', division=division)
+
 @app.route('/detailed_reports/chart/project', methods=['POST'])
 @login_required
 def reports_chart_project():
     year = request.json.get('selectedYear')
     year = int(year)
-    print(year, 'iiiiiiiiiiiiiiiiiiiiiii')
     projects_count = [0] * 12
     bid_projects_count = [0] * 12
 
@@ -240,8 +262,6 @@ def reports_chart_project():
 
     # Query projects created in the current year
     projects = Projects.query.filter(Projects.created_at >= f'{year}-01-01',Projects.created_at < f'{year + 1}-01-01').all()
-
-    print(projects, "projects")
 
     # Count projects by month
     for project in projects:
@@ -271,7 +291,7 @@ def reports_chart_months():
     month = request.json.get('selectedMonth')
     year = request.json.get('selectedYears')
 
-    print(month, year, "month, years")
+    (month, year, "month, years")
     username = current_user.username
     valid_user = User.query.filter_by(username=username).first()
     domain = valid_user.domain
@@ -294,12 +314,8 @@ def reports_chart_months():
     # Retrieve project_ids from bids made by the user
     project_ids_with_bids = set(bid.project_id for bid in bids)
 
-    print("project_ids_with_bids", project_ids_with_bids)
-
     # Get all projects that have bids
     projects = Projects.query.filter(Projects.id.in_(project_ids_with_bids)).all()
-
-    print("All projects", projects)
 
     # Create a mapping from project id to all bids for that project to find the lowest
     project_bids = {project.id: [] for project in projects}
@@ -308,11 +324,8 @@ def reports_chart_months():
     all_bids = Bids.query.filter(Bids.project_id.in_(project_ids_with_bids),
                                  Bids.division == user_division).all()
     for bid in all_bids:
-        print("bid", bid)
         if bid.project_id in project_bids:
             project_bids[bid.project_id].append(bid.totalAmount)
-
-    print("all_bids_bidssdf", all_bids)
 
     project_ids = []
     contractor_prices = []
@@ -355,8 +368,6 @@ def detailed_report_project():
     user_ID = user.id
     bids = Bids.query.filter_by(project_id=projectId, division = user_division).all()
 
-    print("bids: ", bids)
-    
     current_user_id = current_user.id  # Get the logged user's ID
     totalAmount = []
     bid_list = []
@@ -377,7 +388,6 @@ def detailed_report_project():
     min_value = min(totalAmount)
     number_bid = len(bids)
 
-    print("number_bid: ", number_bid)
 
     def calculate_average(data):
         if not data:
@@ -389,14 +399,6 @@ def detailed_report_project():
     average_bid_price = calculate_average(bid_prices)
 
     formatted_average_bid_price = f"${average_bid_price:,.2f}"
-
-    # You can print or return the average bid price as needed
-    print("Average Bid Price:", average_bid_price)
-    print("Average Bid Price:", formatted_average_bid_price)
-
-    print("max_value, min_value, median_value: ",max_value, min_value, average_bid_price)
-
-    print("totalAmount: ", totalAmount)
 
     data = {
         'user_id':user_ID,
@@ -420,7 +422,6 @@ def detailed_report_project():
 def detailed_report_project_915():
     project_id = request.json.get('projectId')
     selectedDivision = request.json.get('selectedDivision')
-    # print("selectedDivision", selectedDivision)
     projectId = project_id.split('-')[1]  # This will get '01'
     projectId = int(projectId)  # Convert '01' to an integer, resulting in 1
     project = Projects.query.filter_by(id=projectId).first()
@@ -430,8 +431,6 @@ def detailed_report_project_915():
     user_ID = user.id
     bids = Bids.query.filter_by(project_id=projectId, division = user_division).all()
 
-    print("bids: ", bids)
-    
     current_user_id = current_user.id  # Get the logged user's ID
     totalAmount = []
     bid_list = []
@@ -451,19 +450,9 @@ def detailed_report_project_915():
     min_value = min(totalAmount)
     number_bid = len(bids)
 
-    print("number_bid: ", number_bid)
-
     average_bid_price = sum(totalAmount) / number_bid
 
     formatted_average_bid_price = f"${average_bid_price:,.2f}"
-
-    # You can print or return the average bid price as needed
-    print("Average Bid Price:", average_bid_price)
-    print("Average Bid Price:", formatted_average_bid_price)
-
-    print("max_value, min_value, median_value: ",max_value, min_value, average_bid_price)
-
-    print("totalAmount: ", totalAmount)
 
     data = {
         'user_id':user_ID,
@@ -482,9 +471,6 @@ def detailed_report_project_915():
 
     return jsonify(data)
 
-
-
-
 @app.route('/detailed_reports/chart/division', methods=['POST'])
 @login_required
 def reports_chart_division():
@@ -493,7 +479,6 @@ def reports_chart_division():
     selectedDivision = request.json.get('selectedDivision')  # Get division from the request, convert to int
     division = int(request.json.get('division__'))
 
-    print(month, year, selectedDivision, "month, year, division")
     
     # Validate inputs
     if month is None or year is None or selectedDivision is None:
@@ -516,32 +501,24 @@ def reports_chart_division():
         db.extract('month', Bids.created_at) == month
     ).all()
 
-    print("Bids found:", bids)
-
     # Retrieve project_ids from bids made by the user
     project_ids_with_bids = {bid.project_id for bid in bids}
-    print("project_ids_with_bids: ", project_ids_with_bids)
     # Get all projects that have bids
     projects = Projects.query.filter(Projects.id.in_(project_ids_with_bids)).all()
 
     # Create a mapping from project id to all bids for that project
     project_bids = {project.id: [] for project in projects}
-    print("project_bids: ", project_bids)
-    # Populate project_bids with all relevant bids
     all_bids = Bids.query.filter(
         Bids.project_id.in_(project_ids_with_bids), 
         Bids.division == division  # Use equality instead of 'in_' method
     ).all()
-    print("all_bids: ", all_bids)
     for bid in all_bids:
-        print("jljljljljlj", bid)
         if bid.project_id in project_bids:
             if isinstance(bid.bidAmount, (list, dict)):
                 project_bids[bid.project_id].append(bid.bidAmount)
             else:
                 project_bids[bid.project_id].append([bid.bidAmount])  # Convert to a list
 
-    print("project_bids: ", project_bids)
     # Initialize the response lists
     project_ids = []
     contractor_prices = []
@@ -561,7 +538,6 @@ def reports_chart_division():
         # Aggregate prices and find the lowest price
         amounts = []
         for bid in project_bids[project.id]:
-            print("ooooooooooooooooooooooooooooooooooo", bid[selectedDivision])
             amounts.append(bid[selectedDivision])
 
         lowest_prices.append(min(amounts) if amounts else 0)  # Lowest bid among all bids
@@ -575,9 +551,9 @@ def reports_chart_division():
         "project_name": project_names
     })
 
+# -------------- End Report Page -------------------
 
-
-
+# -------------- Start User Management Page -------------------
 
 @app.route('/user_management')
 @login_required
@@ -589,6 +565,7 @@ def user_management():
     return render_template('User_Management.html', users=users_with_same_domain)
 
 @app.route('/user_management/<int:user_id>', methods=['GET'])
+@login_required
 def get_user(user_id):
     user = User.query.filter_by(id=user_id).first()
     if user is None:
@@ -603,10 +580,10 @@ def get_user(user_id):
         "state": user.state
     }
 
-    print("pppppp", user_data)
     return jsonify(user_data), 200
 
 @app.route('/user_management/<int:user_id>', methods=['PUT'])
+@login_required
 def update_user(user_id):
     try:
         data = request.get_json()
@@ -616,7 +593,6 @@ def update_user(user_id):
         role = data.get('role')
         state = data.get('state')
 
-        print("Updating data: username =", username, ", state =", state)
         if state == "true":
             states = 1
         else:
@@ -678,7 +654,12 @@ def delete_user(user_id):
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
 
+# -------------- End User Management Page -------------------
+
+# -------------- Start Add Project Page -------------------
+
 @app.route('/add_project', methods=['GET', 'POST'])
+@login_required
 def add_project():
     if request.method == 'POST':
         closingDate = request.json.get('closingDate')
@@ -711,6 +692,9 @@ def add_project():
 
     return render_template('Add_Project.html')
 
+# -------------- End Add Project Page -------------------
+
+# -------------- Start Profile Page -------------------
 
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required
@@ -725,6 +709,10 @@ def profile():
 
         return redirect(url_for('dashboard'))
     return render_template('profile.html')
+
+# -------------- End Add Project Page -------------------
+
+# -------------- Start Project Search Page -------------------
 
 @app.route('/Project_Search')
 @login_required
@@ -795,6 +783,10 @@ def project_search_bid(projectId):
     else:
         return jsonify({"message": "Do you wish to edit your bid for this project?", "state": 3})
 
+# -------------- End Project Search Page -------------------
+
+# -------------- Start Bid Entry Page -------------------
+
 @app.route('/Bid_Entry/<int:projectId>', methods=['GET', 'POST'])
 @login_required
 def project_entry(projectId):
@@ -832,8 +824,6 @@ def project_entry(projectId):
         postalCode = request.json.get('postalCode')
         totalAmount = request.json.get('totalAmount')
 
-        print(bidamount, "jjjjjjjj")
-
         try:
             closingDates = datetime.strptime(closingDate, '%Y-%m-%d')
         except ValueError as e:
@@ -865,7 +855,6 @@ def editbid(projectId):
     user = User.query.filter_by(username=username).first()
     user_id = user.id
     bid = Bids.query.filter_by(user_id=user_id, project_id=projectId).first()
-    print('ppppp',updateClosingDate)
     bid_id = bid.id
     bids = db.session.get(Bids, bid_id)
     parsed_date = datetime.strptime(updateClosingDate, '%Y-%m-%d').date()
@@ -874,13 +863,9 @@ def editbid(projectId):
     db.session.commit()
     return jsonify({"message": "update succesfully!"}), 200
 
-@app.route('/detailed_reports')
-@login_required
-def detailed_reports():
-    username = current_user.username
-    user = User.query.filter_by(username=username).first()
-    division = user.division
-    return render_template('detailed_reports.html', division=division)
+# -------------- End Bid Entry Page -------------------
+
+# -------------- Start Bidding History Page -------------------
 
 @app.route('/bidding_history')
 @login_required
@@ -897,7 +882,6 @@ def bidding_history_table():
     company_id = company.id
     bids = Bids.query.filter_by(company_id=company_id).all()
 
-    print("bidbidbidbidbi", bids)
     serialized_bids = []
     for bid in bids:
         project = bid.project 
@@ -955,6 +939,9 @@ def bidding_history_modal(projectId):
 
     return jsonify(data)
 
+# -------------- End Bidding History Page -------------------
+
+# -------------- Start Company Page -------------------
 
 @app.route('/manage_company')
 @login_required
@@ -997,7 +984,6 @@ def manage_company_detail_edit(userId):
         website = data.get('website')
         division = data.get('division')
 
-        print(firstName, lastName, username, mobileNumber, companyName, phoneNumber, address, website, division)
 
         users = User.query.filter_by(id=userId).first()
         user = db.session.get(User, userId)
@@ -1025,11 +1011,7 @@ def manage_company_detail_edit(userId):
     except Exception as e:
         return jsonify({"error": str(e)}), 500  # Return error message if something goes wrong
 
-@app.route('/networking')
-@login_required
-def networking():
-    return render_template('Networking_Contacts.html')
-
+# -------------- End Company Page -------------------
 
 @app.route('/logout')
 @login_required
@@ -1038,5 +1020,5 @@ def logout():
     return redirect(url_for('home'))
 
 if __name__ == '__main__':
-    # app.run(debug=True)
-    app.run(host="0.0.0.0")
+    app.run(debug=True)
+    # app.run(host="0.0.0.0")

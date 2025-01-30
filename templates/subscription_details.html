@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription | ConstructHub</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/dashboard_global.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/subsription.css') }}">
+
+    <style>
+        /* Global Styles */
+    </style>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+</head>
+
+<body>
+    {% include 'sidebar.html' %}
+
+
+    <!-- Alert Icons -->
+    <div class="main-content">
+        <!-- Notification Icons -->
+        <div class="notifications">
+            <img src="/static/Tabs/Globe_Icon.png" alt="Community Notifications" title="Community Notifications">
+            <img src="/static/Tabs/Bell_Icon.png" alt="Project Alerts" title="Project Alerts">
+        </div>
+
+        <div class="container">
+            <h1>Subscription Details</h1>
+            <p>View your current subscription details below:</p>
+            <table>
+                <tr>
+                    <th>Plan Name</th>
+                    <td>Professional</td>
+                </tr>
+                <tr>
+                    <th>Monthly Cost</th>
+                    <td>Beta Testing</td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td>Active</td>
+                </tr>
+                <tr>
+                    <th>Renewal Date</th>
+                    <td>Monthly</td>
+                </tr>
+            </table>
+            <p></p>
+            <a href="/upgrade" class="button">Upgrade Plan</a>
+            <a href="/cancel" class="button" style="background-color: #d9534f;">Cancel Subscription</a>
+        </div>
+
+        <!-- Other Dashboard Sections -->
+    </div>
+    {% include 'footer.html' %}
+
+
+    <script>
+        function showLogoutPopup() {
+            document.getElementById('logoutPopup').style.display = 'flex';
+        }
+
+        function closeLogoutPopup() {
+            document.getElementById('logoutPopup').style.display = 'none';
+        }
+
+        function confirmLogout() {
+            window.location.href = 'index.html';  // Redirect to the homepage
+        }
+    </script>
+
+    <script>
+        document.getElementById('activeUsers').textContent = 5;
+        document.getElementById('totalProjects').textContent = 330;
+        document.getElementById('bidsSubmitted').textContent = 168;
+
+        const ctx = document.getElementById('biddingChart').getContext('2d');
+        const biddingChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: [
+                    {
+                        label: 'Market Bids',
+                        data: [15, 25, 20, 35, 30, 45, 50, 40, 30, 35, 45, 50],
+                        backgroundColor: 'rgba(0, 123, 255, 0.5)',
+                        borderColor: 'rgba(0, 123, 255, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Contractor Bids',
+                        data: [10, 20, 15, 30, 25, 40, 45, 35, 25, 30, 40, 45],
+                        backgroundColor: 'rgba(0, 51, 102, 0.7)',
+                        borderColor: 'rgba(0, 51, 102, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    </script>
+
+</body>
+
+</html>

@@ -10,106 +10,84 @@
 </head>
 
 <body>
-
-<!-- Sidebar Navigation -->
-    <div class="sidebar">
-        <div class="left-nav">
-        <a href="/">
-        <img src="/static/images/constructhub-logo.png" alt="ConstructHub Logo" class="logo">
-        </a>
-        <a href="/dashboard">Dashboard</a>
-        <div class="dropdown">
-            <a href="#">User HUB</a>
-            <div class="dropdown-content">
-                <a href="/profile">User HUB</a>
-                <a href="/profile/edit">Edit Personal Info</a>
-                <a href="/profile/notifications">Notification Settings</a>
-                <a href="/manage_company">Manage Company (Admin Only)</a>
-                <a href="/user_management">User Management (Admin Only)</a>
-                <a href="/Subscription_Details">Subscription Details</a>
-            </div>
-        </div>
-
-        </div>
-        <a href="/Project_Search">Search Projects</a>
-        <a href="/add_project">Add Project</a>
-        <a href="/detailed_reports">Reports</a>
-        <a href="/bidding_history">Bidding History</a>
-	<a href="#" onclick="showLogoutPopup()">Logout</a>
-    </div>
-
-
+    {% include 'sidebar.html' %}
 
 <!-- Main Content -->
     <div class="main-content">
-        <h1>Project Lookup</h1>
+        <div class="container">
+            <h1>Project Lookup</h1>
 
-        <form id="searchForm">
-            <h3>Search by Project Name</h3>
-            <input type="text" id="projectName" placeholder="Enter project name...">
+            <form id="searchForm">
+                <div>
+                    <h3>Search by Project Name</h3>
+                    <input type="text" id="projectName" placeholder="Enter project name...">
+        
+                    <h3>Advanced Search (Address, City, Province, Postal Code)</h3>
+                    <input type="text" id="address" placeholder="Address">
+                    <input type="text" id="city" placeholder="City">
+                    <div>
+                        <select id="province" name="province" class="input-field">
+                            <option value="">Select Province</option>
+                            <option value="Alberta">Alberta</option>
+                            <option value="British Columbia">British Columbia</option>
+                            <option value="Manitoba">Manitoba</option>
+                            <option value="New Brunswick">New Brunswick</option>
+                            <option value="Newfoundland and Labrador">Newfoundland and Labrador</option>
+                            <option value="Nova Scotia">Nova Scotia</option>
+                            <option value="Ontario">Ontario</option>
+                            <option value="Prince Edward Island">Prince Edward Island</option>
+                            <option value="Manitoba">Manitoba</option>
+                            <option value="Quebec">Quebec</option>
+                            <option value="Saskatchewan">Saskatchewan</option>
+                        </select>
+                    </div>
+                    <input type="text" id="postalCode" placeholder="Postal Code">
+                </div>
+                
+                <button type="submit">Search</button>
+            </form>
+        </div>
 
-            <h3>Advanced Search (Address, City, Province, Postal Code)</h3>
-            <input type="text" id="address" placeholder="Address">
-            <input type="text" id="city" placeholder="City">
-            <div>
-                <select id="province" name="province" class="input-field">
-                    <option value="">Select Province</option>
-                    <option value="Alberta">Alberta</option>
-                    <option value="British Columbia">British Columbia</option>
-                    <option value="Manitoba">Manitoba</option>
-                    <option value="New Brunswick">New Brunswick</option>
-                    <option value="Newfoundland and Labrador">Newfoundland and Labrador</option>
-                    <option value="Nova Scotia">Nova Scotia</option>
-                    <option value="Ontario">Ontario</option>
-                    <option value="Prince Edward Island">Prince Edward Island</option>
-                    <option value="Manitoba">Manitoba</option>
-                    <option value="Quebec">Quebec</option>
-                    <option value="Saskatchewan">Saskatchewan</option>
-                </select>
-            </div>
-            <input type="text" id="postalCode" placeholder="Postal Code">
-            <button type="submit">Search</button>
-        </form>
 
         <div class="project-list" id="projectList">
         </div>
         <div id="errorContainer"></div>
     </div>
 
-    <div id="bidConfirmationModal" class="modal" style="display: none;">
+    <div id="bidConfirmationModal" class="popup-overlay" style="display: none;">
         <span class="close" onclick="closeBidConfirmation()">X</span>
 
-        <div class="modal-content">
+        <div class="popup-content">
             <p>Do you wish to submit a bid for this project?</p>
             <button id="confirmBid">Yes</button>
             <button id="cancelBid">No</button>
         </div>
     </div>
 
-    <div id="ConfirmationModal" class="modal" style="display: none;">
+    <div id="ConfirmationModal" class="popup-overlay" style="display: none;">
         <span class="close" onclick="closeBidConfirmation()">X</span>
 
-        <div class="modal-content">
+        <div class="popup-content">
             <p>Do you wish to add a project ?</p>
             <button id="confirmtogoproject">Yes</button>
             <button onclick="cancelConfirm()">No</button>
         </div>
     </div>
 
-    <div id="editConfirmationModal" class="modal" style="display: none;">
+    <div id="editConfirmationModal" class="popup-overlay" style="display: none;">
         <span class="close" onclick="closeBidConfirmation()">X</span>
 
-        <div class="modal-content">
+        <div class="popup-content">
             <p id="editMessage"></p>
             <button onclick="editBidConfirm()">Yes</button>
             <button onclick="closeBidConfirmation()">No</button>
         </div>
     </div>
 
-    <div id="editbid" class="modal" style="display: none;">
+    <div id="editbid" class="popup-overlay" style="display: none;">
         <span class="close" onclick="closeBidConfirmation()">X</span>
 
-        <div class="modal-content">
+        <div class="popup-content">
             <p>Do you wish to update a project's closing Date ?</p>
             <input id="editClosingDate" type="date" value="">
             <button onclick="updateClosingDate()">Yes</button>
@@ -117,46 +95,15 @@
         </div>
     </div>
 
-    <div id="errorConfirmationModal" class="modal" style="display: none;">
+    <div id="errorConfirmationModal" class="popup-overlay" style="display: none;">
         <span class="close" onclick="closeBidConfirmation()">X</span>
 
-        <div class="modal-content">
+        <div class="popup-content">
             <p id="errorMessage">You can edit your bid after 24 hours!</p>
             <button onclick="closeBidConfirmation()">OK</button>
         </div>
     </div>
-
-
-<!-- Footer Section -->
-	<div class="footer">
-    		<p>&copy; 2024 ConstructHub. All rights reserved.</p>
-
-		<div class="footer-links">
-    		<a href="/privacy-policy.html" target="_blank">Privacy Policy</a> |
-    		<a href="/subscription_agreement.html" target="_blank">Subscription Agreement</a> |
-    		<a href="/terms-of-use.html" target="_blank">Terms of Use</a>
-	</div>
-
-
-
-
-
-<!-- Popup Confirmation Window -->
-        <div id="logoutPopup" class="popup-overlay" style="display: none;">
-            <div class="popup-content">
-                <h3>Confirm Logout</h3>
-                <p>Are you sure you want to log out?</p>
-                <button onclick="confirmLogout()">Yes, Log Out</button>
-                <button onclick="closeLogoutPopup()">Cancel</button>
-            </div>
-        </div>
-    </div>
-
-
-
-
-
-
+    {% include 'footer.html' %}
 
     <script>
         function showLogoutPopup() {
@@ -211,7 +158,7 @@ document.getElementById('searchForm').addEventListener('submit', function (event
             // Check if we have results
             if (data.length === 0) {
                 document.getElementById('errorContainer').innerText = 'No projects found.';
-                document.getElementById('ConfirmationModal').style.display = 'block';
+                document.getElementById('ConfirmationModal').style.display = 'flex';
 
             } else {
                 // Display the results
@@ -253,28 +200,26 @@ function showBidConfirmation(projectId) {
         return response.json();
       })
     .then(data => {
-        console.log("mmmmmmmmmmm",data)
         // alert(data.message)
         if (data.state == 1) {
             document.getElementById("errorMessage").textContent = "You can edit your bid after 24 hours!"
-            document.getElementById('errorConfirmationModal').style.display = 'block';
+            document.getElementById('errorConfirmationModal').style.display = 'flex';
             // window.location.reload();
         } if (data.state == 2) {
             document.getElementById("errorMessage").textContent = "No revisions allowed; project is closed!"
-            document.getElementById('errorConfirmationModal').style.display = 'block';
+            document.getElementById('errorConfirmationModal').style.display = 'flex';
         } if (data.state == 3) {
             document.getElementById("editMessage").textContent = "Do you wish to edit your bid for this project?"
-            // document.getElementById('editConfirmationModal').style.display = 'block';
-            document.getElementById('editbid').style.display = 'block';
+            // document.getElementById('editConfirmationModal').style.display = 'flex';
+            document.getElementById('editbid').style.display = 'flex';
             
         } 
         else {
             
-            document.getElementById('bidConfirmationModal').style.display = 'block';
+            document.getElementById('bidConfirmationModal').style.display = 'flex';
 
             document.getElementById('confirmBid').onclick = function () {
                 // Handle Yes click (e.g. submit a bid)
-                console.log(`Submitting bid for project ID: ${projectId}`);
                 window.location.href = `/Bid_Entry/${projectId}`
                 closeBidConfirmation();
             };
@@ -320,7 +265,6 @@ function updateClosingDate(projectId) {
         body: JSON.stringify(data)
     }).then(response => response.json())
     .then(data => {
-        console.log(data.message)
         alert(data.message)
         closeBidConfirmation()
     })

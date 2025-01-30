@@ -223,10 +223,6 @@
         const user_domain = user_email.value.split('@')[1];
         const company_domain = company_email.split('.').slice(-2).join('.');
 
-        console.log(user_domain, 'user_domain');
-        console.log(company_domain, 'company_domain');
-
-        
         if (user_domain !== company_domain) {
             document.getElementById("domainError").textContent = "Email must match company domain";
         } else {
@@ -516,20 +512,14 @@
         });
     })
     .then(data => {
-        console.log("message", data.message);
         window.location.href = '/login'
     })
     .catch(error => {
-        console.log("register error", error.message);
         // You may want to display the error message on the UI
         alert(error.message); // For example, alert the user of the error
     });
     })
 </script>
-
-
-
-
 
 <!-- Footer Section -->
 <div class="footer">

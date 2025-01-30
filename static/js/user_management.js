@@ -36,7 +36,6 @@ function editUser(user_id) {
       return response.json();
     })
     .then(data => {
-      console.log(data); // Handle the user data here
       // You can populate your modal or form with this data
       document.getElementById('userId').value = data.id;
       document.getElementById('firstName').value = data.firstName;
@@ -67,8 +66,6 @@ function updateUser() {
     state: state
   };
 
-  console.log("data", data)
-
   fetch(`/user_management/${userId}`, {
     method: 'PUT',
     headers: {
@@ -83,7 +80,6 @@ function updateUser() {
       return response.json();
     })
     .then(data => {
-      console.log(data);
       // Handle successful response (e.g., close modal)
       closeModal();
       window.location.reload()
@@ -120,7 +116,6 @@ function confirmAction() {
             }
             return response.json();
         }).then(data => {
-            console.log(data);
             closeModal(); // Close modal after the action
             window.location.reload();
         }).catch(error => {

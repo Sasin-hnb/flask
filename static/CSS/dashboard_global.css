@@ -1,4 +1,3 @@
-
 /* Global Styles */
 body {
     font-family: Arial, sans-serif;
@@ -11,11 +10,13 @@ body {
 }
 
 .sidebar .logo {
-max-width: 100%;  /* Limit width to 100% of sidebar */
-height: auto;    /* Maintain aspect ratio */
-display: block;
-margin-left: auto;
-margin-right: auto;
+    max-width: 100%;
+    /* Limit width to 100% of sidebar */
+    height: auto;
+    /* Maintain aspect ratio */
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* Sidebar Navigation */
@@ -63,7 +64,8 @@ margin-right: auto;
     text-decoration: none;
     display: block;
     transition: background 0.3s;
-  font-size: 0.9em; /* Reduced font size */
+    font-size: 0.9em;
+    /* Reduced font size */
 }
 
 .dropdown-content a:hover {
@@ -82,12 +84,14 @@ margin-right: auto;
 
 /* Main Content Area */
 .main-content {
-    margin-left: 200px; /* Sidebar width */
+    margin-left: 200px;
+    /* Sidebar width */
     width: calc(100% - 200px);
     text-align: center;
     flex-grow: 1;
     padding-bottom: 70px;
-    position: relative; /* Ensure positioning context for .notifications */
+    position: relative;
+    /* Ensure positioning context for .notifications */
 }
 
 .notifications {
@@ -95,8 +99,10 @@ margin-right: auto;
     top: 20px;
     right: 30px;
     display: flex;
-    gap: 20px; /* Space between icons */
-z-index: 10; /* Ensure it stays on top */
+    gap: 20px;
+    /* Space between icons */
+    z-index: 10;
+    /* Ensure it stays on top */
 }
 
 .notifications img {
@@ -148,58 +154,75 @@ z-index: 10; /* Ensure it stays on top */
 
 /* Popup Overlay Background */
 .popup-overlay {
-position: fixed;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-background-color: rgba(0, 0, 0, 0.5);
-display: flex;
-justify-content: center;
-align-items: center;
-z-index: 1000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
 }
 
 /* Popup Content Box */
 .popup-content {
-background-color: white;	/* Background color for the popup */
-color: black;	/* Text color for readability*/
-padding: 20px;
-border-radius: 8px;
-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-text-align: center;
-width: 800px;
-overflow-y: auto;
-max-height: 80vh;
+    background-color: white;
+    /* Background color for the popup */
+    color: black;
+    /* Text color for readability*/
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 800px;
+    overflow-y: auto;
+    max-height: 80vh;
 
 }
 
 .popup-content h3 {
-margin-top: 0;
-color: #003366;
+    margin-top: 0;
+    color: #003366;
 }
 
 .popup-content button {
-margin: 10px;
-padding: 10px 20px;
-border: none;
-border-radius: 5px;
-cursor: pointer;
-font-size: 1em;
+    margin: 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
 }
 
 .popup-content button:hover {
-opacity: 0.9;
+    opacity: 0.9;
+    
 }
 
 .popup-content button:nth-child(1) {
-background-color: #003366;
-color: white;
+    background-color: #003366;
+    color: white;
 }
 
 .popup-content button:nth-child(2) {
-background-color: #d0e0f5;
-color: #003366;
+    background-color: #d0e0f5;
+    color: #003366;
 }
 
 
+button {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }

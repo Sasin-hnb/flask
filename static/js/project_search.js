@@ -78,7 +78,6 @@ function showBidConfirmation(projectId) {
         return response.json();
       })
     .then(data => {
-        console.log("mmmmmmmmmmm",data)
         // alert(data.message)
         if (data.state == 1) {
             document.getElementById("errorMessage").textContent = "You can edit your bid after 24 hours!"
@@ -99,7 +98,6 @@ function showBidConfirmation(projectId) {
 
             document.getElementById('confirmBid').onclick = function () {
                 // Handle Yes click (e.g. submit a bid)
-                console.log(`Submitting bid for project ID: ${projectId}`);
                 window.location.href = `/Bid_Entry/${projectId}`
                 closeBidConfirmation();
             };
@@ -145,7 +143,6 @@ function updateClosingDate(projectId) {
         body: JSON.stringify(data)
     }).then(response => response.json())
     .then(data => {
-        console.log(data.message)
         alert(data.message)
         closeBidConfirmation()
     })

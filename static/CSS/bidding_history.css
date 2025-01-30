@@ -1,0 +1,69 @@
+.filter-section input {
+    padding: 10px;
+    margin-right: 10px;
+    width: 200px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th,
+td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #003366;
+    color: white;
+    cursor: pointer;
+    position: relative;
+}
+
+th:hover {
+    background-color: #00509e;
+}
+
+th::after {
+    content: '\25B2';
+    /* Default up arrow */
+    position: absolute;
+    right: 10px;
+    font-size: 0.8em;
+    opacity: 0.6;
+}
+
+th.sorted-desc::after {
+    content: '\25BC';
+    /* Down arrow for descending */
+}
+
+.blurred {
+    filter: blur(5px);
+    color: transparent;
+    /* Optional: make the text color transparent */
+    text-shadow: 0 0 0 rgba(0, 0, 0, 0.8);
+    /* Optional: make text appear darker */
+}
+
+.modalClose {
+    align-items: center;
+}
+
+.modalBtn {
+    display: flex;
+    justify-content: space-around;
+}
+
+.prevent-select {
+    -webkit-user-select: none;
+    /* Safari */
+    -ms-user-select: none;
+    /* IE 10 and IE 11 */
+    user-select: none;
+    /* Standard syntax */
+}

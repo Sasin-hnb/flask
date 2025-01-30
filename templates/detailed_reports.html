@@ -10,31 +10,8 @@
 </head>
 
 <!-- Sidebar Navigation -->
-<div class="sidebar">
-    <div class="left-nav">
-        <a href="/">
-            <img src="/static/images/constructhub-logo.png" alt="ConstructHub Logo" class="logo">
-        </a>
-        <a href="/dashboard">Dashboard</a>
-        <div class="dropdown">
-            <a href="#">User HUB</a>
-            <div class="dropdown-content">
-                <a href="/profile">User HUB</a>
-                <a href="/profile/edit">Edit Personal Info</a>
-                <a href="/profile/notifications">Notification Settings</a>
-                <a href="/manage_company">Manage Company (Admin Only)</a>
-                <a href="/user_management">User Management (Admin Only)</a>
-                <a href="/Subscription_Details">Subscription Details</a>
-            </div>
-        </div>
+{% include 'sidebar.html' %}
 
-    </div>
-    <a href="/Project_Search">Search Projects</a>
-    <a href="/add_project">Add Project</a>
-    <a href="/detailed_reports">Reports</a>
-    <a href="/bidding_history">Bidding History</a>
-    <a href="#" onclick="showLogoutPopup()">Logout</a>
-</div>
 
 <!-- Main Content -->
 <div class="main-content">
@@ -76,7 +53,7 @@
             </section>
 
             {% if division == "9" %}
-
+            <label> Select Month </label>
             <div class="month-grid">
                 <button id="month_1" value="1" onclick="selectMonth_(this)">Jan</button>
                 <button id="month_2" value="2" onclick="selectMonth_(this)">Feb</button>
@@ -92,6 +69,7 @@
                 <button id="month_12" value="12" onclick="selectMonth_(this)">Dec</button>
             </div>
 
+            <label for="">Select Scope</label>
             <div class="division-grid">
                 <button id="division_1" value="amount1" onclick="selectDivision_9(this)">Drywall</button>
                 <button id="division_2" value="amount2" onclick="selectDivision_9(this)">flooring</button>
@@ -99,7 +77,7 @@
             </div>
 
             {% elif division == "15" %}
-
+            <label> Select Month </label>
             <div class="month-grid">
                 <button id="month_1" value="1" onclick="selectMonth_(this)">Jan</button>
                 <button id="month_2" value="2" onclick="selectMonth_(this)">Feb</button>
@@ -115,6 +93,7 @@
                 <button id="month_12" value="12" onclick="selectMonth_(this)">Dec</button>
             </div>
 
+            <label for="">Select Scope</label>
             <div class="division-grid">
                 <button id="division_1" value="amount1" onclick="selectDivision_15(this)">Plumbing</button>
                 <button id="division_2" value="amount2" onclick="selectDivision_15(this)">Sprinklers</button>
@@ -122,6 +101,7 @@
             </div>
 
             {% else %}
+            <label> Select Month </label>
 
             <div class="month-grid">
                 <button id="month_1" value="1" onclick="selectMonth(this)">Jan</button>
@@ -149,55 +129,29 @@
 
         </div>
 
-</div>
-
-
-
-<div class="report-content" style="display: flex; justify-content: space-between; gap: 20px;">
-    <!-- Project List Section (Scrollable) -->
-    <div class="project-list" style="flex: 1;">
-        <h3 style="text-align: center;">Project List</h3>
-        <div style="max-height: 300px; overflow-y: auto; border: 1px solid #ddd;">
-            <table style="width: 100%; border-collapse: collapse; text-align: left;">
-                <thead>
-                    <tr>
-                        <th style="padding: 10px; border-bottom: 1px solid #ddd;">Project ID</th>
-                        <th style="padding: 10px; border-bottom: 1px solid #ddd;">Project Name</th>
-                    </tr>
-                </thead>
-                <tbody id="project-list-table-body">
-                </tbody>
-            </table>
+        <div class="report-content" style="display: flex; justify-content: space-between; gap: 20px;">
+            <!-- Project List Section (Scrollable) -->
+            <div class="project-list" style="flex: 1;">
+                <h2 style="text-align: center;">Project List</h2>
+                <div style="max-height: 300px; overflow-y: auto; border: 1px solid #ddd;">
+                    <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                        <thead>
+                            <tr>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd;">Project ID</th>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd;">Project Name</th>
+                            </tr>
+                        </thead>
+                        <tbody id="project-list-table-body">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        
         </div>
-    </div>
 
 </div>
 
-<!-- Footer Section -->
-<div class="footer">
-    <p>&copy; 2024 ConstructHub. All rights reserved.</p>
-
-    <div class="footer-links">
-        <a href="/privacy-policy.html" target="_blank">Privacy Policy</a> |
-        <a href="/subscription_agreement.html" target="_blank">Subscription Agreement</a> |
-        <a href="/terms-of-use.html" target="_blank">Terms of Use</a>
-    </div>
-
-
-
-
-
-    <!-- Popup Confirmation Window -->
-    <div id="logoutPopup" class="popup-overlay" style="display: none;">
-        <div class="popup-content">
-            <h3>Confirm Logout</h3>
-            <p>Are you sure you want to log out?</p>
-            <button onclick="confirmLogout()">Yes, Log Out</button>
-            <button onclick="closeLogoutPopup()">Cancel</button>
-        </div>
-    </div>
-</div>
-
+{% include 'footer.html' %}
 
 <div id="projectModal" class="popup-overlay" style="display:none;">
     <div class="popup-content">
@@ -211,6 +165,7 @@
 
     <!-- Chart.js Script for Graph -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
     <script>
         let yearChart; // Variable to hold the chart instance
         let selectedYears = null;
@@ -225,10 +180,8 @@
             button.classList.add('active');
 
             selectedYears = button.value;
-            console.log(selectedYears,"jjjjjjjjjjjjjj")
 
             const selectedYear = button.value; // Get the selected year
-            console.log(selectedYear, "ooooooooooooo")
             const ctx1 = document.getElementById('yearChart').getContext('2d');
 
             if (yearChart) {
@@ -251,8 +204,6 @@
                 .then(data => {
                     const totalProjects = data.totalprojects;
                     const userBids = data.userbids;
-                    console.log("ddddd", totalProjects, userBids)
-
                     // Create the chart without 'const'
                     yearChart = new Chart(ctx1, {
                         type: 'line',
@@ -358,8 +309,6 @@
         
         const projectNames = data.project_name || [];
 
-        console.log(lowestPrices, maxPrices, "jjjdddkkk")
-
 // Assuming contractorPrices contains a single value for the user's bid
 // Calculate the percentage differences
 const percent_lowestPrices = contractorPrices.map((price, index) => 
@@ -369,10 +318,6 @@ const percent_lowestPrices = contractorPrices.map((price, index) =>
 const percent_maxPrices = contractorPrices.map((price, index) => 
 ((maxPrices[index] - price) / price) * 100 || 0  // % difference to max price
 );
-
-// Result
-console.log('Percentage differences from lowest prices:', percent_lowestPrices);
-console.log('Percentage differences to max prices:', percent_maxPrices);
 
 // Create a new chart instance
 monthlyChart = new Chart(ctx2, {
@@ -474,7 +419,6 @@ monthlyChart = new Chart(ctx2, {
                 })
                 .then(response => response.json())
                 .then(data => {
-                        console.log("data::::::::", data)
                     const date = new Date(data.closingDate);
                     const options = { year: 'numeric', month: 'long', day: 'numeric' };
                     const formattedDate = date.toLocaleDateString('en-US', options);
@@ -544,8 +488,6 @@ function selectDivision_9(division) {
         alert('Please select a year first.'); // Alert if no year is selected
         return;
     }
-    console.log(selectedMonths,"mmmmmmmmmmmmmmmmmmmmmmm");
-    
     // Destroy the existing chart if it exists
     if (monthlyChart) {
         monthlyChart.destroy();
@@ -567,7 +509,6 @@ function selectDivision_9(division) {
     })
     .then(data => {
         if (!data) throw new Error('No data received');
-        console.log(">>>>>>>>>>>>>>", data)
 
         const projectIds = data.projectIds || [];
         const contractorPrices = data.contractorPrices || [];
@@ -575,8 +516,6 @@ function selectDivision_9(division) {
         const maxPrices = data.maxPrices || [];
         
         const projectNames = data.project_name || [];
-
-        console.log(lowestPrices, maxPrices, "jjjdddkkk")
 
 // Assuming contractorPrices contains a single value for the user's bid
 // Calculate the percentage differences
@@ -588,10 +527,6 @@ const percent_maxPrices = contractorPrices.map((price, index) =>
     ((maxPrices[index] - price) / price) * 100 || 0  // % difference to max price
 
 );
-
-// Result
-console.log('Percentage differences from lowest prices:', percent_lowestPrices);
-console.log('Percentage differences to max prices:', percent_maxPrices);
 
 // Create a new chart instance
 monthlyChart = new Chart(ctx2, {
@@ -695,7 +630,6 @@ monthlyChart = new Chart(ctx2, {
                 })
                 .then(response => response.json())
                 .then(data => {
-                    console.log("data::::::::", data)
                     const date = new Date(data.closingDate);
                     const options = { year: 'numeric', month: 'long', day: 'numeric' };
                     const formattedDate = date.toLocaleDateString('en-US', options);
@@ -754,8 +688,6 @@ function selectDivision_15(division) {
         alert('Please select a year first.'); // Alert if no year is selected
         return;
     }
-    console.log(selectedMonths,"mmmmmmmmmmmmmmmmmmmmmmm");
-    
     // Destroy the existing chart if it exists
     if (monthlyChart) {
         monthlyChart.destroy();
@@ -777,7 +709,6 @@ function selectDivision_15(division) {
     })
     .then(data => {
         if (!data) throw new Error('No data received');
-        console.log(">>>>>>>>>>>>>>", data)
 
         const projectIds = data.projectIds || [];
         const contractorPrices = data.contractorPrices || [];
@@ -785,8 +716,6 @@ function selectDivision_15(division) {
         const maxPrices = data.maxPrices || [];
         
         const projectNames = data.project_name || [];
-
-        console.log(lowestPrices, maxPrices, "jjjdddkkk")
 
 // Assuming contractorPrices contains a single value for the user's bid
 // Calculate the percentage differences
@@ -797,10 +726,6 @@ const percent_lowestPrices = contractorPrices.map((price, index) =>
 const percent_maxPrices = contractorPrices.map((price, index) => 
     ((maxPrices[index] - price) / price) * 100 || 0  // % difference to max price
 );
-
-// Result
-console.log('Percentage differences from lowest prices:', percent_lowestPrices);
-console.log('Percentage differences to max prices:', percent_maxPrices);
 
 // Create a new chart instance
 monthlyChart = new Chart(ctx2, {
@@ -904,7 +829,6 @@ const projectListContainer = document.getElementById('project-list-table-body');
                 })
                 .then(response => response.json())
                 .then(data => {
-                    console.log("data::::::::", data)
                     const date = new Date(data.closingDate);
                     const options = { year: 'numeric', month: 'long', day: 'numeric' };
                     const formattedDate = date.toLocaleDateString('en-US', options);
@@ -964,7 +888,7 @@ function showLogoutPopup() {
     function confirmLogout() {
         window.location.href = '/';  // Redirect to the homepage
     }
-</script>
+    </script>
 
 
 </body>

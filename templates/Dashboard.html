@@ -11,39 +11,7 @@
 </head>
 
 <body>
-
-
-    <!-- Sidebar Navigation -->
-    <div class="sidebar">
-        <div class="left-nav">
-            <a href="/">
-                <img src="/static/images/constructhub-logo.png" alt="ConstructHub Logo" class="logo">
-            </a>
-            <a href="/dashboard">Dashboard</a>
-            <div class="dropdown">
-                <a href="#">User HUB</a>
-                <div class="dropdown-content">
-                    <a href="/profile">User HUB</a>
-                    <a href="/profile/edit">Edit Personal Info</a>
-                    <a href="/profile/notifications">Notification Settings</a>
-                    {% if valid_role == "Admin" %}
-                    <a href="/manage_company">Manage Company (Admin Only)</a>
-                    <a href="/user_management">User Management (Admin Only)</a>
-                    {% endif %}
-                    <a href="/Subscription_Details">Subscription Details</a>
-                </div>
-            </div>
-
-        </div>
-        <a href="/Project_Search">Search Projects</a>
-        <a href="/add_project">Add Project</a>
-        <a href="/detailed_reports">Reports</a>
-        <a href="/bidding_history">Bidding History</a>
-        <a href="#" onclick="showLogoutPopup()">Logout</a>
-    </div>
-
-
-
+    {% include 'sidebar.html' %}
 
     <!-- Main Content -->
     <div class="main-content">
@@ -121,87 +89,7 @@
         </div>
     </div>
 
-
-
-
-
-
-
-
-    <!-- Footer Section -->
-    <div class="footer">
-        <p>&copy; 2024 ConstructHub. All rights reserved.</p>
-
-        <div class="footer-links">
-            <a href="/privacy-policy.html" target="_blank">Privacy Policy</a> |
-            <a href="/subscription_agreement.html" target="_blank">Subscription Agreement</a> |
-            <a href="/terms-of-use.html" target="_blank">Terms of Use</a>
-        </div>
-
-        <script>
-            document.getElementById('activeUsers').textContent = 5;
-
-            const ctx = document.getElementById('biddingChart').getContext('2d');
-
-            fetch('/dashboard/chart')
-                .then(response => response.json())
-                .then(data => {
-                    // Assuming data.projects is an array of numbers
-                    const totalProjects = data.projects.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-                    const bidsSubmitted = data.bids.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-
-                    // Update the text content of the element with ID 'totalProjects'
-                    document.getElementById('totalProjects').textContent = totalProjects;
-                    document.getElementById('bidsSubmitted').textContent = bidsSubmitted
-
-                    const biddingChart = new Chart(ctx, {
-                        type: 'bar',
-                        data: {
-                            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                            datasets: [
-                                {
-                                    label: 'Market Bids',
-                                    data: data.projects,
-                                    backgroundColor: 'rgba(0, 123, 255, 0.5)',
-                                    borderColor: 'rgba(0, 123, 255, 1)',
-                                    borderWidth: 1
-                                },
-                                {
-                                    label: 'Contractor Bids',
-                                    data: data.bids,
-                                    backgroundColor: 'rgba(0, 51, 102, 0.7)',
-                                    borderColor: 'rgba(0, 51, 102, 1)',
-                                    borderWidth: 1
-                                }
-                            ]
-                        },
-                        options: {
-                            responsive: true,
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    ticks: {
-                                        stepSize: 1 // Set step size to whole numbers
-                                    }
-                                }
-                            }
-                        }
-                    });
-                })
-
-        </script>
-
-
-        <!-- Popup Confirmation Window -->
-        <div id="logoutPopup" class="popup-overlay" style="display: none;">
-            <div class="popup-content">
-                <h3>Confirm Logout</h3>
-                <p>Are you sure you want to log out?</p>
-                <button onclick="confirmLogout()">Yes, Log Out</button>
-                <button onclick="closeLogoutPopup()">Cancel</button>
-            </div>
-        </div>
-    </div>
+    {% include 'footer.html' %}
 
     <script>
         function showLogoutPopup() {

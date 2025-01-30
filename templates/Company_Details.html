@@ -5,430 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Dashboard | ConstructHub</title>
-    <style>
-        /* Global Styles */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            background-color: #f9f9f9;
-        }
-
-        .sidebar .logo {
-            max-width: 100%;
-            /* Limit width to 100% of sidebar */
-            height: auto;
-            /* Maintain aspect ratio */
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* Sidebar Navigation */
-        .sidebar {
-            width: 200px;
-            background-color: #003366;
-            color: white;
-            height: 100vh;
-            position: fixed;
-            display: flex;
-            flex-direction: column;
-            padding-top: 20px;
-        }
-
-        .sidebar a {
-            color: white;
-            text-decoration: none;
-            padding: 15px 20px;
-            font-size: 1.2em;
-            display: block;
-            transition: background 0.3s;
-        }
-
-        .sidebar a:hover {
-            background-color: #00509e;
-        }
-
-        .dropdown {
-            position: relative;
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: white;
-            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-            z-index: 1;
-            min-width: 200px;
-            right: 0;
-        }
-
-        .dropdown-content a {
-            color: black;
-            padding: 10px 20px;
-            text-decoration: none;
-            display: block;
-            transition: background 0.3s;
-            font-size: 0.9em;
-            /* Reduced font size */
-        }
-
-        .dropdown-content a:hover {
-            background-color: #f1f1f1;
-        }
-
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-
-        .sidebar .logo {
-            font-size: 1.8em;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        /* Main Content Area */
-        .main-content {
-            margin-left: 200px;
-            /* Sidebar width */
-            width: calc(100% - 200px);
-            text-align: center;
-            flex-grow: 1;
-            padding-bottom: 70px;
-            position: relative;
-            /* Ensure positioning context for .notifications */
-        }
-
-        .notifications {
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            display: flex;
-            gap: 20px;
-            /* Space between icons */
-            z-index: 10;
-            /* Ensure it stays on top */
-        }
-
-        .notifications img {
-            width: 30px;
-            cursor: pointer;
-        }
-
-        .bidding-metrics {
-            margin: 70px auto 20px auto;
-            width: 80%;
-        }
-
-        .dashboard {
-            padding: 20px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .dashboard-card {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            text-align: center;
-
-        }
-
-        .footer {
-            background-color: #003366;
-            color: white;
-            text-align: center;
-            padding: 15px;
-            width: calc(100% - 200px);
-            box-sizing: border-box;
-            margin-left: 200px;
-            position: relative;
-        }
-
-        /* Popup Overlay Background */
-        .popup-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        /* Popup Content Box */
-        .popup-content {
-            background-color: white;
-            /* Background color for the popup */
-            color: black;
-            /* Text color for readability*/
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            width: 350px;
-        }
-
-        .popup-content h3 {
-            margin-top: 0;
-            color: #003366;
-        }
-
-        .popup-content button {
-            margin: 10px;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1em;
-        }
-
-        .popup-content button:hover {
-            opacity: 0.9;
-        }
-
-        .popup-content button:nth-child(1) {
-            background-color: #003366;
-            color: white;
-        }
-
-        .popup-content button:nth-child(2) {
-            background-color: #d0e0f5;
-            color: #003366;
-        }
-
-        .container {
-            margin: 50px auto;
-            max-width: 800px;
-            background-color: white;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
-
-        h1 {
-            text-align: center;
-            color: #003366;
-        }
-
-        .user-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-
-        .user-table th,
-        .user-table td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: left;
-        }
-
-        .user-table th {
-            background-color: #003366;
-            color: white;
-        }
-
-        .action-buttons button {
-            margin-right: 5px;
-            padding: 8px 12px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.9em;
-        }
-
-        .action-buttons .edit-btn {
-            background-color: #00509e;
-            color: white;
-        }
-
-        .action-buttons .remove-btn {
-            background-color: #d9534f;
-            color: white;
-        }
-
-        .add-user-btn {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 1em;
-            text-align: center;
-            margin: 10px 0;
-            cursor: pointer;
-        }
-
-        .add-user-btn:hover,
-        .action-buttons button:hover {
-            opacity: 0.9;
-        }
-
-
-        .modal {
-            display: none;
-            /* Hidden by default */
-            position: fixed;
-            /* Stay in place */
-            z-index: 1;
-            /* Sit on top */
-            left: 0;
-            top: 0;
-            width: 100%;
-            /* Full width */
-            height: 100%;
-            /* Full height */
-            overflow: auto;
-            /* Enable scroll if needed */
-            background-color: rgba(0, 0, 0, 0.5);
-            /* Black w/ opacity */
-        }
-
-        .modal-content {
-            background-color: #fff;
-            margin: 15% auto;
-            /* 15% from the top and centered */
-            padding: 20px;
-            border: 1px solid #888;
-            width: 400px;
-            /* Could be more or less, depending on screen size */
-            border-radius: 8px;
-            /* Rounded corners */
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        h2 {
-            margin-top: 0;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-            transition: border 0.3s;
-        }
-
-        input[type="text"]:focus,
-        input[type="email"]:focus,
-        select:focus {
-            border: 1px solid #007BFF;
-            outline: none;
-        }
-
-        button {
-            background-color: #007BFF;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        .confirm {
-            background-color: #28a745;
-            /* Green */
-            color: white;
-        }
-
-        .cancel {
-            background-color: #dc3545;
-            /* Red */
-            color: white;
-        }
-
-        .confirm:hover {
-            background-color: #218838;
-        }
-
-        .cancel:hover {
-            background-color: #c82333;
-        }
-    </style>
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/dashboard_global.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/company_detail.css') }}">
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
 
-
-
-
-
-
-
-
     <!-- Sidebar Navigation -->
-    <div class="sidebar">
-        <div class="left-nav">
-            <a href="/">
-                <img src="/static/images/constructhub-logo.png" alt="ConstructHub Logo" class="logo">
-            </a>
-            <a href="/dashboard">Dashboard</a>
-            <div class="dropdown">
-                <a href="#">User HUB</a>
-                <div class="dropdown-content">
-                    <a href="/profile">User HUB</a>
-                    <a href="/profile/edit">Edit Personal Info</a>
-                    <a href="/profile/notifications">Notification Settings</a>
-                    <a href="/manage_company">Company Details</a>
-                    <a href="/user_management">User Management</a>
-                    <a href="/Subscription_Details">Subscription Details</a>
-                </div>
-            </div>
-
-        </div>
-        <a href="/Project_Search">Search Projects</a>
-        <a href="/add_project">Add Project</a>
-        <a href="/detailed_reports">Reports</a>
-        <a href="/bidding_history">Bidding History</a>
-        <a href="#" onclick="showLogoutPopup()">Logout</a>
-    </div>
-
-
-
+    {% include 'sidebar.html' %}
 
     <!-- Main Content -->
     <div class="main-content">
@@ -437,8 +23,6 @@
             <img src="/static/Tabs/Globe_Icon.png" alt="Community Notifications" title="Community Notifications">
             <img src="/static/Tabs/Bell_Icon.png" alt="Project Alerts" title="Project Alerts">
         </div>
-
-
 
         <!-- Main Content -->
         <div class="container">
@@ -471,7 +55,7 @@
             </div>
             <div class="form-group">
                 <label for="division">Division</label>
-                <select id="division" name="division" required>
+                <select id="division" name="division" required disabled>
                     <option value="">Select your division</option>
                     <option value="1">General Contractor</option>
                     <option value="2">Division 2: Demolition</option>
@@ -511,34 +95,8 @@
         </div>
     </div>
 
-
-
-
-
-
-
-
     <!-- Footer Section -->
-    <div class="footer">
-        <p>&copy; 2024 ConstructHub. All rights reserved.</p>
-
-        <div class="footer-links">
-            <a href="/privacy-policy.html" target="_blank">Privacy Policy</a> |
-            <a href="/subscription_agreement.html" target="_blank">Subscription Agreement</a> |
-            <a href="/terms-of-use.html" target="_blank">Terms of Use</a>
-        </div>
-
-
-        <!-- Popup Confirmation Window -->
-        <div id="logoutPopup" class="popup-overlay" style="display: none;">
-            <div class="popup-content">
-                <h3>Confirm Logout</h3>
-                <p>Are you sure you want to log out?</p>
-                <button onclick="confirmLogout()">Yes, Log Out</button>
-                <button onclick="closeLogoutPopup()">Cancel</button>
-            </div>
-        </div>
-    </div>
+    {% include 'footer.html' %}
 
     <script>
         function showLogoutPopup() {
@@ -559,7 +117,6 @@
         fetch('/manage_company/detail')
             .then(responsive => responsive.json())
             .then(data => {
-                console.log(data, "data")
                 companyData = data
                 document.getElementById("company_manage_detail").innerHTML = `
                 <h2>Company Profile</h2>
@@ -630,8 +187,6 @@
                 mobileNumber: mobileNumber
             }
 
-            console.log(updateData, "pkpkpkpkpkp")
-
             fetch(`/manage_company/${userId}`, {
                 method: 'PUT',
                 headers: {
@@ -646,7 +201,6 @@
                     return response.json();
                 })
                 .then(data => {
-                    console.log(data);
                     // Handle successful response (e.g., close modal)
                     closeModal();
                     window.location.reload()

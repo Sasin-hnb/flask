@@ -5,322 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bidding History | ConstructHub</title>
-    <style>
-        /* Global Styles */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            background-color: #f9f9f9;
-        }
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/dashboard_global.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/bidding_history.css') }}">
 
-        .sidebar .logo {
-            max-width: 100%;
-            /* Limit width to 100% of sidebar */
-            height: auto;
-            /* Maintain aspect ratio */
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* Sidebar Navigation */
-        .sidebar {
-            width: 200px;
-            background-color: #003366;
-            color: white;
-            height: 100vh;
-            position: fixed;
-            display: flex;
-            flex-direction: column;
-            padding-top: 20px;
-        }
-
-        .sidebar a {
-            color: white;
-            text-decoration: none;
-            padding: 15px 20px;
-            font-size: 1.2em;
-            display: block;
-            transition: background 0.3s;
-        }
-
-        .sidebar a:hover {
-            background-color: #00509e;
-        }
-
-        .dropdown {
-            position: relative;
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: white;
-            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-            z-index: 1;
-            min-width: 200px;
-            right: 0;
-        }
-
-        .dropdown-content a {
-            color: black;
-            padding: 10px 20px;
-            text-decoration: none;
-            display: block;
-            transition: background 0.3s;
-            font-size: 0.9em;
-            /* Reduced font size */
-        }
-
-        .dropdown-content a:hover {
-            background-color: #f1f1f1;
-        }
-
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-
-        .sidebar .logo {
-            font-size: 1.8em;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        /* Main Content Area */
-        .main-content {
-            margin-left: 200px;
-            /* Sidebar width */
-            width: calc(100% - 200px);
-            text-align: center;
-            flex-grow: 1;
-            padding-bottom: 70px;
-            position: relative;
-            /* Ensure positioning context for .notifications */
-        }
-
-        .notifications {
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            display: flex;
-            gap: 20px;
-            /* Space between icons */
-            z-index: 10;
-            /* Ensure it stays on top */
-        }
-
-        .notifications img {
-            width: 30px;
-            cursor: pointer;
-        }
-
-        .bidding-metrics {
-            margin: 70px auto 20px auto;
-            width: 80%;
-        }
-
-        .dashboard {
-            padding: 20px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .dashboard-card {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            text-align: center;
-
-        }
-
-        .footer {
-            background-color: #003366;
-            color: white;
-            text-align: center;
-            padding: 15px;
-            width: calc(100% - 200px);
-            box-sizing: border-box;
-            margin-left: 200px;
-            position: relative;
-        }
-
-        .footer-links a {
-            color: white;
-            text-decoration: none;
-            margin: 0 10px;
-        }
-
-        .footer-links a:hover {
-            text-decoration: underline;
-        }
-
-        /* Popup Overlay Background */
-        .popup-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-
-        }
-
-        /* Popup Content Box */
-        .popup-content {
-            background-color: white;
-            /* Background color for the popup */
-            color: black;
-            /* Text color for readability*/
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            text-align: left;
-            width: 800px;
-            overflow-y: auto;
-            max-height: 80vh;
-        }
-
-        .popup-content h3 {
-            margin-top: 0;
-            color: #003366;
-        }
-
-        .popup-content button {
-            margin: 10px;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1em;
-        }
-
-        .popup-content button:hover {
-            opacity: 0.9;
-        }
-
-        .popup-content button:nth-child(1) {
-            background-color: #003366;
-            color: white;
-        }
-
-        .popup-content button:nth-child(2) {
-            background-color: #d0e0f5;
-            color: #003366;
-        }
-
-        .filter-section input {
-            padding: 10px;
-            margin-right: 10px;
-            width: 200px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th,
-        td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #003366;
-            color: white;
-            cursor: pointer;
-            position: relative;
-        }
-
-        th:hover {
-            background-color: #00509e;
-        }
-
-        th::after {
-            content: '\25B2';
-            /* Default up arrow */
-            position: absolute;
-            right: 10px;
-            font-size: 0.8em;
-            opacity: 0.6;
-        }
-
-        th.sorted-desc::after {
-            content: '\25BC';
-            /* Down arrow for descending */
-        }
-
-        .blurred {
-            filter: blur(5px);
-            color: transparent;
-            /* Optional: make the text color transparent */
-            text-shadow: 0 0 0 rgba(0, 0, 0, 0.8);
-            /* Optional: make text appear darker */
-        }
-
-        .modalClose {
-            align-items: center;
-        }
-
-        .modalBtn {
-            display: flex;
-            justify-content: space-around;
-        }
-
-        .prevent-select {
-            -webkit-user-select: none;
-            /* Safari */
-            -ms-user-select: none;
-            /* IE 10 and IE 11 */
-            user-select: none;
-            /* Standard syntax */
-        }
-    </style>
 </head>
 
 <body>
-
-    <!-- Sidebar Navigation -->
-    <div class="sidebar">
-        <div class="left-nav">
-            <a href="/">
-                <img src="/static/images/constructhub-logo.png" alt="ConstructHub Logo" class="logo">
-            </a>
-            <a href="/dashboard">Dashboard</a>
-            <div class="dropdown">
-                <a href="#">User HUB</a>
-                <div class="dropdown-content">
-                    <a href="/profile">User HUB</a>
-                    <a href="/profile/edit">Edit Personal Info</a>
-                    <a href="/profile/notifications">Notification Settings</a>
-                    <a href="/manage_company">Manage Company (Admin Only)</a>
-                    <a href="/user_management">User Management (Admin Only)</a>
-                    <a href="/Subscription_Details">Subscription Details</a>
-                </div>
-            </div>
-
-        </div>
-        <a href="/Project_Search">Search Projects</a>
-        <a href="/add_project">Add Project</a>
-        <a href="/detailed_reports">Reports</a>
-        <a href="/bidding_history">Bidding History</a>
-        <a href="#" onclick="showLogoutPopup()">Logout</a>
-    </div>
-
-
-
+    {% include 'sidebar.html' %}
 
     <div class="main-content">
         <h1>Bidding History</h1>
@@ -344,32 +35,14 @@
         </table>
     </div>
 
-    <!-- Footer Section -->
-    <div class="footer">
-        <p>&copy; 2024 ConstructHub. All rights reserved.</p>
+    {% include 'footer.html' %}
 
-        <div class="footer-links">
-            <a href="/privacy-policy.html" target="_blank">Privacy Policy</a> |
-            <a href="/subscription_agreement.html" target="_blank">Subscription Agreement</a> |
-            <a href="/terms-of-use.html" target="_blank">Terms of Use</a>
-        </div>
-
-        <div id="logoutPopup" class="popup-overlay" style="display: none;">
-            <div class="popup-content">
-                <h3>Confirm Logout</h3>
-                <p>Are you sure you want to log out?</p>
-                <button onclick="confirmLogout()">Yes, Log Out</button>
-                <button onclick="closeLogoutPopup()">Cancel</button>
+    <div id="projectModal" class="popup-overlay" style="display:none;">
+        <div class="popup-content">
+            <div id="modal_content">
             </div>
-        </div>
-
-        <div id="projectModal" class="popup-overlay" style="display:none;">
-            <div class="popup-content">
-                <div id="modal_content">
-                </div>
-                <div class="modalBtn">
-                    <button id="modalClose">close</button>
-                </div>
+            <div class="modalBtn">
+                <button id="modalClose">close</button>
             </div>
         </div>
     </div>
@@ -420,11 +93,7 @@
         fetch('/bidding_history/table')
             .then(response => response.json())
             .then(data => {
-                console.log("data", data);
                 let tableBody = document.getElementById("bidding_history_tbody");
-
-
-
                 // Clear the existing table body
                 tableBody.innerHTML = '';
 
@@ -433,7 +102,6 @@
                     const date = new Date(bid.closingDate);
                     const options = { year: 'numeric', month: 'long', day: 'numeric' };
                     const formattedDate = date.toLocaleDateString('en-US', options);
-                    console.log(typeof(bid.totalAmount))
                     tableBody.innerHTML += `
         <tr>
             <td>${bid.formatted_project_id}</td>
@@ -497,8 +165,6 @@
                     const categories_9 = ['Drywall', 'Flooring', 'Paint'];
                     const categories_15 = ['Plumbing & Refrigeration', 'Sprinklers', 'HVAC'];
 
-                    console.log(data.division, "ooooooooo")
-
                     const generateTables_9 = (bids) => {
                         return categories_9.map((category, index) => {
                             const sortedBids = bids.slice().sort((a, b) => {
@@ -506,7 +172,6 @@
             });
                             const rows = sortedBids.map(bid => {
                                 const amount = bid.amount[`amount${index + 1}`];
-                                console.log("amoumoaumoau", amount)
                                 return `
                                     <tr>
                                         <td>$ ${bid.company_id === currentCompany 
@@ -543,8 +208,6 @@
             });
                             const rows = sortedBids.map(bid => {
                                 const amount = bid.amount[`amount${index + 1}`];
-                                console.log("amoumoaumoau", typeof(amount))
-
                                 return `
                                     <tr>
                                         <td>$ ${bid.company_id === currentCompany 
@@ -614,7 +277,6 @@ ${data.division == 9
         </table>`}
         `;
                     document.getElementById('projectModal').style.display = "flex";
-                    console.log(data);
                 });
         }
 

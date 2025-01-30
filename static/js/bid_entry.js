@@ -33,8 +33,6 @@ function showBidConfirmation() {
   const closingDate = document.getElementById('closingDate').value;
   const postalCode = document.getElementById('postalCode').value;
 
-
-  console.log("Total Sum: ", totalValue);
   document.getElementById('bidConfirmationModal').style.display = 'block';
 
   document.getElementById('confirmBid').onclick = function () {
@@ -60,7 +58,6 @@ function showBidConfirmation() {
       return response.json();
     })
       .then(data => {
-        console.log(data);
         closeBidConfirmation();
         alert(data.message)
         window.location.href = '/project_search'

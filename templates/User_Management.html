@@ -12,36 +12,7 @@
 
 <body>
 
-    <!-- Sidebar Navigation -->
-    <div class="sidebar">
-        <div class="left-nav">
-            <a href="/">
-                <img src="{{ url_for('static', filename='images/constructhub-logo.png') }}" alt="ConstructHub Logo"
-                    class="logo">
-            </a>
-            <a href="/dashboard">Dashboard</a>
-            <div class="dropdown">
-                <a href="#">User HUB</a>
-                <div class="dropdown-content">
-                    <a href="/profile">User HUB</a>
-                    <a href="/profile/edit">Edit Personal Info</a>
-                    <a href="/profile/notifications">Notification Settings</a>
-                    <a href="/manage_company">Manage Company (Admin Only)</a>
-                    <a href="/user_management">User Management (Admin Only)</a>
-                    <a href="/Subscription_Details">Subscription Details</a>
-                </div>
-            </div>
-
-        </div>
-        <a href="/Project_Search">Search Projects</a>
-        <a href="/add_project">Add Project</a>
-        <a href="/detailed_reports">Reports</a>
-        <a href="/bidding_history">Bidding History</a>
-        <a href="#" onclick="showLogoutPopup()">Logout</a>
-    </div>
-
-
-
+    {% include 'sidebar.html' %}
 
     <!-- Main Content -->
     <div class="main-content">
@@ -143,26 +114,8 @@
             </div>
         </div>
     </div>
-        <!-- Footer Section -->
-        <div class="footer">
-            <p>&copy; 2024 ConstructHub. All rights reserved.</p>
 
-            <div class="footer-links">
-                <a href="/privacy-policy.html" target="_blank">Privacy Policy</a> |
-                <a href="/subscription_agreement.html" target="_blank">Subscription Agreement</a> |
-                <a href="/terms-of-use.html" target="_blank">Terms of Use</a>
-            </div>
-        </div>
-
-            <!-- Popup Confirmation Window -->
-            <div id="logoutPopup" class="popup-overlay" style="display: none;">
-                <div class="popup-content">
-                    <h3>Confirm Logout</h3>
-                    <p>Are you sure you want to log out?</p>
-                    <button onclick="confirmLogout()">Yes, Log Out</button>
-                    <button onclick="closeLogoutPopup()">Cancel</button>
-                </div>
-            </div>
+    {% include 'footer.html' %}
         
 
         <script>
@@ -204,7 +157,6 @@
                         return response.json();
                     })
                     .then(data => {
-                        console.log(data); // Handle the user data here
                         // You can populate your modal or form with this data
                         document.getElementById('userId').value = data.id;
                         document.getElementById('firstName').value = data.firstName;
@@ -235,8 +187,6 @@
                     state: state
                 };
 
-                console.log("data", data)
-
                 fetch(`/user_management/${userId}`, {
                     method: 'PUT',
                     headers: {
@@ -251,8 +201,6 @@
                         return response.json();
                     })
                     .then(data => {
-                        console.log(data);
-                        // Handle successful response (e.g., close modal)
                         closeModal();
                         window.location.reload()
                     })
@@ -288,7 +236,6 @@
                         }
                         return response.json();
                     }).then(data => {
-                        console.log(data);
                         closeModal(); // Close modal after the action
                         window.location.reload();
                     }).catch(error => {

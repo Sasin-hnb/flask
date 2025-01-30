@@ -219,11 +219,9 @@ document.getElementById('login-form').addEventListener('submit', function(event)
         });
     })
     .then(data => {
-        console.log("message", data.message);
         window.location.href = '/dashboard';
     })
     .catch(error => {
-        console.log("login error", error.message);
         // You may want to display the error message on the UI
         alert(error.message); // For example, alert the user of the error
     });
