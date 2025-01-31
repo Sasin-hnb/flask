@@ -195,3 +195,30 @@ th.sorted-desc::after {
   text-shadow: 0 0 0 rgba(0, 0, 0, 0.8);
   /* Optional: make text appear darker */
 }
+
+p{
+  margin: 0;
+}
+
+
+.bid_container {
+  display: flex;
+  justify-content: space-around;
+  /* gap: 20px; */
+}
+.box {
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 200px;
+  text-align: center;
+}
+.icon {
+  font-size: 40px;
+}
+.value {
+  font-size: 24px;
+  font-weight: bold;
+}

@@ -233,18 +233,68 @@ def dashboard_chart():
 
 # -------------- Start Report Page -------------------
 
+from datetime import datetime
+
 @app.route('/detailed_reports')
 @login_required
 def detailed_reports():
     username = current_user.username
     user = User.query.filter_by(username=username).first()
     division = user.division
-    return render_template('detailed_reports.html', division=division)
+    domain = user.domain
+    company = Company.query.filter_by(domain=domain).first()
+    company_id = company.id
+    
+    # Get current year and previous year
+    current_year = datetime.now().year
+    previous_year = current_year - 1
+
+    # Query bids for current year
+    current_year_bids = Bids.query.filter(
+        Bids.company_id == company_id,
+        Bids.created_at >= datetime(current_year, 1, 1),
+        Bids.created_at < datetime(current_year + 1, 1, 1)  # Exclude next year
+    ).all()
+
+    # Query bids for previous year
+    previous_year_bids = Bids.query.filter(
+        Bids.company_id == company_id,
+        Bids.created_at >= datetime(previous_year, 1, 1),
+        Bids.created_at < datetime(current_year, 1, 1)  # Exclude current year
+    ).all()
+
+    # Calculate total value and counts
+    current_year_total_value = sum(bid.totalAmount for bid in current_year_bids)
+    current_year_number_bids = len(current_year_bids)
+
+    previous_year_total_value = sum(bid.totalAmount for bid in previous_year_bids)
+    previous_year_number_bids = len(previous_year_bids)
+
+    # Calculate percentages safely
+    if previous_year_total_value > 0:
+        percent_from_previous_value = (current_year_total_value / previous_year_total_value) * 100
+    else:
+        percent_from_previous_value = 0  # or None, or some other default value
+
+    if previous_year_number_bids > 0:
+        percent_from_previous_number = (current_year_number_bids / previous_year_number_bids) * 100
+    else:
+        percent_from_previous_number = 0  # or None, or some other default value
+
+    print(percent_from_previous_number, percent_from_previous_value)
+
+    return render_template('detailed_reports.html', 
+                           division=division,
+                           current_year_total_value=current_year_total_value,
+                           current_year_number_bids=current_year_number_bids,
+                           percent_from_previous_number=percent_from_previous_number,
+                           percent_from_previous_value=percent_from_previous_value)
+
 
 @app.route('/detailed_reports/chart/project', methods=['POST'])
 @login_required
 def reports_chart_project():
-    year = request.json.get('selectedYear')
+    year = request.json.get('currentYear')
     year = int(year)
     projects_count = [0] * 12
     bid_projects_count = [0] * 12
@@ -332,11 +382,15 @@ def reports_chart_months():
     lowest_prices = []
     max_prices = []
     project_name = []
+    city = []
+    province = []
 
     # Now gather data for each project
     for project in projects:
         project_ids.append(f"CH-{str(project.id).zfill(2)}")
         project_name.append(project.projectName)
+        city.append(project.city)
+        province.append(project.province)
         
         # Get the user's bid for the project, if any
         user_bid = next((bid.totalAmount for bid in bids if bid.project_id == project.id), 0)
@@ -352,7 +406,9 @@ def reports_chart_months():
         "contractorPrices": contractor_prices,
         "lowestPrices": lowest_prices,
         "maxPrices": max_prices,
-        "project_name": project_name
+        "project_name": project_name,
+        "city": city,
+        "province": province
     })
 
 @app.route('/detailed_report/project/table', methods=['POST'])
@@ -379,7 +435,7 @@ def detailed_report_project():
         bid_details = {
             'user_id': bid.user_id,
             'bid_price': bid.totalAmount,  # Assuming totalAmount is the bid price
-            'bidder_name': bidder_name   # Replace with the actual attribute for the bidder name
+            'bidder_name': bidder_name,   # Replace with the actual attribute for the bidder name
         }
         bid_list.append(bid_details)
 
@@ -525,11 +581,15 @@ def reports_chart_division():
     lowest_prices = []
     max_prices = []
     project_names = []
+    city = []
+    province = []
 
     # Now gather data for each project
     for project in projects:
         project_ids.append(f"CH-{str(project.id).zfill(2)}")
         project_names.append(project.projectName)
+        city.append(project.city)
+        province.append(project.province)
 
         # Get the user's bid for the project, if any
         user_bid_data = next((b.bidAmount[selectedDivision] for b in bids if b.project_id == project.id), 0)
@@ -548,7 +608,9 @@ def reports_chart_division():
         "contractorPrices": contractor_prices,
         "lowestPrices": lowest_prices,
         "maxPrices": max_prices,
-        "project_name": project_names
+        "project_name": project_names,
+        "city": city,
+        "province": province
     })
 
 # -------------- End Report Page -------------------
