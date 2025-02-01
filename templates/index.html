@@ -14,7 +14,101 @@
             background-color: #f9f9f9;
         }
 
-        /* Hero Section */
+        .header {
+            background-color: #003366;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+	.header .logo {
+            font-size: 1.5em;
+        }
+
+        .header a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 1.2em;
+        }
+
+        .header a:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer Section */
+        .footer {
+            background-color: #003366;
+            color: white;
+            text-align: center;
+            padding: 15px 20px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5em;
+            }
+
+            .hero p {
+                font-size: 1em;
+            }
+        }
+
+	/* Footer Links Styling */
+	.footer-links {
+            text-align: center;      /* Center align the links */
+            margin-top: 20px;        /* Add spacing from the form */
+            font-size: 0.9em;        /* Slightly smaller font */
+            color: #555;             /* Subtle grey color */
+	}
+
+	.footer-links a {
+            color: #555;             /* Link color */
+            text-decoration: none;   /* Remove underline */
+            margin: 0 10px;          /* Space between links */
+	}
+
+	.footer-links a:hover {
+            text-decoration: underline; /* Add underline on hover */
+            color: #003366;            /* Highlight hover color */
+	}
+
+	/* Footer Links Styling */
+	.footer-links {
+            text-align: center;      /* Center align the links */
+            margin-top: 20px;        /* Add spacing from the form */
+            font-size: 0.9em;        /* Slightly smaller font */
+            color: #555;             /* Subtle grey color */
+	}
+
+	.footer-links a {
+            color: #555;             /* Link color */
+            text-decoration: none;   /* Remove underline */
+            margin: 0 10px;          /* Space between links */
+	}
+
+	.footer-links a:hover {
+            text-decoration: underline; /* Add underline on hover */
+            color: #003366;            /* Highlight hover color */
+	}
+
+        .header a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 1.2em;
+        }
+
+        .header a:hover {
+            text-decoration: underline;
+        }
+
         .hero {
             background-image: url('static/images/background_image.jpg');
             background-size: cover;
@@ -68,108 +162,65 @@
             color: #003366;
         }
 
-        /* Header Section */
-        .header {
-            background-color: #003366;
-            color: white;
-            padding: 15px 5px;
+        .container {
+            width: 80%;
+            margin: 3rem auto;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+
+        .blog-box {
+            width: 30%;
+            margin-bottom: 2rem;
+            background-color: white;
+            padding: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .blog-box:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .blog-box img {
+            width: 100%;
+            height: auto;
+            margin-bottom: 1rem;
+        }
+
+        .modal {
+            display: none;
             position: fixed;
+            z-index: 1000;
+            left: 0;
             top: 0;
             width: 100%;
-            z-index: 1000;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
         }
 
-        .header .logo {
-            font-size: 1.5em;
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 20px;
+            width: 60%;
+            border-radius: 8px;
         }
 
-        .header a {
-            color: white;
-            text-decoration: none;
-            margin: 0 15px;
-            font-size: 1.2em;
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
         }
 
-        .header a:hover {
-            text-decoration: underline;
-        }
-
-        /* Footer Section */
-        .footer {
-            background-color: #003366;
-            color: white;
-            text-align: center;
-            padding: 15px 20px;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5em;
-            }
-
-            .hero p {
-                font-size: 1em;
-            }
-        }
-
-        /* Footer Links Styling */
-        .footer-links {
-            text-align: center;
-            /* Center align the links */
-            margin-top: 20px;
-            /* Add spacing from the form */
-            font-size: 0.9em;
-            /* Slightly smaller font */
-            color: #555;
-            /* Subtle grey color */
-        }
-
-        .footer-links a {
-            color: #555;
-            /* Link color */
-            text-decoration: none;
-            /* Remove underline */
-            margin: 0 10px;
-            /* Space between links */
-        }
-
-        .footer-links a:hover {
-            text-decoration: underline;
-            /* Add underline on hover */
-            color: #003366;
-            /* Highlight hover color */
-        }
-
-        /* Footer Links Styling */
-        .footer-links {
-            text-align: center;
-            /* Center align the links */
-            margin-top: 20px;
-            /* Add spacing from the form */
-            font-size: 0.9em;
-            /* Slightly smaller font */
-            color: #555;
-            /* Subtle grey color */
-        }
-
-        .footer-links a {
-            color: #555;
-            /* Link color */
-            text-decoration: none;
-            /* Remove underline */
-            margin: 0 10px;
-            /* Space between links */
-        }
-
-        .footer-links a:hover {
-            text-decoration: underline;
-            /* Add underline on hover */
-            color: #003366;
-            /* Highlight hover color */
+        .close:hover {
+            color: black;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -180,7 +231,7 @@
         <div class="left-nav">
             <!-- Logo link -->
             <a href="/">
-                <img src="{{ url_for('static', filename='images/constructhub-logo.png') }}" alt="ConstructHub Logo"
+                <img src="static/images/constructhub-logo.png" alt="ConstructHub Logo"
                     class="logo">
             </a>
         </div>
@@ -189,6 +240,7 @@
             <a href="blog">Blog</a>
             <a href="register">Register</a>
             <a href="login">Login</a>
+            <a></a>
         </nav>
     </div>
 
