@@ -109,6 +109,10 @@ def contact():
 def networking():
     return render_template('Networking_Contacts.html')
 
+@app.route('/blog')
+def blog():
+    return render_template('blog_page.html')
+
 @app.route('/register', methods=['POST', 'GET'])
 def register():
     if request.method == 'GET':
