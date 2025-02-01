@@ -38,48 +38,38 @@
                 <p>Currently Logged In: <span id="activeUsers">0</span></p>
             </div>
 
-            <a href="detailed_reports" style="text-decoration: none; color: inherit;">
-                <div class="dashboard-card">
+                <div class="dashboard-card" onclick="detailed_reports()">
                     <img src="static/Tabs/DetailedReport.jpg" alt="Detailed Report"
                         style="width: 150px; height: 150px; display: block; margin: 0 auto; border-radius: 8px;">
                     <h3>View Detailed Report</h3>
                     <p>Build, View & Customize a report.</p>
                 </div>
-            </a>
 
-            <a href="Project_Search" style="text-decoration: none; color: inherit;">
-                <div class="dashboard-card">
+                <div class="dashboard-card" onclick="Project_Search()">
                     <img src="static/Tabs/ProjectLookup.jpg" alt="Project Lookup"
-                        style="width: 150px; height: auto; display: block; 	margin: 0 auto; border-radius: 8px;">
+                        style="width: 150px; height: 150px; display: block; 	margin: 0 auto; border-radius: 8px;">
                     <h3>Lookup Projects</h3>
                     <p>Easily search for ongoing or past construction projects.</p>
                 </div>
-            </a>
 
-            <a href="add_project" style="text-decoration: none; color: inherit;">
-                <div class="dashboard-card">
+                <div class="dashboard-card" onclick="add_project()">
                     <img src="static/Tabs/ProjectEntry.jpg" alt="Project Entry"
                         style="width: 150px; height: 150px; display: block; 	margin: 0 auto; border-radius: 8px;">
                     <h3>Add Projects</h3>
                     <p>Securely enter a new project into the ConstructHUB Database.</p>
                 </div>
-            </a>
 
-            <a href="bidding_history" style="text-decoration: none; color: inherit;">
-                <div class="dashboard-card">
+                <div class="dashboard-card" onclick="bidding_history()">
                     <img src="static/Tabs/BiddingHistory.jpg" alt="Bidding History"
-                        style="width: 150px; height: auto; display: block; 	margin: 0 auto; border-radius: 8px;">
+                        style="width: 150px; height: 150px; display: block; 	margin: 0 auto; border-radius: 8px;">
                     <h3>Bidding History</h3>
                     <p>View your bidding history, and quote values.</p>
                 </div>
-            </a>
-
-
 
             <!-- Logout Button with Popup Confirmation -->
             <div class="dashboard-card" id="logout-card" style="cursor: pointer;" onclick="showLogoutPopup()">
                 <img src="static/Tabs/Logout.jpg" alt="Logout"
-                    style="width: 150px; height: auto; display: block; margin: 0 auto; border-radius: 8px;">
+                    style="width: 150px; height: 150px; display: block; margin: 0 auto; border-radius: 8px;">
                 <h3>Logout</h3>
                 <p>Safely log out of your ConstructHub account.</p>
             </div>
@@ -157,6 +147,23 @@
         function confirmLogout() {
             window.location.href = '/logout';  // Redirect to the homepage
         }
+
+        function detailed_reports() {
+            window.location.href = '/detailed_reports'
+        }
+
+        function add_project() {
+            window.location.href = '/add_project'
+        }
+
+        function Project_Search() {
+            window.location.href = '/Project_Search'
+        }
+
+        function bidding_history() {
+            window.location.href = '/bidding_history'
+        }
+
     </script>
 
 </body>
