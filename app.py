@@ -101,6 +101,18 @@ def home():
 def About():
     return render_template('About.html')
 
+@app.route('/terms_of_use')
+def terms_of_use():
+    return render_template('terms.html')
+
+@app.route('/subscription_agreement')
+def subscription_agreement():
+    return render_template('subscription_agreement.html')
+
+@app.route('/Privacy_Policy')
+def privacy_policy():
+    return render_template('privacy_policy.html')
+
 @app.route('/contact')
 def contact():
     return render_template('Contact.html')
