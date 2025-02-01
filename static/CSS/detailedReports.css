@@ -145,19 +145,24 @@ background-color: white;
 .project-details p {
   margin: 10px 0;
 }
-
+.modalTd{
+    border-bottom: none;
+vertical-align: top;
+padding-bottom: 0;
+}
 
 th,
 td {
     padding: 15px;
     text-align: left;
     border-bottom: 1px solid #ddd;
+    cursor: pointer;
+
 }
 
 th {
     background-color: #003366;
     color: white;
-    cursor: pointer;
     position: relative;
 }
 
@@ -222,3 +227,19 @@ p{
   font-size: 24px;
   font-weight: bold;
 }
+
+.project-header {
+            font-size: 24px;
+            color: #003366;
+        }
+        .project-info {
+            margin: 10px 0;
+          display: flex;
+          justify-content: space-between;
+        }
+        .info-label {
+            font-weight: bold;
+        }
+        .info-value {
+            margin-left: 10px;
+        }

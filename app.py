@@ -45,6 +45,8 @@ class Company(db.Model):
     BusinessPhone = db.Column(db.String(15))
     BusinessAddress = db.Column(db.String(255))
     BusinessWebsite = db.Column(db.String(255))
+    country = db.Column(db.String(100))
+    province = db.Column(db.String(100))
     created_at = db.Column(db.Date, default=date.today)
     updated_at = db.Column(db.Date, default=date.today, onupdate=date.today)
 
@@ -143,7 +145,7 @@ def register():
             else:
                 new_company = Company(domain=domain, BusinessName=BusinessName,
                                         BusinessPhone=BusinessPhone, BusinessAddress=BusinessAddress,
-                                        BusinessWebsite=BusinessWebsite)
+                                        BusinessWebsite=BusinessWebsite,country=country, province=province)
                 new_user = User(division=division, country=country, province=province,
                                 firstName=firstName, lastName=lastName, mobileNumber=mobileNumber,
                                 username=username, password=hash_password, domain=domain, state=True, role="Admin")
@@ -155,6 +157,35 @@ def register():
                 return jsonify({'message': 'Register Successfully'})
         else:
             return jsonify({'message': "Username already exists."}), 401
+
+@app.route('/register/company', methods=['GET'])
+def registerCompany():
+    queries = request.args.get('query', '').lower()
+    print("query:", queries)
+    
+    if queries:
+        # Modified query to find companies where BusinessName contains the search query
+        companies = Company.query.filter(Company.BusinessName.ilike(f'%{queries}%')).all()
+        
+        # Prepare the response data
+        company_list = []
+        for company in companies:
+            company_data = {
+                'id': company.id,
+                'BusinessName': company.BusinessName,
+                'BusinessPhone': company.BusinessPhone,
+                'BusinessAddress': company.BusinessAddress,
+                'BusinessWebsite': company.BusinessWebsite,
+                'country': company.country,
+                'province':company.province
+            }
+            company_list.append(company_data)
+
+        # Return the JSON response
+        return jsonify(company_list)
+    
+    # If no query, return an empty list
+    return jsonify([])
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -232,8 +263,12 @@ def dashboard_chart():
 # -------------- End Dashboard Page ------------------
 
 # -------------- Start Report Page -------------------
-
-from datetime import datetime
+def format_currency(value):
+    if value is None:
+        return "0.00"
+    
+    # Format the number
+    return f"{value:,.2f}"
 
 @app.route('/detailed_reports')
 @login_required
@@ -265,6 +300,7 @@ def detailed_reports():
 
     # Calculate total value and counts
     current_year_total_value = sum(bid.totalAmount for bid in current_year_bids)
+    formatted_value = format_currency(current_year_total_value)
     current_year_number_bids = len(current_year_bids)
 
     previous_year_total_value = sum(bid.totalAmount for bid in previous_year_bids)
@@ -285,7 +321,7 @@ def detailed_reports():
 
     return render_template('detailed_reports.html', 
                            division=division,
-                           current_year_total_value=current_year_total_value,
+                           current_year_total_value=formatted_value,
                            current_year_number_bids=current_year_number_bids,
                            percent_from_previous_number=percent_from_previous_number,
                            percent_from_previous_value=percent_from_previous_value)
@@ -491,7 +527,13 @@ def detailed_report_project_915():
     totalAmount = []
     bid_list = []
     for bid in bids:
-        totalAmount.append(float(bid.bidAmount[selectedDivision]))
+        bid_amount = bid.bidAmount[selectedDivision]
+
+        if bid_amount:  # This checks if the string is not empty
+            totalAmount.append(float(bid_amount))
+        else:
+            # Handle the case where bid_amount is empty, e.g.:
+            print(f"No bid amount for division {selectedDivision}")
         # user = User.query.filter_by(id=bid.user_id).first()
         company = Company.query.filter_by(id=bid.company_id).first()
         bidder_name = company.BusinessName
@@ -1083,5 +1125,5 @@ def logout():
     return redirect(url_for('home'))
 
 if __name__ == '__main__':
-    # app.run(debug=True)
-    app.run(host="0.0.0.0")
+    app.run(debug=True)
+    # app.run(host="0.0.0.0")
