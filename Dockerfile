@@ -1,7 +1,5 @@
 # Use an official Python runtime as a base image
 FROM python:3.9-slim
-FROM redis:latest
-
 
 # Set the working directory to /app
 WORKDIR /app
