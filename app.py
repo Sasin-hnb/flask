@@ -10,6 +10,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from flask_session import Session
 import redis
+import os
 
 
 app = Flask(__name__)
@@ -23,8 +24,21 @@ app.config['SESSION_TYPE'] = 'redis'
 app.config['SESSION_PERMANENT'] = False
 app.config['SESSION_USE_SIGNER'] = True
 app.config['SESSION_KEY_PREFIX'] = 'session:'
-app.config['SESSION_REDIS'] = redis.StrictRedis(host='localhost', port=6379, db=0)
+# app.config['SESSION_REDIS'] = redis.StrictRedis(host='localhost', port=6379, db=0)
 
+
+# Get Redis connection details from environment variables (set these in Render)
+REDIS_URL = os.getenv('REDIS_URL', 'redis://red-cugms123esus73fehh00:6379')
+
+# Initialize Redis connection
+r = redis.from_url(REDIS_URL)
+
+# Check if connection works
+try:
+    r.ping()
+    print("Connected to Redis!")
+except redis.exceptions.ConnectionError as e:
+    print(f"Error connecting to Redis: {e}")
 
 login_manager = LoginManager()
 login_manager.init_app(app)
