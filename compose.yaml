@@ -17,3 +17,11 @@ services:
         published: 5000
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+
+version: '3'
+services:
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
