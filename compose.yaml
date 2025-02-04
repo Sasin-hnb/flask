@@ -1,10 +1,10 @@
-version: '3.9'  # Only one version, set it to 3.9
-
+version: "3.9"
+name: flask
 services:
   flask:
     restart: unless-stopped
     build:
-      context: ./flask  # Make sure Flask app's Dockerfile is in the ./flask directory
+      context: ./flask
       dockerfile: Dockerfile
     deploy:
       resources:
@@ -12,14 +12,13 @@ services:
           cpus: "1.0"
           memory: 512M
     ports:
-      - "5000:5000"  # Exposes port 5000 for Flask
-    environment:
-      - REDIS_URL=redis://red-cugms123esus73fehh00:6379  # Connect to the Redis container using its service name
-    depends_on:
-      - redis  # Ensures Redis starts before Flask
-
+      - mode: ingress
+        target: 5000
+        published: 5000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
   redis:
     image: redis:latest
     ports:
-      - "6379:6379"  # Exposes Redis port 6379
-    restart: unless-stopped  # Redis container will restart unless explicitly stopped
+      - "6379:6379"
+
