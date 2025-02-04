@@ -35,7 +35,7 @@
                 <img src="static/Tabs/UsersOnline.jpg" alt="Users Online"
                     style="width: 150px; height: 150px; display: block; 	margin: 0 auto; border-radius: 8px;">
                 <h3>Active Users</h3>
-                <p>Currently Logged In: <span id="activeUsers">0</span></p>
+                <p>Currently Logged In: <span id="active-users">0</span></p>
             </div>
 
                 <div class="dashboard-card" onclick="detailed_reports()">
@@ -81,8 +81,11 @@
 
     {% include 'footer.html' %}
 
+    <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
+
+    
+
     <script>
-        document.getElementById('activeUsers').textContent = 5;
 
         const ctx = document.getElementById('biddingChart').getContext('2d');
 
@@ -135,16 +138,6 @@
     </script>
 
     <script>
-        fetch('/active_users')
-            .then(response => response.json())
-            .then(data => {
-                console.log("data", data)
-                document.getElementById("activeUsers").textContent = data.active_users;
-
-            })
-    </script>
-
-    <script>
         
         function showLogoutPopup() {
             document.getElementById('logoutPopup').style.display = 'flex';
@@ -175,6 +168,15 @@
         }
 
     </script>
+
+<script>
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+    socket.on('active_users', function(data) {
+        console.log(data, "popopopopo")
+        document.getElementById('active-users').textContent = data.count;
+    });
+</script>
 
 </body>
 

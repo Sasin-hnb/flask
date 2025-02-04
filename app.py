@@ -9,8 +9,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from flask_session import Session
-import redis
-import os
+from flask_socketio import SocketIO, emit
 
 
 app = Flask(__name__)
@@ -20,25 +19,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'  # Use SQLite databa
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = 'secretkey'
 
-app.config['SESSION_TYPE'] = 'redis'
-app.config['SESSION_PERMANENT'] = False
-app.config['SESSION_USE_SIGNER'] = True
-app.config['SESSION_KEY_PREFIX'] = 'session:'
-# app.config['SESSION_REDIS'] = redis.StrictRedis(host='localhost', port=6379, db=0)
-
-
-# Get Redis connection details from environment variables (set these in Render)
-REDIS_URL = os.getenv('REDIS_URL', 'redis://red-cugms123esus73fehh00:6379')
-
-# Initialize Redis connection
-r = redis.from_url(REDIS_URL)
-
-# Check if connection works
-try:
-    r.ping()
-    print("Connected to Redis!")
-except redis.exceptions.ConnectionError as e:
-    print(f"Error connecting to Redis: {e}")
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -115,26 +95,27 @@ def create_tables():
 
 bcrypt = Bcrypt(app)
 cors = CORS(app)
-Session(app)
-
-active_users = set()
 
 @login_manager.user_loader
 def load_user(user_id):
     print(user_id, "llllllllllllllllllllll")
     return User.query.get(int(user_id))
 
-@app.before_request
-def track_active_users():
-    print("ooooooo", session)
-    if '_user_id' in session:
-        print("kkkkkkkkkkkkkkkkkkk")
-        active_users.add(session['_user_id'])
+socketio = SocketIO(app)
 
-@app.route('/active_users')
-def get_active_users():
-    return {'active_users': len(active_users)}
+active_users = 0
 
+@socketio.on('connect')
+def handle_connect():
+    global active_users
+    active_users += 1
+    emit('active_users', {'count': active_users}, broadcast=True)
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    global active_users
+    active_users -= 1
+    emit('active_users', {'count': active_users}, broadcast=True)
 
 @app.route('/')
 def home():
@@ -1240,5 +1221,5 @@ def logout():
     return redirect(url_for('home'))
 
 if __name__ == '__main__':
-    # app.run(debug=True)
-    app.run(host="0.0.0.0")
+    app.run(debug=True)
+    # app.run(host="0.0.0.0")
