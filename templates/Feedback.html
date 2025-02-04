@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard | ConstructHub</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/global.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/feedback.css') }}">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    {% include 'sidebar.html' %}
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Notification Icons -->
+        <div class="notifications">
+            <img src="/static/Tabs/Globe_Icon.png" alt="Community Notifications" title="Community Notifications">
+            <img src="/static/Tabs/Bell_Icon.png" alt="Project Alerts" title="Project Alerts">
+        </div>
+
+        <div class="container">
+            <div class="container_header">
+                <h1>We'd love to hear from you</h1>
+                <p>If you have any questions, feedback, or inquiries, please use the form below to get in touch with us. Our team will respond as soon as possible.</p>
+            </div>
+            <div class="container_body">
+                <div>
+                    <label for="name">Your Name</label>
+                    <input type="text" disabled value="{{fullName}}">
+                </div>
+                <div>
+                    <label for="email">Your Email</label>
+                    <input type="text" id="email" disabled value="{{email}}">
+                </div>
+                <div>
+                    <label for="">Your Message</label>
+                    <textarea rows="8" id="message"></textarea>
+                </div>
+                <button onclick="sendMessage()">Sned Message</button>
+            </div>
+        </div>
+
+    </div>
+
+    {% include 'footer.html' %}
+
+    <script>
+        
+        function showLogoutPopup() {
+            document.getElementById('logoutPopup').style.display = 'flex';
+        }
+
+        function closeLogoutPopup() {
+            document.getElementById('logoutPopup').style.display = 'none';
+        }
+
+        function confirmLogout() {
+            window.location.href = '/logout';  // Redirect to the homepage
+        }
+
+    </script>
+
+<script>
+    function sendMessage() {
+        let message = document.getElementById("message").value;
+        let email = document.getElementById("email").value;
+
+        if (!message.trim()) {
+            alert("Please enter a message before sending.");
+            return;
+        }
+
+        fetch("/feedback", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ email: email, message: message })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+            alert(data.message);
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("An error occurred. Please try again.");
+        });
+    }
+</script>
+
+
+</body>
+
+</html>

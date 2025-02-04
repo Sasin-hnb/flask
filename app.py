@@ -5,6 +5,12 @@ from flask_login import login_user, login_required, LoginManager, UserMixin, log
 from flask_cors import CORS
 from datetime import datetime, timezone, date, timedelta
 from sqlalchemy import JSON 
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from flask_session import Session
+import redis
+
 
 app = Flask(__name__)
 
@@ -12,6 +18,13 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'  # Use SQLite database
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = 'secretkey'
+
+app.config['SESSION_TYPE'] = 'redis'
+app.config['SESSION_PERMANENT'] = False
+app.config['SESSION_USE_SIGNER'] = True
+app.config['SESSION_KEY_PREFIX'] = 'session:'
+app.config['SESSION_REDIS'] = redis.StrictRedis(host='localhost', port=6379, db=0)
+
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -88,10 +101,26 @@ def create_tables():
 
 bcrypt = Bcrypt(app)
 cors = CORS(app)
+Session(app)
+
+active_users = set()
 
 @login_manager.user_loader
 def load_user(user_id):
+    print(user_id, "llllllllllllllllllllll")
     return User.query.get(int(user_id))
+
+@app.before_request
+def track_active_users():
+    print("ooooooo", session)
+    if '_user_id' in session:
+        print("kkkkkkkkkkkkkkkkkkk")
+        active_users.add(session['_user_id'])
+
+@app.route('/active_users')
+def get_active_users():
+    return {'active_users': len(active_users)}
+
 
 @app.route('/')
 def home():
@@ -1133,6 +1162,62 @@ def manage_company_detail_edit(userId):
         return jsonify({"error": str(e)}), 500  # Return error message if something goes wrong
 
 # -------------- End Company Page -------------------
+
+# -------------- Start Feedback Page -------------------
+@app.route('/feedback', methods=['GET', 'POST'])
+@login_required
+def feedback():
+    if request.method == 'GET':
+        username = current_user.username
+        user = User.query.filter_by(username=username).first()
+        
+        firstName = user.firstName
+        lastName = user.lastName
+        fullName = firstName + ' ' + lastName  # Corrected this line
+        email = username
+        
+        return render_template('Feedback.html', fullName=fullName, email=email)
+    
+    if request.method == 'POST':
+        data = request.json
+        sender_email = data.get("email")
+        message_body = data.get("message")
+
+        receiver_email = "AvyaanDavid@outlook.com"
+        subject = "New Feedback from ConstructHub"
+
+        # Set up email message
+        msg = MIMEMultipart()
+        msg["From"] = sender_email
+        msg["To"] = receiver_email
+        msg["Subject"] = subject
+        msg.attach(MIMEText(message_body, "plain"))
+
+        try:
+            # Configure SMTP server (Replace with your email credentials)
+            smtp_server = "smtp.office365.com"
+            smtp_port = 587
+            smtp_user = "AvyaanDavid@outlook.com"
+            smtp_password = "your-email-password"
+
+            server = smtplib.SMTP(smtp_server, smtp_port)
+            server.starttls()
+            server.login(smtp_user, smtp_password)
+            server.sendmail(sender_email, receiver_email, msg.as_string())
+            server.quit()
+
+            return jsonify({"message": "Message sent successfully!"})
+
+        except Exception as e:
+            return jsonify({"message": f"Error sending message: {str(e)}"}), 500
+
+        
+
+
+
+
+# -------------- Start Feedback Page -------------------
+
 
 @app.route('/logout')
 @login_required

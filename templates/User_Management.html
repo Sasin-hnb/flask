@@ -31,23 +31,23 @@
             <table class="user-table">
                 <thead>
                     <tr>
-                        <th>FirstName</th>
-                        <th>LastName</th>
-                        <th>Email</th>
-                        <th>Role</th>
-                        <th>status</th>
-                        <th>Actions</th>
+                        <th scope="col">FirstName</th>
+                        <th scope="col">LastName</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Role</th>
+                        <th scope="col">status</th>
+                        <th scope="col">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for user in users %}
                     <tr>
-                        <td>{{ user.firstName }} </td>
-                        <td>{{ user.lastName }} </td>
-                        <td>{{ user.username }}</td>
-                        <td>{{ user.role }}</td>
-                        <td>{{ "Approved" if user.state else "Declined" }}</td>
-                        <td class="action-buttons">
+                        <td data-label="FirstName" scope="row">{{ user.firstName }} </td>
+                        <td data-label="LastName">{{ user.lastName }} </td>
+                        <td data-label="Email">{{ user.username }}</td>
+                        <td data-label="Role">{{ user.role }}</td>
+                        <td data-label="status">{{ "Approved" if user.state else "Declined" }}</td>
+                        <td data-label="Actions" class="action-buttons">
                             <button class="edit-btn" id="editUser" onclick="editUser('{{ user.id }}')">Edit</button>
                             <!-- You may want to implement JavaScript for editing -->
                             <button class="remove-btn" id="removeUser"

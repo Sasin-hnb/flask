@@ -243,3 +243,44 @@ p{
         .info-value {
             margin-left: 10px;
         }
+
+        @media (max-width: 768px) {
+          .sidebar {
+              width: 100%;
+              height: auto;
+              position: relative;
+          }
+
+          .main-content {
+              margin-left: 0;
+              width: 100%;
+          }
+
+          .container {
+              padding: 10px;
+          }
+
+          .report-content {
+              padding: 0 20px; /* Less padding on smaller screens */
+              flex-direction: column; /* Stack items vertically */
+          }
+
+          .bid_container {
+              flex-direction: column; /* Stack boxes vertically */
+              align-items: center; /* Center align */
+          }
+
+          .box {
+              width: 90%; /* Make boxes full width on smaller screens */
+          }
+      }
+
+      @media (max-width: 480px) {
+          .sidebar .logo {
+              font-size: 1.5em;
+          }
+
+          .sidebar a {
+              font-size: 1em;
+          }
+      }
