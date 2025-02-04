@@ -14,7 +14,7 @@ services:
     ports:
       - "5000:5000"  # Exposes port 5000 for Flask
     environment:
-      - REDIS_URL=redis://redis:6379/0  # Connect to the Redis container using its service name
+      - REDIS_URL=redis://red-cugms123esus73fehh00:6379  # Connect to the Redis container using its service name
     depends_on:
       - redis  # Ensures Redis starts before Flask
 
